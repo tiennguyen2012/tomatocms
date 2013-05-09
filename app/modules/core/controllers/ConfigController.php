@@ -52,7 +52,17 @@ class Core_ConfigController extends Zend_Controller_Action
 		
 		$subDirs = Tomato_Core_Utility_File::getSubDir(TOMATO_APP_DIR.'/modules');
 		foreach ($subDirs as $module) {
-			$file = TOMATO_APP_DIR.DS.'modules'.DS.$module.DS.'config'.DS.'config.ini';
+            /**
+             * Hosting
+             */
+            $host = $_SERVER['SERVER_NAME'];
+            $host = (substr($host, 0, 3) == 'www') ? substr($host, 4) : $host;
+
+            $file = TOMATO_APP_DIR.DS.'modules'.DS.$module.DS.'config'.DS.$host.'.ini';
+            if(!file_exists($file)){
+                $file = TOMATO_APP_DIR.DS.'modules'.DS.$module.DS.'config'.DS.'config.ini';
+            }
+
 			if (file_exists($file)) {
 				// Get sections from config file
 				$config = new Zend_Config_Ini($file);
@@ -128,8 +138,16 @@ class Core_ConfigController extends Zend_Controller_Action
 			$module = $this->_request->getPost('moduleName');
 			$section = $this->_request->getPost('section');
 			$key = $this->_request->getPost('key');
-			
-			$file = TOMATO_APP_DIR.DS.'modules'.DS.$module.DS.'config'.DS.'config.ini';
+
+            /**
+             * Hosting
+             */
+            $host = $_SERVER['SERVER_NAME'];
+            $host = (substr($host, 0, 3) == 'www') ? substr($host, 4) : $host;
+
+            $file = TOMATO_APP_DIR.DS.'modules'.DS.$module.DS.'config'.DS.$host.'.ini';
+            if(!file_exists($file))
+			    $file = TOMATO_APP_DIR.DS.'modules'.DS.$module.DS.'config'.DS.'config.ini';
 			
 			$config = new Zend_Config_Ini($file, null, array('allowModifications' => true));
 			unset($config->$section->$key);
@@ -154,8 +172,13 @@ class Core_ConfigController extends Zend_Controller_Action
 			if ($section) {
 				$key = $this->_request->getPost('key');
 				$value = $this->_request->getPost('value');
-				
-				$file = TOMATO_APP_DIR.DS.'modules'.DS.$module.DS.'config'.DS.'config.ini';
+
+                $host = $_SERVER['SERVER_NAME'];
+                $host = (substr($host, 0, 3) == 'www') ? substr($host, 4) : $host;
+
+                $file = TOMATO_APP_DIR.DS.'modules'.DS.$module.DS.'config'.DS.$host.'.ini';
+                if(!file_exists($file))
+                    $file = TOMATO_APP_DIR.DS.'modules'.DS.$module.DS.'config'.DS.'config.ini';
 				
 				$config = new Zend_Config_Ini($file, null, array('allowModifications' => true));
 				
