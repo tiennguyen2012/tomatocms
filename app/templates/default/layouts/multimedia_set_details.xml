@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: multimedia_set_details.xml 2025 2010-04-02 07:29:38Z huuphuoc $
+ * @since		2.0.2
+ */
+-->
+<!DOCTYPE layout SYSTEM "http://schemas.tomatocms.com/dtd/layout.dtd">
+<layout>
+	<container cols="12">
+		<widget module="menu" name="menu" load="php">
+			<title><![CDATA[Menu]]></title>
+			<resources>
+				<resource type="javascript" src="{APP_STATIC_SERVER}/js/jquery.hoverIntent/jquery.hoverIntent.minified.js" />
+				<resource type="javascript" src="{APP_STATIC_SERVER}/js/superfish/superfish.js" />
+				<resource type="javascript" src="{APP_STATIC_SERVER}/js/superfish/supersubs.js" />
+				<resource type="css" src="{APP_STATIC_SERVER}/js/superfish/superfish.css" />
+			</resources>
+			<params>
+				<param name="menu_id">
+					<value><![CDATA[1]]></value>
+				</param>
+			</params>
+		</widget>
+	</container>
+	<container cols="12">
+		<container cols="8" position="first">
+			<defaultOutput />
+			<widget module="tag" name="tags">
+				<title><![CDATA[Tags]]></title>
+				<resources></resources>
+			</widget>
+			<widget module="comment" name="comment">
+				<title><![CDATA[Comment]]></title>
+				<resources>
+					<resource type="javascript" src="{APP_STATIC_SERVER}/js/jquery.validate/jquery.validate.min.js" />
+				</resources>
+				<params>
+					<param name="limit">
+						<value><![CDATA[10]]></value>
+					</param>
+					<param name="allow_comment">
+						<value><![CDATA[1]]></value>
+					</param>
+					<param name="show_avatar">
+						<value><![CDATA[1]]></value>
+					</param>
+					<param name="avatar_size">
+						<value><![CDATA[50]]></value>
+					</param>
+				</params>
+			</widget>
+		</container>
+		<container cols="4" position="last">
+			<widget module="multimedia" name="latestsets">
+				<title><![CDATA[Latest sets]]></title>
+				<params>
+					<param name="limit">
+						<value><![CDATA[10]]></value>
+					</param>
+				</params>
+			</widget>
+			<widget module="tag" name="tagcloud" load="php">
+				<title><![CDATA[Tag Cloud]]></title>
+				<params>
+					<param name="limit">
+						<value><![CDATA[30]]></value>
+					</param>
+				</params>
+			</widget>
+		</container>
+	</container>
+</layout>

@@ -1,0 +1,269 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id$
+ * @since		2.0.4
+ */
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->APP_STATIC_SERVER; ?>/css/960/<?php if ($this->APP_LANG_RTL) : ?>all-rtl.min.css<?php else : ?>all.min.css<?php endif; ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->APP_STATIC_SERVER; ?>/skin/admin/default/<?php if ($this->APP_LANG_RTL) : ?>admin-rtl.css<?php else : ?>admin.css<?php endif; ?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $this->APP_STATIC_SERVER; ?>/js/jquery.imgareaselect/imgareaselect-animated.css" />
+<script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/jquery.ajaxq/jquery.ajaxq.min.js"></script>
+<script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/jquery.json/jquery.json.min.js"></script>
+<script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/phpjs/php.full.min.js"></script>
+<script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/tomato/namespace.js"></script>
+<script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/jquery.imgareaselect/jquery.imgareaselect.pack.js"></script>
+<script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/tomato/multimedia/image.js"></script>
+
+<div class="container_12" style="background-color: #F9F9F9;">
+	<div class="grid_12 t_a_multimedia_image t_a_form">
+		<div class="grid_9 alpha">
+			<div class="t_a_line t_a_toggle">
+				<div></div>
+				<h2><?php echo $this->translator('image_editor_details'); ?></h2>
+			</div>
+			<div>
+				<div class="clearfix" style="padding-top: 10px;">
+					<ul style="list-style-type: none;">
+						<li style="float: left; padding-right: 5px;">
+							<?php echo $this->translator('image_select_size'); ?>
+							<select name="tImageSize" id="tImageSize">
+								<?php if ($this->data != null) : ?>
+								<?php foreach ($this->data as $size => $source) : ?>
+								<option value="<?php echo $this->escape($size); ?>"><?php echo $this->escape($this->translator($size)); ?></option>
+								<?php endforeach; ?>
+								<?php endif; ?>
+							</select>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="grid_9 alpha t_a_bottom">
+					<input type="button" class="image_crop" name="tMultiMediaImageCrop" id="tMultiMediaImageCrop" value="<?php echo $this->escape($this->translator('image_action_crop')); ?>" disabled="disabled" />
+					<input type="button" name="tMultiMediaImageRotateLeft" id="tMultiMediaImageRotateLeft" value="<?php echo $this->escape($this->translator('image_action_rotate_left')); ?>" />
+					<input type="button" name="tMultiMediaImageRotateRight" id="tMultiMediaImageRotateRight" value="<?php echo $this->escape($this->translator('image_action_rotate_right')); ?>" />
+					<input type="button" name="tMultiMediaImageFlipVertical" id="tMultiMediaImageFlipVertical" value="<?php echo $this->escape($this->translator('image_action_flip_vertical')); ?>" />
+					<input type="button" name="tMultiMediaImageFlipHorizontal" id="tMultiMediaImageFlipHorizontal" value="<?php echo $this->escape($this->translator('image_action_flip_horizontal')); ?>" />
+				</div>
+			<div id="tImageSourceContainer" class="grid_9 alpha" style="border: 1px solid #CCCCCC; overflow: auto; text-align: center;">
+				<img id="imgSource" src="" />
+			</div>
+		</div>	
+			
+		<div class="grid_3 omega">
+			<div class="grid_3 omega t_g_bottom">
+				<div class="t_a_line t_a_toggle">
+					<div></div>
+					<h2><?php echo $this->translator('image_editor_crop'); ?></h2>
+				</div>
+				<div>
+					<div class="grid_3 alpha clearfix t_a_top">
+						<?php echo $this->escape($this->translator('image_selection')); ?> <input type="text" name="tImageNewWidth" id="tImageNewWidth" style="width: 40px;" /> : <input type="text" name="tImageNewHeight" id="tImageNewHeight" style="width: 40px;" />
+					</div>
+				</div>
+			</div>
+			<div class="grid_3 omega t_g_bottom">
+				<div class="t_a_line t_a_toggle">
+					<div></div>
+					<h2><?php echo $this->translator('image_editor_apply_settings'); ?></h2>
+				</div>
+				<div>
+					<div class="grid_3 alpha clearfix t_a_bottom" style="padding-top: 10px;">
+						<label><?php echo $this->translator('image_editor_apply_change_to'); ?></label><br />
+						<select name="tMultimediaImageApplyTo" id="tMultimediaImageApplyTo">
+							<option value=""><?php echo $this->escape($this->translator('image_current_size')); ?></option>
+							<?php if ($this->data != null) : ?>
+							<?php foreach ($this->data as $size => $source) : ?>
+							<option value="<?php echo $this->escape($source); ?>|<?php echo $size; ?>"><?php echo $this->escape($this->translator($size)); ?></option>
+							<?php endforeach; ?>
+							<?php endif; ?>
+						</select>
+						<input type="hidden" name="fileId" id="fileId" value="<?php if ($this->file != null) : ?><?php echo $this->file->file_id; ?><?php endif; ?>" />
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="clearfix t_a_bottom"></div>	
+</div>
+<script type="text/javascript">
+var baseUrl = '<?php echo $this->baseUrl; ?>';
+var data = $.evalJSON(base64_decode(rawurldecode('<?php echo $this->dataString; ?>')));
+var options = {
+		fadeSpeed: 400,
+		handles: true,
+		onSelectChange: onSelectChange,
+		instance: true
+};
+var imgSource = $('#imgSource');
+var img = new Tomato.Multimedia.Image(data);
+var editor = new Tomato.Multimedia.Image.Editor(imgSource, options);
+
+function onSelectChange(img, selection) {
+	if (selection.width != 0 || selection.height != 0) {
+		// Enable image crop button
+		$('.image_crop').unbind('click').bind('click', function() {
+			imageAction('crop', null); 
+		}).removeAttr('disabled');
+	} else {
+		// Disable image crop button
+		$('.image_crop').attr('disabled', 'disabled').unbind('click');
+	}
+
+	$('#tImageNewWidth').val(selection.width);
+	$('#tImageNewHeight').val(selection.height);
+
+	var divHeight = 40;
+	var top = selection.height + 5;
+	var height = $('#imgSource').height();
+	if ((top  + selection.y1) > height - divHeight) {
+		top = - divHeight;	
+	}
+
+	$('.imgareaselect-selection').parent().css('overflow', '');
+	
+	if ($('#tMultimediaImageCropForm').html() == undefined) {
+		// Set parent selection overflow none
+		$('.imgareaselect-selection').parent().css('overflow', '');
+		$('.imgareaselect-selection').after('<div id="tMultimediaImageCropForm" style="position: relative; left: 0; top: ' + top + 'px;"><input type="button" class="image_crop" value="<?php echo $this->escape($this->translator('image_action_crop')); ?>" /></div>');
+	} else {
+		$('#tMultimediaImageCropForm').css('top', top + 'px');
+	}
+};
+
+function imageAction(action, mode) {
+	var dataPost = null;
+	switch (action) {
+		case 'rotate':
+			var degrees = 450;
+			if (mode == 'left') {
+				degrees = 270;
+			} 
+			dataPost = { degrees: degrees };
+			break;
+		case 'flip':
+			dataPost = { mode: mode }
+			break;
+		case 'crop':
+			if (editor == undefined || editor == null) {
+				return false;
+			}
+			var selection = editor.getSelection();
+			dataPost = { x1: selection.x1, y1: selection.y1, width: selection.width, height: selection.height };
+			$('#tMultiMediaImageCrop').attr('disabled', 'disabled').unbind('click');
+			break;
+		default:
+			alert('Select Action');
+	}
+
+	if (dataPost != null) {
+		dataPost.source = $(imgSource).attr('src');
+		dataPost.action = action;
+		dataPost.des = $('#tMultimediaImageApplyTo').val();
+		dataPost.file_id = $('#fileId').val();
+		
+		editor.removeSelection();
+		$.ajaxq('image_load', {
+			type: 'POST',
+			url: '<?php echo $this->url(array(), 'multimedia_image_load'); ?>',
+			data: dataPost,
+			success: function(response) {
+				if (response != 'RESULT_NOT_OK') {
+					$(imgSource).hide();
+					response = $.evalJSON(response);
+					if (response.image_url != undefined) {
+						$(imgSource).attr('src', response.image_url + '?rand=' + Math.random()).fadeIn("slow");
+						editor.setOption(options);
+						$(imgSource).fadeIn('slow');
+					}
+					if (response.type != undefined && response.type != null) {
+						$('#tImageSize option').each(function() {
+							$(this).removeAttr('selected');
+							if (response.type == this.value) {
+								$(this).attr('selected', 'selected');
+								data[response.type] = response.image_url;
+								$('#tImageSize').change();
+								return;
+							}
+						});
+					}
+				}
+			}
+		});
+	}
+};
+
+$(document).ready(function() {
+	$('#tImageSize').bind('change', function() {
+		var size = this.value;
+		if (img.getOption(size) != undefined) {
+			var src = img.getOption(size);
+			$(imgSource).hide().attr('src', img.getOption(size) + '?rand=' + Math.random()).fadeIn('slow');
+			editor.removeSelection();
+			if (src.indexOf(baseUrl) >= 0) {
+				editor.setOption(options);
+				// Rotate left
+				$('#tMultiMediaImageRotateLeft').bind('click', function() {
+					imageAction('rotate', 'left');
+				}).removeAttr('disabled');
+
+				// Rotate right
+				$('#tMultiMediaImageRotateRight').bind('click', function() {
+					imageAction('rotate', 'right');
+				}).removeAttr('disabled');
+
+				// Flip vertical
+				$('#tMultiMediaImageFlipVertical').bind('click', function() {
+					imageAction('flip', 'vertical');
+				}).removeAttr('disabled');
+
+				// Flip horizontal
+				$('#tMultiMediaImageFlipHorizontal').bind('click', function() {
+					imageAction('flip', 'horizontal');
+				}).removeAttr('disabled');
+							
+			} else {
+				$('#tMultiMediaImageRotateLeft').unbind().attr('disabled', 'disabled');
+				$('#tMultiMediaImageRotateRight').unbind().attr('disabled', 'disabled');
+				$('#tMultiMediaImageFlipVertical').unbind().attr('disabled', 'disabled');
+				$('#tMultiMediaImageFlipHorizontal').unbind().attr('disabled', 'disabled');
+			}
+		}
+	});
+	$('#tImageSize option:last').attr('selected', 'selected').change();
+
+	$('#tImageNewWidth').bind('keyup', function() {
+		var selection = editor.getSelection();
+		var x1 = selection.x1;
+		var y1 = selection.y1;
+		var x2 = x1 + parseInt($(this).val());
+		var y2 = y1 + parseInt($('#tImageNewHeight').val());
+		editor.setSelection(x1, y1, x2, y2, true);
+		editor.update();
+	});
+
+	$('#tImageNewHeight').bind('keyup', function() {
+		var selection = editor.getSelection();
+		var x1 = selection.x1;
+		var y1 = selection.y1;
+		var x2 = x1 + parseInt($('#tImageNewWidth').val());
+		var y2 = y1 + parseInt($(this).val());
+		editor.setSelection(x1, y1, x2, y2, true);
+		editor.update();
+	});
+});
+</script>

@@ -1,0 +1,89 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: user.phtml 1536 2010-03-10 06:44:34Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('rule_user_page_title'));
+?>
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><a href="<?php echo $this->url(array(), 'core_user_list'); ?>"><?php echo $this->translator('user_list_breadcump'); ?></a></span><span><?php echo $this->translator('rule_user_breadcump'); ?></span>	
+</div>
+<?php if (!$this->user->is_active) : ?>
+<div class="grid_12 t_a_bottom">
+	<?php echo $this->translator('rule_user_desc'); ?>: <b><?php echo $this->user->user_name; ?> - <?php echo $this->user->full_name; ?></b><br />
+	<?php echo $this->translator('rule_user_is_not_actived'); ?>
+</div>
+<?php else : ?>
+<div class="grid_12 t_a_bottom">
+	<?php echo $this->translator('rule_user_desc'); ?>: <b><?php echo $this->user->user_name; ?> - <?php echo $this->user->full_name; ?></b><br />
+	<?php echo $this->translator('rule_user_guide'); ?>
+</div>
+<form method="post" action="<?php echo $this->url(array('user_id' => $this->user->user_id), 'core_rule_set_user'); ?>">
+<?php foreach ($this->modules as $module) : ?>
+<div class="grid_12 t_a_bottom">
+	<div class="t_a_line t_a_toggle">
+		<div></div> 
+		<h2><?php echo $module; ?></h2>
+	</div>
+	<div>
+	<?php if ($resources = $this->ruleLoader()->getResources($module)) : ?>
+		<?php for ($i = 0; $i < count($resources); $i++) : ?>
+		<div class="grid_4 t_a_top <?php if ($i % 3 == 0) : ?> alpha<?php elseif ($i % 3 == 2) : ?> omega<?php endif; ?>">
+			<div class="clearfix t_a_box">
+				<div style="padding: 5px" class="t_a_line t_a_toggle">
+					<div></div>
+					<h2><?php echo $resources[$i]->description; ?></h2> 
+				</div>
+				<div style="padding: 0px 5px 5px 5px">
+					<a class="t_a_link tSelectAll" href="javascript: void(0)"><?php echo $this->translator('rule_role_select_all'); ?></a> | <a class="t_a_link tDeselectAll" href="javascript: void(0)"><?php echo $this->translator('rule_role_deselect_all'); ?></a> 
+					<br />
+					<ul>
+					<?php foreach ($privileges = $this->ruleLoader()->getPrivilegesByUser($resources[$i], $this->user->user_id) as $index => $priv) : ?>
+						<li><input type="checkbox" name="privileges[]" value="<?php echo $priv->privilege_id; ?>_<?php echo $resources[$i]->module_name; ?>:<?php echo $resources[$i]->controller_name; ?>"<?php if ($priv->allow == null || $priv->allow == 0) : ?> <?php else : ?> checked="checked"<?php endif; ?> /> <?php echo $priv->description; ?></li>
+					<?php endforeach; ?>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<?php if ($i % 3 == 2) : ?><div class="clearfix"></div><?php endif; ?>
+		<?php endfor; ?>
+		<div class="clearfix"></div>
+	<?php endif; ?>
+	</div>
+</div>
+<?php endforeach; ?>
+
+<div class="grid_12"><input class="t_a_button" type="submit" value="<?php echo $this->translator('rule_user_submit_button'); ?>" /></div>
+</form>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('a.tSelectAll').click(function() {
+		$(this).parent().find('input[type="checkbox"]').each(function() {
+			$(this).attr('checked', 'checked');
+		});
+	});
+	$('a.tDeselectAll').click(function() {
+		$(this).parent().find('input[type="checkbox"]').each(function() {
+			$(this).attr('checked', '');
+		});
+	});
+});
+</script>
+<?php endif; ?>

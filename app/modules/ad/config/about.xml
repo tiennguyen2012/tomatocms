@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: about.xml 1511 2010-03-09 09:06:06Z huuphuoc $
+ */
+-->
+<!DOCTYPE module SYSTEM "http://schemas.tomatocms.com/dtd/module_about.dtd">
+<module>
+	<name>ad</name>
+	<description langKey="about_ad_description"><![CDATA[Manage banners]]></description>
+	<thumbnail></thumbnail>
+	<author>TomatoCMS Core Team</author>
+	<email>core@tomatocms.com</email>
+	<version>2.0.1</version>
+	<license>free</license>
+	
+	<!-- Required modules and libraries -->
+	<requires>
+		<requiredModules>
+			<requiredModule name="upload" />			
+		</requiredModules>
+	</requires>
+	
+	<!-- Install and uninstall scripts -->
+	<install>
+			<query><![CDATA[DROP TABLE IF EXISTS `###ad_banner`;]]></query>
+			<query><![CDATA[CREATE TABLE `###ad_banner` (
+  `banner_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(200) default NULL,
+  `text` varchar(255) default NULL,
+  `more_info` text,
+  `num_clicks` int(11) default '0',
+  `created_date` date default NULL,
+  `start_date` date default NULL,
+  `expired_date` date default NULL,
+  `publish_up` datetime default NULL,
+  `publish_down` datetime default NULL,
+  `client_id` int(11) default NULL,
+  `code` text,
+  `click_url` text,
+  `target` enum('new_tab','new_window','same_window') default 'new_tab',
+  `format` enum('image','flash','text','html') default 'image',
+  `image_url` varchar(255) default NULL,
+  `ordering` int(11) default '0',
+  `mode` enum('unique','share','alternate') default 'unique',
+  `timeout` int(11) default '15',
+  `status` enum('active','inactive') default 'active',
+  PRIMARY KEY  (`banner_id`),
+  KEY `idx_status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+			<query><![CDATA[DROP TABLE IF EXISTS `###ad_click`;]]></query>
+			<query><![CDATA[CREATE TABLE `###ad_click` (
+  `banner_id` int(11) NOT NULL,
+  `zone_id` int(11) NOT NULL,
+  `page_id` int(11) default NULL,
+  `clicked_date` datetime NOT NULL,
+  `ip` varchar(30) NOT NULL,
+  `from_url` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+<query><![CDATA[DROP TABLE IF EXISTS `###ad_client`;]]></query>
+		<query><![CDATA[CREATE TABLE `###ad_client` (
+  `client_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(200) NOT NULL,
+  `email` varchar(200) default NULL,
+  `telephone` varchar(50) default NULL,
+  `address` text,
+  `created_date` datetime NOT NULL,
+  PRIMARY KEY  (`client_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###ad_page_assoc`;]]></query>
+		<query><![CDATA[CREATE TABLE `###ad_page_assoc` (
+  `ad_page_id` int(10) NOT NULL auto_increment,
+  `banner_id` int(11) NOT NULL,
+  `page_name` varchar(200) default NULL,
+  `zone_id` int(11) NOT NULL,
+  `page_url` varchar(200) default NULL,
+  PRIMARY KEY  (`ad_page_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###ad_zone`;]]></query>
+		<query><![CDATA[CREATE TABLE `###ad_zone` (
+  `zone_id` int(10) unsigned NOT NULL auto_increment,
+  `width` int(11) NOT NULL,
+  `height` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `description` varchar(255) default NULL,
+  `price` varchar(255) default NULL,
+  PRIMARY KEY  (`zone_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+	</install>
+	
+	<uninstall>
+		<query><![CDATA[DROP TABLE IF EXISTS `###ad_client`;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###ad_banner`;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###ad_zone`;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###ad_page_assoc`;]]></query>
+	</uninstall>
+	
+	<admin>
+		<task langKey="dashboard_list_zones" link="/admin/ad/zone/list/" />
+		<task langKey="dashboard_list_banners" link="/admin/ad/banner/list/" />
+		<task langKey="dashboard_list_client" link="/admin/ad/client/list/" />
+	</admin>
+</module>

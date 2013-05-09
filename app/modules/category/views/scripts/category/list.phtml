@@ -1,0 +1,113 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: list.phtml 2015 2010-04-02 07:24:33Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('category_list_page_title'));
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.sortable.js');
+?>
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span><span><?php echo $this->translator('category_list_breadcump'); ?></span>
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="prefix_9 grid_3 alpha t_a_textright">
+		<a href="<?php echo $this->url(array(), 'category_category_add'); ?>" class="t_a_link"><?php echo $this->translator('category_add_breadcump'); ?></a>
+	</div>
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_8 alpha t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('category_name'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('category_id'); ?></h2>
+	</div>
+	<div class="grid_2 omega t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('category_list_action'); ?></h2>
+	</div>
+</div>
+<div class="clearfix"></div>
+<div id="t_categories_tree" class="grid_12 alpha t_a_bottom">
+	<?php $depthItem = array(); ?>
+	<?php foreach ($this->categories as $category) : ?>
+	<?php if ($category->depth - 1 >= 0 || $category->depth == 0) : ?>
+	<?php $depthItem[$category->depth] = $category->category_id; ?>
+	<?php endif; ?>
+	<div id="tCategoryRow_<?php echo $category->category_id; ?>" class="<?php if ($category->depth - 1 >= 0) : ?>tChildCategoriesHide tChildCategories_<?php echo $depthItem[$category->depth - 1]; ?> <?php endif;?>grid_12 t_a_bottom">
+		<div class="clearfix t_a_box">
+			<div class="grid_8 alpha">
+				<div style="padding-left: 5px">
+				<?php if ($category->right_id - $category->left_id > 1) : ?>
+					<a href="javascript: void(0);" class="t_toggle_view_child_category" rel="<?php echo $category->category_id; ?>"><span style="width: 20px; float: left; color: #DA5C00;" id="tCategoryBullet_<?php echo $category->category_id; ?>">[+]</span> <?php echo str_repeat('---', $category->depth).' '.$category->name; ?></a>
+				<?php else : ?>
+				<div style="width: 20px; float: left">&nbsp;</div> <div style="float: left"><?php echo str_repeat('---', $category->depth).' '.$category->name; ?></div>
+				<?php endif; ?>	
+				</div>
+			</div>
+			<div class="grid_2"><?php echo $category->category_id; ?></div>
+			<div class="grid_2 omega">
+				<?php if ($this->allow('edit')) : ?>
+				<a class="t_a_link" href="<?php echo $this->url(array('category_id' => $category->category_id), 'category_category_edit'); ?>"><?php echo $this->translator('category_list_action_edit'); ?></a> |
+				<?php endif; ?>
+				<?php if ($this->allow('delete')) : ?> 
+				<a class="t_a_link tDeleteAction" rel="<?php echo $category->category_id; ?>" href="javascript: void(0)"><?php echo $this->translator('category_list_action_delete'); ?></a>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+	<?php endforeach; ?>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.tChildCategoriesHide').hide();
+	
+	$('.t_toggle_view_child_category').each(function() {
+		var self = this;
+		var category_id = $(self).attr('rel');
+		$(self).toggle(function() {
+			$('.tChildCategories_' + category_id).fadeIn('slow');
+			$('#tCategoryBullet_' + category_id).html('[-]');
+		}, function() {
+			$('.tChildCategories_' + category_id).hide();
+			$('#tCategoryBullet_' + category_id).html('[+]');
+		});
+	});
+	<?php if ($this->allow('delete')) : ?>
+	$('a.tDeleteAction').click(function() {
+		if (confirm('<?php echo $this->escape($this->translator('category_list_action_delete_confirm')); ?>')) {
+			$(this).html('').addClass('t_a_loading');
+			var id = $(this).attr('rel');
+			$.ajaxq('category_category', {
+				type: 'POST',
+				url: '<?php echo $this->url(array(), 'category_category_delete'); ?>',
+				data: { id: id },
+				success: function(response) {
+					if ('RESULT_OK' == response) {
+						$('#tCategoryRow_' + id).fadeOut('slow');
+						window.location = '<?php echo $this->url(array(), 'category_category_list'); ?>';
+					}
+				}
+			});
+		}
+	});
+	<?php endif; ?>
+});
+</script>

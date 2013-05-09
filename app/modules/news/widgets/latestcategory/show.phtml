@@ -1,0 +1,41 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: show.phtml 1402 2010-03-02 06:28:59Z huuphuoc $
+ */
+?>
+<div class="t_g_box t_news_latestcategory">
+    <div class="t_g_box_head">
+    	<h2><?php echo $this->translator()->widget('latest_articles'); ?></h2>
+    	<a class="t_g_box_head_collapse" href="javascript:void(0)">Collapse</a>				    					    				    	
+    </div>
+    <div class="t_g_box_content">
+    	<ul>
+		<?php foreach ($this->articles as $index => $article) : ?>
+			<li>
+				<?php if ($article->image_general) : ?><a href="<?php echo $this->url($article->getProperties(), 'news_article_details'); ?>"><img src="<?php echo $article->image_general; ?>" /></a><?php endif; ?><h4><a href="<?php echo $this->url($article->getProperties(), 'news_article_details'); ?>"><?php echo $article->title; ?></a></h4>
+				<?php echo date('H:i, d-m-Y', strtotime($article->activate_date)); ?>
+				<div style="margin-top: 5px"><?php echo $article->description; ?></div>
+				<div class="t_g_clear"></div>
+			</li>
+		<?php endforeach; ?>
+		</ul>
+	</div>	    
+    <div class="t_g_box_corner t_g_box_corner_tl"></div>
+    <div class="t_g_box_corner t_g_box_corner_tr"></div>
+    <div class="t_g_box_corner t_g_box_corner_bl"></div>
+    <div class="t_g_box_corner t_g_box_corner_br"></div>
+</div>

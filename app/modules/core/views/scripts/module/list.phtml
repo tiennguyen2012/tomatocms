@@ -1,0 +1,181 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: list.phtml 2015 2010-04-02 07:24:33Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('module_list_page_title'));
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.resizable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+?>
+
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><?php echo $this->translator('module_list_breadcump'); ?></span>	
+</div>
+<div class="grid_12 t_a_bottom"><?php echo $this->translator('module_list_guide'); ?></div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_3 alpha t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('module_list_name'); ?></h2>
+	</div>
+	<div class="grid_3 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('module_list_required_modules'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('module_list_author'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('module_list_version'); ?></h2>
+	</div>
+	<div class="grid_2 omega t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('module_list_action'); ?></h2>
+	</div>
+</div>
+<?php foreach ($this->modules as $module) : ?>
+<div class="grid_12">
+	<div class="clearfix t_a_box">
+		<div class="grid_3 alpha">
+			<div style="padding-left: 5px">
+				<?php echo sprintf($this->translator('module_list_module_name'), $module['name']); ?><br />
+				<?php echo $module['description']; ?>
+			</div>
+		</div>
+		<div class="grid_3">
+		<?php if (count($module['required']['modules']) == 0) : ?>
+		---
+		<?php else : ?>
+			<ul class="t_a_list">
+			<?php foreach ($module['required']['modules'] as $requiredModule) : ?>
+				<li class="tModule_<?php echo $requiredModule; ?>"<?php if (isset($this->dbModules[$requiredModule])) : ?> style="text-decoration: line-through"<?php endif; ?>><?php echo $requiredModule; ?></li>
+			<?php endforeach; ?>
+			</ul>
+		<?php endif; ?>
+		</div>
+		<div class="grid_2"><a class="t_a_link" href="mailto: <?php echo $module['email']; ?>"><?php echo $module['author']; ?></a></div>
+		<div class="grid_2"><?php echo $module['version']; ?></div>
+		<div class="grid_2 omega">
+		<?php if (isset($this->dbModules[$module['name']])) : ?>
+			<?php if ($this->allow('uninstall')) : ?>
+			<a class="t_a_link tModuleAction" href="javascript: void(0)" rel="<?php echo $module['name']; ?>_uninstall"><?php echo $this->translator('module_list_uninstall'); ?></a>
+			<?php endif; ?>
+		<?php else : ?>
+			<?php if ($this->allow('install')) : ?>
+			<a class="t_a_link tModuleAction" href="javascript: void(0)" rel="<?php echo $module['name']; ?>_install"><?php echo $this->translator('module_list_install'); ?></a>
+			<?php endif; ?>
+		<?php endif; ?>
+		</div>
+	</div>
+</div>
+<?php endforeach; ?>
+
+<?php if ($this->allow('install')) : ?>
+<div class="grid_12 t_a_bottom t_a_line">
+	<div></div> 
+	<h2><?php echo $this->translator('module_list_upload_head'); ?></h2>
+</div>
+<?php if (extension_loaded('zip')) : ?>
+<form method="post" action="<?php echo $this->url(array(), 'core_module_upload'); ?>" enctype="multipart/form-data">
+<div class="grid_12 t_a_bottom">
+	<?php echo $this->translator('module_list_upload_guide'); ?><br />
+	<input type="file" name="file" style="width: 300px" /> <input class="t_a_button" type="submit" value="<?php echo $this->translator('module_list_upload_button'); ?>" />
+</div>
+</form>
+<?php else : ?>
+<div class="grid_12 t_a_bottom">
+	<div class="t_a_message_warning"><?php echo $this->translator('module_list_zip_extension_not_available'); ?></div>
+</div>
+<?php endif; ?>
+<?php endif; ?>
+
+<div id="tDialogContainer"></div>
+
+<?php if ($this->allow('install') || $this->allow('uninstall')) : ?>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('a.tModuleAction').click(function() {
+		var self = this;
+		var arr = $(self).attr('rel').split('_');
+		var moduleName = arr[0];
+		var action = arr[1];
+		switch (action) {
+			<?php if ($this->allow('install')) : ?>
+			case 'install':
+				$(self).html('').addClass('t_a_loading');
+				$.ajaxq('module_list', {
+					url: "<?php echo $this->url(array(), 'core_module_install'); ?>",
+					type: 'POST',
+					data: { name: moduleName },
+					success: function(response) {
+						$(self).html("<?php echo $this->translator('module_list_uninstall'); ?>")
+							.attr('rel', moduleName + '_uninstall')
+							.removeClass('t_a_loading');
+						$('li.tModule_' + moduleName).css('text-decoration', 'line-through');
+						$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('module_list_install_success')); ?>', moduleName))
+							.dialog({
+								title: '<?php echo addslashes($this->translator('module_list_action_message')); ?>',
+						    	show: { effect: 'fade' },
+								open: function(event, ui) {
+									setTimeout(function() {
+										$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+									}, 3000);
+								}
+							});
+					}
+				});				
+				break;
+			<?php endif; ?>
+			<?php if ($this->allow('uninstall')) : ?>
+			case 'uninstall':
+				if (confirm('<?php echo addslashes($this->translator('module_list_uninstall_confirm')); ?>')) {
+					$(self).html('').addClass('t_a_loading');
+					$.ajaxq('module_list', {
+						url: "<?php echo $this->url(array(), 'core_module_uninstall'); ?>",
+						type: 'POST',
+						data: { name: moduleName },
+						success: function(response) {
+							$(self).html("<?php echo $this->translator('module_list_install'); ?>")
+								.attr('rel', moduleName + '_install')
+								.removeClass('t_a_loading');
+							$('li.tModule_' + moduleName).css('text-decoration', 'none');
+							$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('module_list_uninstall_success')); ?>', moduleName))
+								.dialog({
+									title: '<?php echo addslashes($this->translator('module_list_action_message')); ?>',
+							    	show: { effect: 'fade' },
+									open: function(event, ui) {
+										setTimeout(function() {
+											$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+										}, 3000);
+									}
+								});
+						}
+					});
+				}
+				break;
+			<?php endif; ?>
+		}
+	});
+});
+</script>
+<?php endif; ?>

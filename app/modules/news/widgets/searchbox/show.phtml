@@ -1,0 +1,78 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: show.phtml 887 2010-01-20 04:44:39Z huuphuoc $
+ */
+?>
+<div class="t_g_box t_news_searchbox">
+    <div class="t_g_box_head">
+    	<h2><?php echo $this->translator()->widget('search_box'); ?></h2>
+    	<a class="t_g_box_head_collapse" href="javascript:void(0)">Collapse</a>				    					    				    	
+    </div>
+    <div class="t_g_box_content" style="text-align: center;">
+    	<input type="text" name="q" id="tNewsSearchKeyword_<?php echo $this->unid; ?>" value="" />
+		<input type="button" id="tSearchButton_<?php echo $this->unid; ?>" value="<?php echo $this->translator()->widget('search_button'); ?>" class="t_g_button" />
+		<div class="clearfix"></div>
+	</div>			    
+    <div class="t_g_box_corner t_g_box_corner_tl"></div>
+    <div class="t_g_box_corner t_g_box_corner_tr"></div>
+    <div class="t_g_box_corner t_g_box_corner_bl"></div>
+    <div class="t_g_box_corner t_g_box_corner_br"></div>
+</div>
+<script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/jquery.autocomplete/jquery.autocomplete.js"></script>
+<link rel="stylesheet" type="text/css" href="/js/jquery.autocomplete/jquery.autocomplete.css" />
+<script type="text/javascript">
+$(document).ready(function() {
+	var q_<?php echo $this->unid; ?> = $('#tNewsSearchKeyword_<?php echo $this->unid; ?>');
+	var keyword_<?php echo $this->unid; ?> = '<?php if ($this->keyword) : ?><?php echo $this->keyword; ?><?php else : ?><?php echo $this->translator()->widget('search_keyword'); ?><?php endif; ?>';
+	var url_<?php echo $this->unid; ?> = '<?php echo $this->url(array(), 'news_article_search'); ?>';
+	$(q_<?php echo $this->unid; ?>).val(keyword_<?php echo $this->unid; ?>).focus(function() {
+		if ($(q_<?php echo $this->unid; ?>).val() == keyword_<?php echo $this->unid; ?>) {
+			$(q_<?php echo $this->unid; ?>).val('').css('color', '#000');	
+		}
+	}).blur(function() {
+		if ($(q_<?php echo $this->unid; ?>).val() == '') {
+			$(q_<?php echo $this->unid; ?>).val(keyword_<?php echo $this->unid; ?>).css('color', '#9196a2');	
+		}
+	}).keypress(function(e) {
+		if (e.which == 13) {
+			document.location.href = url_<?php echo $this->unid; ?> + '?q=' + $(q_<?php echo $this->unid; ?>).val();
+		}
+	});
+	$('#tSearchButton_<?php echo $this->unid; ?>').bind('click', function() {
+		document.location.href = url_<?php echo $this->unid; ?> + '?q=' + $(q_<?php echo $this->unid; ?>).val();
+	});
+
+	$(q_<?php echo $this->unid; ?>).autocomplete('<?php echo $this->url(array(), 'news_article_search_suggest'); ?>',
+		{
+			delay: 10,
+			minChars: 2,
+			matchSubset: 1,
+			matchContains: 1,
+			cacheLength: 10,
+			formatItem: function(row) {
+				var img = null;
+				if (row[2] != '') {
+					img = '<img class="t_g_left" src="' + row[2] + '" style="padding-right: 5px; width: 40px;" />';
+				}
+				return img + row[0];
+			},
+			autoFill: false,
+			extraParams: { limit: <?php echo $this->limit; ?> }
+		}
+	);
+});
+</script>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: news_article_search.xml 2036 2010-04-02 08:06:31Z huuphuoc $
+ * @since		2.0.2
+ */
+-->
+<!DOCTYPE layout SYSTEM "http://schemas.tomatocms.com/dtd/layout.dtd">
+<layout>
+	<container cols="12">
+		<widget module="menu" name="menu" load="php">
+			<title><![CDATA[Menu]]></title>
+			<resources>
+				<resource type="javascript" src="{APP_STATIC_SERVER}/js/jquery.hoverIntent/jquery.hoverIntent.minified.js" />
+				<resource type="javascript" src="{APP_STATIC_SERVER}/js/superfish/superfish.js" />
+				<resource type="javascript" src="{APP_STATIC_SERVER}/js/superfish/supersubs.js" />
+				<resource type="css" src="{APP_STATIC_SERVER}/js/superfish/superfish.css" />
+			</resources>
+			<params>
+				<param name="menu_id">
+					<value><![CDATA[1]]></value>
+				</param>
+			</params>
+		</widget>
+	</container>
+	<container cols="12">
+		<widget module="news" name="breadcump" load="php">
+			<title><![CDATA[Breadcump]]></title>
+			<resources></resources>
+			<params>
+				<param name="categoryId" type="global" />
+			</params>
+		</widget>
+	</container>
+	<container cols="12">
+		<container cols="8" position="first">
+			<defaultOutput />
+		</container>
+		<container cols="4" position="last">
+			<widget module="utility" name="countdown" load="php">
+				<title><![CDATA[Countdown]]></title>
+				<resources>
+					<resource type="javascript" src="{APP_STATIC_SERVER}/js/jquery.countdown/jquery.countdown.min.js" />
+				</resources>
+				<params>
+					<param name="event">
+						<value><![CDATA[TomatoCMS v2.0.5 release]]></value>
+					</param>
+					<param name="target">
+						<value><![CDATA[2010-05-04 15:00:00]]></value>
+					</param>
+				</params>
+			</widget>
+			<widget name="twitter" module="utility" load="php">
+				<title><![CDATA[Twitter updates]]></title>
+				<resources></resources>
+				<params>
+					<param name="account"><value><![CDATA[tomatocms]]></value></param>
+					<param name="limit"><value><![CDATA[10]]></value></param>
+				</params>
+				<cache lifetime="3600" />				
+			</widget>
+			<widget name="feed" module="utility" load="php">
+				<title><![CDATA[Feed]]></title>
+				<resources></resources>
+				<params>
+					<param name="url">
+						<value><![CDATA[http://feeds.feedburner.com/TomatoCMS]]></value>
+					</param>
+					<param name="title">
+						<value><![CDATA[RSS entries]]></value>
+					</param>
+					<param name="limit">
+						<value><![CDATA[5]]></value>
+					</param>
+				</params>
+				<cache lifetime="3600" />
+			</widget>
+		</container>
+	</container>
+</layout>

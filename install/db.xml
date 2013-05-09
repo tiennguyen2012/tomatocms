@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db version="2.0.3">
+	<!-- Queries to initialize data -->
+	<init>
+		<module name="core">
+			<query><![CDATA[INSERT INTO `###core_role`(role_id, name, description, locked) VALUES (1,'admin','Administrator',1);]]></query>
+			<query><![CDATA[INSERT INTO `###core_user`(user_id, role_id, user_name, password, full_name, email, is_active, created_date, logged_in_date, is_online) VALUES (1,1,'admin',md5('admin'),'Administrator','admin@email.com',1,NULL,NULL,0);]]></query>
+			<query><![CDATA[INSERT INTO `###core_rule`(rule_id, obj_id, obj_type, privilege_id, allow, resource_name) VALUES (1,1,'role',NULL,1,NULL);]]></query>
+		</module>
+	</init>
+</db>

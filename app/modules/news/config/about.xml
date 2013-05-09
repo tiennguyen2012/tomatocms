@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: about.xml 1970 2010-04-02 06:49:46Z huuphuoc $
+ */
+-->
+<!DOCTYPE module SYSTEM "http://schemas.tomatocms.com/dtd/module_about.dtd">
+<module>
+	<name>news</name>
+	<description langKey="about_news_description"><![CDATA[Manage articles]]></description>
+	<thumbnail></thumbnail>
+	<author>TomatoCMS Core Team</author>
+	<email>core@tomatocms.com</email>
+	<version>2.0.1</version>
+	<license>free</license>
+	
+	<!-- Required modules and libraries -->
+	<requires>
+		<requiredModules>
+			<requiredModule name="category" />
+			<requiredModule name="comment" />
+			<requiredModule name="tag" />
+			<requiredModule name="upload" />				
+		</requiredModules>	
+	</requires>
+	
+	<!-- Install and uninstall scripts -->
+	<install>
+		<query><![CDATA[DROP TABLE IF EXISTS `###news_article`;]]></query>
+		<query><![CDATA[CREATE TABLE `###news_article` (
+  `article_id` int(11) NOT NULL auto_increment,
+  `category_id` smallint(6) default NULL,
+  `title` varchar(255) default NULL,
+  `sub_title` varchar(255) default NULL,
+  `slug` varchar(255) default NULL,
+  `description` text,
+  `content` mediumtext,
+  `author` varchar(255) default NULL,
+  `icons` varchar(255) default NULL,
+  `image_square` varchar(255) default NULL,
+  `image_thumbnail` varchar(255) default NULL,
+  `image_small` varchar(255) default NULL,
+  `image_general` varchar(255) default NULL,
+  `image_crop` varchar(255) default NULL,
+  `image_medium` varchar(255) default NULL,
+  `image_large` varchar(255) default NULL,
+  `status` enum('deleted','draft','inactive','active') default 'inactive',
+  `num_views` int(11) default '0',
+  `created_date` datetime default NULL,
+  `created_user_id` int(11) default NULL,
+  `created_user_name` varchar(255) default NULL,
+  `updated_date` datetime default NULL,
+  `updated_user_id` int(11) default NULL,
+  `updated_user_name` varchar(255) default NULL,
+  `activate_user_id` int(11) default NULL,
+  `activate_user_name` varchar(50) default NULL,
+  `activate_date` datetime default NULL,
+  `allow_comment` tinyint(4) default NULL,
+  `num_comments` int(11) default '0',
+  `is_hot` tinyint(4) default '0',
+  `ordering` int(11) default '0',
+  `show_date` date default NULL,
+  `sticky` tinyint(1) NOT NULL default '0',
+  PRIMARY KEY  (`article_id`),
+  KEY `idx_latest` (`status`,`activate_date`),
+  KEY `idx_latest_category` (`category_id`,`status`,`activate_date`),
+  KEY `idx_most_commented` (`category_id`,`status`,`num_comments`),
+  KEY `idx_most_viewed` (`category_id`,`status`,`num_views`),
+  KEY `idx_most_viewed_2` (`status`,`num_views`),
+  KEY `idx_created_user` (`created_user_id`,`article_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###news_article_category_assoc`;]]></query>
+		<query><![CDATA[CREATE TABLE `###news_article_category_assoc` (
+  `article_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  PRIMARY KEY  (`article_id`,`category_id`),
+  KEY `idx_category` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###news_article_hot`;]]></query>
+		<query><![CDATA[CREATE TABLE `###news_article_hot` (
+  `article_id` int(11) NOT NULL,
+  `created_date` datetime default NULL,
+  `ordering` smallint(6) default NULL,
+  PRIMARY KEY  (`article_id`),
+  KEY `idx_ordering` (`ordering`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###news_article_rate`;]]></query>
+		<query><![CDATA[CREATE TABLE `###news_article_rate` (
+  `article_id` int(11) NOT NULL,
+  `rate` enum('1','2','3','4','5') NOT NULL,
+  `ip` varchar(40) NOT NULL,
+  `created_date` datetime default NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###news_article_revision`;]]></query>
+		<query><![CDATA[CREATE TABLE IF NOT EXISTS `###news_article_revision` (
+  `revision_id` int(11) NOT NULL auto_increment,
+  `article_id` int(11) NOT NULL,
+  `category_id` smallint(6) default NULL,
+  `title` varchar(255) default NULL,
+  `sub_title` varchar(255) default NULL,
+  `slug` varchar(255) default NULL,
+  `description` text,
+  `content` mediumtext,
+  `author` varchar(255) default NULL,
+  `icons` varchar(255) default NULL,
+  `created_date` datetime default NULL,
+  `created_user_id` int(11) default NULL,
+  `created_user_name` varchar(255) default NULL,
+  PRIMARY KEY  (`revision_id`),
+  KEY `idx_article_id` (`article_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+	</install>
+	
+	<uninstall>
+		<query><![CDATA[DROP TABLE IF EXISTS `###news_article`;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###news_article_category_assoc`;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###news_article_hot`;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###news_article_rate`;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###news_article_revision`;]]></query>
+	</uninstall>
+	
+	<admin>
+		<task langKey="dashboard_list_articles" link="/admin/news/article/list/" />
+		<task langKey="dashboard_add_article" link="/admin/news/article/add/" />
+		<task langKey="dashboard_list_hot_articles" link="/admin/news/article/hot/" />
+	</admin>
+</module>

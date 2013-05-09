@@ -1,0 +1,185 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: list.phtml 2020 2010-04-02 07:26:40Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('role_list_page_title'));
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.validate/jquery.validate.min.js');
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.resizable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+?>
+
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><?php echo $this->translator('role_list_breadcump'); ?></span>	
+</div>
+<?php if ($this->roles) : ?>
+<div class="grid_12 t_a_bottom"><?php echo $this->translator('role_list_guide'); ?></div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_2 alpha t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('role_list_name'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('role_list_desc'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('role_list_status'); ?></h2>
+	</div>
+	<div class="grid_1 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('role_list_id'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('role_list_num_user'); ?></h2>
+	</div>
+	<div class="grid_3 omega t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('role_list_action'); ?></h2>
+	</div>
+</div>
+<?php foreach ($this->roles as $role) : ?>
+<div class="grid_12" id="tRole_<?php echo $role->role_id; ?>">
+	<div class="clearfix t_a_box">
+		<div class="grid_2 alpha"><div style="padding-left: 5px"><?php echo $role->name; ?></div></div>
+		<div class="grid_2"><?php echo $role->description; ?></div>
+		<div class="grid_2"><?php if ($role->locked) : ?><?php echo $this->translator('role_list_locked'); ?><?php else : ?><?php echo $this->translator('role_list_unlocked'); ?><?php endif; ?></div>
+		<div class="grid_1"><?php echo $role->role_id; ?></div>
+		<div class="grid_2"><?php if ($role->num_users) : ?><?php echo $role->num_users; ?><?php else : ?>0<?php endif; ?></div>
+		<div class="grid_3 omega">
+			<?php if ($this->allow('lock')) : ?>
+			<a class="t_a_link tLockRole" rel="<?php echo $role->role_id; ?>_<?php echo $role->locked; ?>_<?php echo $role->name; ?>" href="javascript: void(0)"><?php if ($role->locked) : ?><?php echo $this->translator('role_list_action_unlock'); ?><?php else : ?><?php echo $this->translator('role_list_action_lock'); ?><?php endif; ?></a>
+			<?php endif; ?>
+			<?php if ($this->allow('delete')) : ?>
+			<?php if ((null == $role->num_users || 0 == $role->num_users) && !$role->locked) : ?> | <a class="t_a_link tDeleteRole" rel="<?php echo $role->role_id; ?>_<?php echo $role->name; ?>" href="javascript: void(0)"><?php echo $this->translator('role_list_action_delete'); ?></a><?php endif; ?> |
+			<?php endif; ?>
+			<?php if ($this->allow('set', 'rule', 'core')) : ?>
+			<a class="t_a_link" href="<?php echo $this->url(array('role_id' => $role->role_id), 'core_rule_set_role'); ?>"><?php echo $this->translator('role_list_action_rule'); ?></a>
+			<?php endif; ?>
+		</div>
+	</div>
+</div>
+<?php endforeach; ?>
+<?php endif; ?>
+
+<?php if ($this->allow('add')) : ?>
+<div class="grid_12 t_a_bottom t_a_line">
+	<div></div> 
+	<h2><?php echo $this->translator('role_list_add_head'); ?></h2>
+</div>
+<form method="post" id="addRoleForm" name="addRoleForm" action="<?php echo $this->url(array(), 'core_role_add'); ?>" class="t_a_form">
+<div class="grid_12 t_a_bottom">
+	<div class="grid_12 t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('role_list_name'); ?>:</label></div>
+		<div class="grid_10 omega"><input type="text" style="width: 140px" name="name" id="name"/></div>
+	</div>
+	<div class="grid_12 t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('role_list_desc'); ?>:</label></div>
+		<div class="grid_10 omega"><input type="text" style="width: 140px" name="description" /></div>
+	</div>
+	<div class="grid_12 t_a_bottom">
+		<div class="grid_10 prefix_2 alpha"><input type="checkbox" name="lock" value="1" /> <?php echo $this->translator('role_list_lock'); ?></div>
+	</div>
+	<div class="grid_12 t_a_bottom">
+		<div class="grid_10 prefix_2 alpha"><input class="t_a_button" type="submit" value="<?php echo $this->translator('role_list_add_button'); ?>" /></div>
+	</div>
+</div>
+</form>
+<?php endif; ?>
+
+<div id="tDialogContainer"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	<?php if ($this->allow('lock')) : ?>
+	$('a.tLockRole').click(function() {
+		var self = this;
+		var arr = $(this).attr('rel').split('_');
+		$(self).html('').addClass('t_a_loading');
+		$.ajaxq('core_role', {
+			url: '<?php echo $this->url(array(), 'core_role_lock'); ?>',
+			type: 'POST',
+			data: { id: arr[0], lock: arr[1] },
+			success: function(response) {
+				$(self).attr('rel', arr[0] + '_' + response + '_' + arr[2]);
+				if (response == 1) {
+					$(self).html("<?php echo addslashes($this->translator('role_list_action_unlock')); ?>");
+				} else {
+					$(self).html("<?php echo addslashes($this->translator('role_list_action_lock')); ?>");
+				}
+				$(self).removeClass('t_a_loading');
+				$('#tDialogContainer').html((response == 1) ? sprintf('<?php echo addslashes($this->translator('role_list_lock_success')); ?>', arr[2]) : sprintf('<?php echo addslashes($this->translator('role_list_unlock_success')); ?>', arr[2]))
+					.dialog({
+						title: '<?php echo addslashes($this->translator('role_list_action_message')); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+			}
+		});
+	});
+	<?php endif; ?>
+	<?php if ($this->allow('delete')) : ?>
+	$('a.tDeleteRole').click(function() {
+		var self = this;
+		if (confirm("<?php echo addslashes($this->translator('role_list_delete_confirm')); ?>")) {
+			$(self).html('&nbsp;').addClass('t_a_loading').css('text-decoration', 'none');
+			var arr = $(self).attr('rel').split('_');
+			$.ajaxq('core_role', {
+				url: '<?php echo $this->url(array(), 'core_role_delete'); ?>',
+				type: 'POST',
+				data: { id: arr[0] },
+				success: function(response) {
+					$('#tRole_' + arr[0]).fadeOut('slow');
+					$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('role_list_delete_success')); ?>', arr[1]))
+						.dialog({
+							title: '<?php echo addslashes($this->translator('role_list_action_message')); ?>',
+					    	show: { effect: 'fade' },
+							open: function(event, ui) {
+								setTimeout(function() {
+									$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+								}, 3000);
+							}
+						});
+				}
+			});
+		}
+	});	
+	<?php endif; ?>
+	
+	$('#addRoleForm').validate({
+		rules: {
+			name: {required: true}
+	    },
+	    messages: {
+	    	name: {
+	        	required: "<?php echo addslashes($this->translator('role_list_name_required')); ?>"
+			}
+		}
+	});
+});
+</script>

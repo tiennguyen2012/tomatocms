@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: permissions.xml 1955 2010-04-02 04:23:10Z hoangninh $
+ */
+-->
+<!DOCTYPE permissions SYSTEM "http://schemas.tomatocms.com/dtd/module_permission.dtd">
+<permissions>
+	<resource name="file" description="Manage file" langKey="permisson_file">
+		<privilege name="add" description="Create new file" langKey="permisson_file_add" />
+		<privilege name="edit" description="Edit given file" langKey="permisson_file_edit" />
+		<privilege name="delete" description="Delete a file" langKey="permisson_file_delete" />
+		<privilege name="activate" description="Activate a file" langKey="permisson_file_activate" />
+		<privilege name="editor" description="Image Editor" langKey="permisson_file_editor" />
+	</resource>
+	<resource name="note" description="Manage notes" langKey="permisson_note">
+		<privilege name="list" description="View list of notes" langKey="permisson_note_list" />
+		<privilege name="edit" description="Edit given note" langKey="permisson_note_edit" />
+		<privilege name="delete" description="Delete a note" langKey="permisson_note_delete" />
+		<privilege name="activate" description="Activate a note" langKey="permisson_note_activate" />
+	</resource>
+	<resource name="photo" description="Manage photos" langKey="permisson_photo">
+		<privilege name="upload" description="Upload photo" langKey="permisson_photo_upload" />
+	</resource>
+	<resource name="set" description="Manage set" langKey="permisson_set">
+		<privilege name="add" description="Create new set" langKey="permisson_set_add" />
+		<privilege name="edit" description="Edit given set" langKey="permisson_set_edit" />
+		<privilege name="delete" description="Delete a set" langKey="permisson_set_delete" />
+		<privilege name="activate" description="Activate a set" langKey="permisson_set_activate" />
+	</resource>
+</permissions>

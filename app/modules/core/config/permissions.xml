@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: permissions.xml 1664 2010-03-22 06:15:38Z huuphuoc $
+ */
+-->
+<!DOCTYPE permissions SYSTEM "http://schemas.tomatocms.com/dtd/module_permission.dtd">
+<permissions>
+	<resource name="cache" description="Manage cache" langKey="permisson_cache">
+		<privilege name="clear" description="Clear all cached data" langKey="permisson_cache_clear" />
+		<privilege name="delete" description="Delete cached item" langKey="permisson_cache_delete" />
+		<privilege name="list" description="View the list of cached items by id" langKey="permisson_cache_list" />
+	</resource>
+	<resource name="config" description="Manage settings" langKey="permisson_config" >
+		<privilege name="app" description="Configure application" langKey="permisson_config_app" />
+		<privilege name="add" description="Add setting" langKey="permisson_config_add" />
+		<privilege name="delete" description="Delete settings" langKey="permisson_config_delete" />
+		<privilege name="edit" description="Edit setting" langKey="permisson_config_edit" />
+		<privilege name="list" description="View the list of settings" langKey="permisson_config_list" />
+		<privilege name="update" description="Update setting" langKey="permisson_config_update" />
+	</resource>
+	<resource name="hook" description="Manage hooks" langKey="permisson_hook">
+		<privilege name="config" description="Config hook" langKey="permisson_hook_config" />
+		<privilege name="install" description="Install hook" langKey="permisson_hook_install" />
+		<privilege name="list" description="View the list of hooks" langKey="permisson_hook_list" />
+		<privilege name="uninstall" description="Uninstall hook" langKey="permisson_hook_uninstall" />
+		<privilege name="upload" description="Upload new hook" langKey="permisson_hook_upload" />
+	</resource>
+	<resource name="index" description="Administrator section" langKey="permisson_index">
+		<privilege name="dashboard" description="Dashboard of administrator" langKey="permisson_index_dashborad" />
+	</resource>
+	<resource name="language" description="Manage languages" langKey="permisson_language">
+		<privilege name="add" description="Add item to language file" langKey="permisson_language_add" />
+		<privilege name="delete" description="Delete item from language file" langKey="permisson_language_delete" />
+		<privilege name="edit" description="Edit language file" langKey="permisson_language_edit" />
+		<privilege name="list" description="View the list of language files for module/wiget" langKey="permisson_language_list" />
+		<privilege name="new" description="Create new language file" langKey="permisson_language_new" />
+		<privilege name="update" description="Update item in language file" langKey="permisson_language_update" />
+		<privilege name="upload" description="Upload new language package" langKey="permisson_language_upload" />
+	</resource>
+	<resource name="module" description="Manage modules" langKey="permisson_module">
+		<privilege name="install" description="Install module" langKey="permisson_module_install" />
+		<privilege name="list" description="View the list of modules" langKey="permisson_module_list" />
+		<privilege name="uninstall" description="Uninstall module" langKey="permisson_module_uninstall" />
+		<privilege name="upload" description="Upload new module" langKey="permisson_module_upload" />
+	</resource>
+	<resource name="page" description="Manage pages" langKey="permisson_page">
+		<privilege name="add" description="Create new page" langKey="permisson_page_add" />
+		<privilege name="edit" description="Edit page" langKey="permisson_page_edit" />
+		<privilege name="layout" description="Update layout of page" langKey="permisson_page_layout" />
+		<privilege name="list" description="View the list of pages" langKey="permisson_page_list" />
+		<privilege name="ordering" description="Update order of pages" langKey="permisson_page_ordering" />
+	</resource>
+	<resource name="plugin" description="Manage plugins" langKey="permisson_plugin">
+		<privilege name="config" description="Config plugin" langKey="permisson_plugin_config" />
+		<privilege name="install" description="Install plugin" langKey="permisson_plugin_install" />
+		<privilege name="list" description="View the list of plugins" langKey="permisson_plugin_list" />
+		<privilege name="ordering" description="Update order of plugins" langKey="permisson_plugin_ordering" />
+		<privilege name="uninstall" description="Uninstall plugin" langKey="permisson_plugin_uninstall" />
+		<privilege name="upload" description="Upload new plugin" langKey="permisson_plugin_upload" />
+	</resource>
+	<resource name="privilege" description="Manage actions to resource" langKey="permisson_privilege">
+		<privilege name="add" description="Add action" langKey="permisson_privilege_add" />
+		<privilege name="delete" description="Delete action" langKey="permisson_privilege_delete" />
+		<privilege name="list" description="View the list of actions" langKey="permisson_privilege_list" />
+	</resource>
+	<resource name="resource" description="Manage resources" langKey="permisson_resource">
+		<privilege name="add" description="Add resource" langKey="permisson_resource_add" />
+		<privilege name="delete" description="Delete resource" langKey="permisson_resource_delete" />
+	</resource>
+	<resource name="role" description="Manage roles" langKey="permisson_role">
+		<privilege name="add" description="Add role" langKey="permisson_role_add" />
+		<privilege name="delete" description="Delete role" langKey="permisson_role_delete" />
+		<privilege name="list" description="View the list of roles" langKey="permisson_role_list" />
+		<privilege name="lock" description="Lock/unlock role" langKey="permisson_role_lock" />
+	</resource>
+	<resource name="rule" description="Manage rules" langKey="permisson_rule">
+		<privilege name="role" description="Set rules for role" langKey="permisson_rule_role" />
+		<privilege name="user" description="Set rules for user" langKey="permisson_rule_user" />
+	</resource>
+	<resource name="target" description="Manage hook targets" langKey="permisson_target">
+		<privilege name="add" description="Apply hook for target" langKey="permisson_target_add" />
+		<privilege name="list" description="View the list of targets" langKey="permisson_target_list" />
+		<privilege name="remove" description="Remove hook from target" langKey="permisson_target_remove" />
+	</resource>
+	<resource name="template" description="Manage templates" langKey="permisson_template">
+		<privilege name="activate" description="Activate template" langKey="permisson_template_activate" />
+		<privilege name="editskin" description="Edit skin of template" langKey="permisson_template_editskin" />
+		<privilege name="list" description="View the list of templates" langKey="permisson_template_list" />
+		<privilege name="skin" description="Set skin for current template" langKey="permisson_template_skin" />
+	</resource>
+	<resource name="user" description="Manage users" langKey="permisson_user">
+		<privilege name="activate" description="Activate/deactivate an user" langKey="permisson_user_activate" />
+		<privilege name="add" description="Add user" langKey="permisson_user_add" />
+		<privilege name="changepass" description="Update password" langKey="permisson_user_changepass" />
+		<privilege name="edit" description="Update user information" langKey="permisson_user_edit" />
+		<privilege name="list" description="View the list of users" langKey="permisson_user_list" />		
+	</resource>
+	<resource name="widget" description="Manage widgets" langKey="permisson_widget">
+		<privilege name="install" description="Install widget" langKey="permisson_widget_install" />
+		<privilege name="list" description="View the list of widgets" langKey="permisson_widget_list" />
+		<privilege name="uninstall" description="Uninstall widget" langKey="permisson_widget_uninstall" />
+		<privilege name="upload" description="Upload new widget" langKey="permisson_widget_upload" />
+	</resource>
+</permissions>

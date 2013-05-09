@@ -1,0 +1,78 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: login.phtml 2020 2010-04-02 07:26:40Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('auth_login_page_title'));
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.validate/jquery.validate.min.js');
+?>
+
+<style type="text/css">
+.t_a_form .clearfix { border-bottom: none; padding-bottom: 10px; }
+.t_a_form label.error { margin-left: 0px; background: #B70002; color: #FFF; -moz-border-radius: 4px; -webkit-border-radius: 4px; }
+</style>
+
+<div class="grid_12">
+	<div class="alpha grid_4 prefix_4" style="margin-top: 200px">
+		<div class="t_a_line">
+			<div></div> 
+			<h2><?php echo $this->translator('auth_login_title'); ?></h2>
+		</div>
+		<div><?php echo $this->flashMessenger(); ?></div>
+	</div>
+</div>
+
+<form method="post" action="<?php echo $this->url(array(), 'core_auth_login'); ?>" class="t_a_form" id="loginForm">
+<div class="grid_4 prefix_4">
+	<div class="clearfix">
+		<div><label><?php echo $this->translator('auth_login_user_name'); ?>:</label></div>
+		<div><input type="text" style="width: 100%; height: 25px; font-size: 18px" name="username" id="username" /></div>
+	</div>
+	<div class="clearfix">
+		<div><label><?php echo $this->translator('auth_login_password'); ?>:</label></div>
+		<div>
+			<input type="password" style="width: 100%; height: 25px; font-size: 18px" name="password" id="password" />
+		</div>
+	</div>
+	<div class="clearfix t_a_top">
+		<input name="submit" class="t_a_button" type="submit" value="<?php echo $this->translator('auth_login_submit_button'); ?>" />
+	</div>
+</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#loginForm').validate({
+		rules: {
+			username: {
+		  		required: true
+			},
+			password: {
+				required: true
+			}
+	    },
+	    messages: {
+	    	username: {
+	        	required: "<?php echo $this->translator('auth_login_user_name_required'); ?>"
+			},
+			password: {
+	        	required: "<?php echo $this->translator('auth_login_password_required'); ?>"
+			}
+		}
+	});
+});
+</script>

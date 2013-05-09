@@ -1,0 +1,69 @@
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: admin-rtl.css 1852 2010-03-30 17:54:55Z huuphuoc $
+ * @since		2.0.3
+ */
+
+@import "admin.css";
+ 
+/** 
+ * Support RTL style
+ */
+html, body { direction: rtl; }
+#t_a_footer .omega { text-align: left; }
+
+.t_a_left { float: right; }
+.t_a_right { float: left; }
+.t_a_textleft { text-align: right; }
+.t_a_textright { text-align: left; }
+
+/* ========== Admin ========================================================= */
+
+#t_a_header_welcome { text-align: left; }
+#t_a_header h1 { text-align: left; }
+#t_a_header_menu { left: auto; right: 0; }
+
+/** 
+ * Breadcump
+ */
+.t_a_breadcump { background: #FFF url(images/a_breadcump_bg.png) top right repeat-x; }
+.t_a_breadcump span { float: right; background: url(images/a_breadcump_seperator.gif) left no-repeat; padding-right: 5px; padding-left: 10px; }
+.t_a_breadcump span:last-child { background-image: none; }
+
+/**
+ * Line and toggle
+ */
+.t_a_toggle h2 span { background: #F9F9F9 url(images/a_toggle_hide.png) right no-repeat; padding-left: 10px; padding-right: 10px; }
+.t_a_toggle h2.t_a_toggle_hide span { background: url(images/a_toggle_hide.png) right no-repeat; padding-left: 0px; padding-right: 10px; }
+.t_a_toggle h2.t_a_toggle_show span { background: url(images/a_toggle_show.png) right no-repeat; padding-left: 0px; padding-right: 10px; }
+
+/**
+ * List
+ */
+.t_a_list li { background: url(images/a_list_bg.jpg) right no-repeat; padding-left: 0px; padding-right: 10px; }
+
+/**
+ * Menu
+ */
+.sf-menu li { float: right; }
+.sf-menu li:hover ul,
+.sf-menu li.sfHover ul { right: 0; left: auto; }
+ul.sf-menu li li:hover ul, ul.sf-menu li li.sfHover ul { right: 180px; left: auto; }
+ul.sf-menu li li li:hover ul, ul.sf-menu li li li.sfHover ul { right: 180px; left: auto; }
+.sf-menu { float: right; }
+.sf-menu a { border-left: none; }
+.sf-menu a.sf-with-ul { padding-left: 2.25em; padding-right: 1em; }
+.t_a_menu_menu .sf-sub-indicator { right: auto; left: .75em; background-image: url(images/a_menu_rtl.png); } 

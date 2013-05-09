@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: about.xml 1567 2010-03-10 18:26:49Z huuphuoc $
+ */
+-->
+<!DOCTYPE module SYSTEM "http://schemas.tomatocms.com/dtd/module_about.dtd">
+<module>
+	<name>core</name>
+	<description langKey="about_core_description"><![CDATA[Core module. This module will be installed at the first time you install website]]></description>
+	<thumbnail></thumbnail>
+	<author>TomatoCMS Core Team</author>
+	<email>core@tomatocms.com</email>
+	<version>2.0.1</version>
+	<license>free</license>
+	
+	<!-- Required modules and libraries -->
+	<requires>
+	</requires>
+	
+	<!-- Install and uninstall scripts -->
+	<install>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_hook`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_hook` (
+  `hook_id` int(10) unsigned NOT NULL auto_increment,
+  `module` varchar(100) default NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text NOT NULL,
+  `thumbnail` text,
+  `author` varchar(255) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `version` varchar(20) default NULL,
+  `license` text,
+  PRIMARY KEY  (`hook_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_module`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_module` (
+  `module_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL,
+  `description` text NOT NULL,
+  `thumbnail` text,
+  `author` varchar(255) default NULL,
+  `email` varchar(100) default NULL,
+  `version` varchar(20) default NULL,
+  `license` text,
+  PRIMARY KEY  (`module_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_page`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_page` (
+  `page_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(50) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `description` text,
+  `url` varchar(255) NOT NULL,
+  `url_type` enum('static','regex') default 'static',
+  `params` text,
+  `ordering` smallint(6) default '0',
+  PRIMARY KEY  (`page_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_plugin`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_plugin` (
+  `plugin_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL,
+  `description` text NOT NULL,
+  `thumbnail` text,
+  `author` varchar(255) default NULL,
+  `email` varchar(100) default NULL,
+  `version` varchar(20) default NULL,
+  `license` text,
+  `ordering` smallint(6) default NULL,
+  PRIMARY KEY  (`plugin_id`),
+  KEY `idx_ordering` (`ordering`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_privilege`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_privilege` (
+  `privilege_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL,
+  `description` text,
+  `module_name` varchar(100) default NULL,
+  `controller_name` varchar(100) default NULL,
+  PRIMARY KEY  (`privilege_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_request_log`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_request_log` (
+  `log_id` int(10) unsigned NOT NULL auto_increment,
+  `ip` varchar(30) NOT NULL,
+  `agent` varchar(255) default NULL,
+  `browser` varchar(100) default NULL,
+  `version` varchar(30) default NULL,
+  `platform` varchar(30) default NULL,
+  `bot` varchar(100) default NULL,
+  `uri` text,
+  `full_url` text,
+  `refer_url` text,
+  `access_time` datetime NOT NULL,
+  PRIMARY KEY  (`log_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_resource`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_resource` (
+  `resource_id` int(10) unsigned NOT NULL auto_increment,
+  `description` text,
+  `parent_id` varchar(50) default NULL,
+  `module_name` varchar(255) default NULL,
+  `controller_name` varchar(255) default NULL,
+  PRIMARY KEY  (`resource_id`),
+  UNIQUE KEY `idx_name_parent` (`parent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_role`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_role` (
+  `role_id` int(50) unsigned NOT NULL auto_increment,
+  `name` varchar(200) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `locked` tinyint(4) NOT NULL,
+  PRIMARY KEY  (`role_id`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_role_inheritance`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_role_inheritance` (
+  `child_id` int(11) NOT NULL,
+  `parent_id` int(11) NOT NULL,
+  `ordering` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`child_id`,`parent_id`),
+  KEY `parent_id` (`parent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_rule`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_rule` (
+  `rule_id` int(10) unsigned NOT NULL auto_increment,
+  `obj_id` int(50) NOT NULL,
+  `obj_type` enum('user','role') default 'role',
+  `privilege_id` int(11) default NULL,
+  `allow` tinyint(1) NOT NULL default '0',
+  `resource_name` varchar(100) default NULL,
+  PRIMARY KEY  (`rule_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_session`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_session` (
+  `session_id` varchar(255) NOT NULL,
+  `data` text NOT NULL,
+  `modified` int(11) default NULL,
+  `lifetime` int(11) default NULL,
+  PRIMARY KEY  (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_target`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_target` (
+  `target_id` int(10) unsigned NOT NULL auto_increment,
+  `target_module` varchar(100) default NULL,
+  `target_name` varchar(255) NOT NULL,
+  `description` text,
+  `hook_module` varchar(100) default NULL,
+  `hook_name` varchar(100) NOT NULL,
+  `hook_type` enum('action','filter') default 'action',
+  PRIMARY KEY  (`target_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_user`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_user` (
+  `user_id` int(10) unsigned NOT NULL auto_increment,
+  `role_id` int(11) NOT NULL,
+  `user_name` varchar(100) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `full_name` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `is_active` tinyint(4) NOT NULL default '0',
+  `created_date` datetime default NULL,
+  `logged_in_date` datetime default NULL,
+  `is_online` tinyint(4) default '0',  
+  PRIMARY KEY  (`user_id`),
+  UNIQUE KEY `user_name` (`user_name`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###core_widget`;]]></query>
+		<query><![CDATA[CREATE TABLE `###core_widget` (
+  `widget_id` int(10) unsigned NOT NULL auto_increment,
+  `name` varchar(100) NOT NULL,
+  `title` varchar(100) default NULL,
+  `module` varchar(100) NOT NULL,
+  `description` text,
+  `thumbnail` text,
+  `author` varchar(255) default NULL,
+  `email` varchar(100) default NULL,
+  `version` varchar(20) default NULL,
+  `license` text,
+  PRIMARY KEY  (`widget_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>	
+	</install>
+	
+	<uninstall>
+	</uninstall>
+	
+	<admin></admin>
+</module>

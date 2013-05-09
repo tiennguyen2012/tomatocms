@@ -1,0 +1,86 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: show.phtml 1267 2010-02-23 04:39:27Z huuphuoc $
+ */
+?>
+<?php if ($this->articles != null) : ?>
+<div class="t_g_box t_news_mostrated">
+    <div class="t_g_box_head">
+    	<h2><?php echo $this->translator()->widget('most_viewed'); ?></h2>
+    	<a class="t_g_box_head_collapse" href="javascript:void(0)">Collapse</a>				    					    				    	
+    </div>
+    <div class="t_g_cycle_slider">
+		<span><a id="tNewsMostRatedSliderPrev_<?php echo $this->uuid; ?>" class="t_g_cycle_slider_prev" href="javascript:void(0)"></a></span>
+		<div id="tNewsMostRatedSliderNav_<?php echo $this->uuid; ?>" class="t_g_cycle_slider_nav"></div>
+		<span><a id="tNewsMostRatedSliderNext_<?php echo $this->uuid; ?>" class="t_g_cycle_slider_next" href="javascript:void(0)"></a></span>
+	</div>
+    <div class="t_g_box_content">
+    	<div id="tNewsMostRatedSlideshow_<?php echo $this->uuid; ?>" style="margin: 0px; padding: 0px">
+			<?php foreach ($this->articles as $index => $article) : ?>
+			<?php if ($index % 6 == 0) : ?><ul style="<?php if ($index == 0) : ?>dispaly: block<?php else : ?>display: none<?php endif; ?>"><?php endif;?>
+			<li>
+				<div class="t_g_left"><i><?php echo sprintf($this->translator()->widget('num_rates'), $article->num_rates); ?></i></div>
+				<p class="t_g_left" style="width: 220px;">
+					<a href="<?php echo $this->url($article->getProperties(), 'news_article_details'); ?>"><?php echo $article->title; ?></a>
+					<br />
+					<?php if ($this->categoryId == null) : ?>
+					<i><?php echo $this->translator()->widget('in_category'); ?> <b><a href="<?php echo $this->url(array('category_id' => $article->category_id), 'news_article_category'); ?>"><?php echo $article->category_name; ?></a></b></i>
+					<?php endif; ?>
+				</p>
+				<div class="clearfix"></div>
+			</li>
+			<?php if ($index % 6 == 5) : ?></ul><?php endif; ?>
+			<?php endforeach; ?>
+		</div>
+		<div class="clearfix"></div>
+	</div>			    
+    <div class="t_g_box_corner t_g_box_corner_tl"></div>
+    <div class="t_g_box_corner t_g_box_corner_tr"></div>
+    <div class="t_g_box_corner t_g_box_corner_bl"></div>
+    <div class="t_g_box_corner t_g_box_corner_br"></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#tNewsMostRatedSlideshow_<?php echo $this->uuid; ?>').cycle({ 
+	    fx: 'fade', 
+	    timeout: 0, 
+	    pager: '#tNewsMostRatedSliderNav_<?php echo $this->uuid; ?>',
+	    prev: '#tNewsMostRatedSliderPrev_<?php echo $this->uuid; ?>',
+	    next: '#tNewsMostRatedSliderNext_<?php echo $this->uuid; ?>',		
+	    pagerAnchorBuilder: function(idx, slide) { 
+			$('#tNewsMostRatedSliderNav_<?php echo $this->uuid; ?>').find('span').eq(<?php echo floor(count($this->articles) / 8); ?>).remove();
+        	return '<span><a href="#"></a></span>';
+    	},
+		after: function(curr, next, opts) {
+		    var index = opts.currSlide;
+		    if (index == 0) {
+				$('#tNewsMostRatedSliderPrev_<?php echo $this->uuid; ?>').css({backgroundPosition: "-10px -10px"});
+			} else {
+				$('#tNewsMostRatedSliderPrev_<?php echo $this->uuid; ?>').css({backgroundPosition: "0px -10px"});
+			}
+			<?php if ($this->articles != null) : ?>
+			if (index == <?php echo floor(count($this->articles) / 8); ?>) {
+				$('#tNewsMostRatedSliderNext_<?php echo $this->uuid; ?>').css({backgroundPosition: "-10px 0px"});
+			} else {
+				$('#tNewsMostRatedSliderNext_<?php echo $this->uuid; ?>').css({backgroundPosition: "0px 0px"});
+			}
+			<?php endif; ?>
+		}
+	});		
+});
+</script>
+<?php endif; ?>

@@ -1,0 +1,53 @@
+<?php
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: _browser.phtml 2015 2010-04-02 07:24:33Z huuphuoc $
+ * @since		2.0.4
+ */
+?>
+<?php 
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.resizable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+?>
+<div>
+	<?php echo sprintf($this->translator('file_browse', 'upload'), '<a class="t_a_link" href="javascript: void(0);" id="libLoader">', '</a>'); ?>
+	<div id="libLoaderContainer"></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var dialogOpts = {
+        title: "<?php echo $this->escape($this->translator('file_browse_title', 'upload')); ?>",
+        modal: true,
+        autoOpen: false,
+        height: 500,
+        width: 500,
+        open: function() {
+	        $('#libLoaderContainer').load('<?php echo $this->url(array(), 'upload_file_browse'); ?>', {
+		        	path: '<?php echo $this->path; ?>',
+		        	imageSelectCallback: '<?php echo $this->imageSelectCallback; ?>',
+		        	ext: '<?php echo $this->ext; ?>',			        	
+		       });
+        }
+	};
+	$('#libLoaderContainer').dialog(dialogOpts);
+	$('#libLoader').click(function() {
+		$("#libLoaderContainer").dialog('open');
+	});
+});
+</script>

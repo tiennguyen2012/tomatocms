@@ -1,0 +1,226 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: list.phtml 2015 2010-04-02 07:24:33Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('widget_list_page_title'));
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.resizable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+?>
+
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><?php echo $this->translator('widget_list_breadcump'); ?></span>	
+</div>
+<div class="grid_12 t_a_bottom"><?php echo $this->translator('widget_list_top_desc'); ?></div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_3 alpha">
+		<div class="t_a_line t_a_toggle">
+			<div></div>
+			<h2><?php echo $this->translator('widget_list_filter'); ?></h2>
+		</div>
+		<div>
+			<?php echo $this->translator('widget_list_filter_guide'); ?><br />
+			<?php echo $this->translator('widget_list_filter_module'); ?><br />
+			<select id="tModuleSelect" style="width: 220px">
+				<option value="">---</option>
+			<?php foreach ($this->modules as $module) : ?>
+				<option value="<?php echo $module; ?>"><?php echo $module; ?></option>
+			<?php endforeach; ?>
+			</select>
+			<br />
+			<?php echo $this->translator('widget_list_filter_status'); ?><br />
+			<select id="tStatusSelect" style="width: 220px; margin-bottom: 10px">
+				<option value="">---</option>
+				<option value="1"><?php echo $this->translator('widget_list_filter_installed'); ?></option>
+				<option value="0"><?php echo $this->translator('widget_list_filter_not_installed'); ?></option>
+			</select>
+			<br />
+			<a class="t_a_button" id="tFilterButton" href="javascript: void(0)"><?php echo $this->translator('widget_list_filter_button'); ?></a>
+		</div>
+	</div>
+	<div class="grid_9 omega">
+		<div class="clearfix t_a_bottom">
+			<div class="grid_3 alpha t_a_line">
+				<div></div>
+				<h2><?php echo $this->translator('widget_list_desc'); ?></h2>
+			</div>
+			<div class="grid_2 t_a_line">
+				<div></div> 
+				<h2><?php echo $this->translator('widget_list_author'); ?></h2>
+			</div>
+			<div class="grid_2 t_a_line">
+				<div></div> 
+				<h2><?php echo $this->translator('widget_list_version'); ?></h2>
+			</div>
+			<div class="grid_2 omega t_a_line">
+				<div></div> 
+				<h2><?php echo $this->translator('widget_list_action'); ?></h2>
+			</div>
+		</div>
+		<?php if ($this->widgets) : ?>
+		<?php foreach ($this->widgets as $module => $widgets) : ?>
+		<div style="margin-bottom: 5px">
+			<div class="t_a_line t_a_toggle">
+				<div></div>
+				<h2><?php echo sprintf($this->translator('widget_list_by_module'), $module); ?></h2>
+			</div>
+			<div style="display: none; padding-top: 5px" class="tModuleContainer" id="tModuleContainer_<?php echo $module; ?>">
+			<?php foreach ($widgets as $widget) : ?>
+				<div class="clearfix t_a_box tModule_<?php echo $module; ?> tWidgetContainer<?php if (isset($this->dbWidgets[strtolower($widget->module.':'.$widget->name)])) : ?> tWidgetInstalled<?php else : ?> tWidgetNotInstalled<?php endif; ?>">
+					<div class="grid_3 alpha">
+						<div style="margin-left: 5px">
+							<b><?php echo $widget->name; ?></b> (<?php echo $widget->title; ?>)<br />
+							<?php echo $widget->description; ?>
+						</div>
+					</div>
+					<div class="grid_2"><a class="t_a_link" href="mailto: <?php echo $widget->email; ?>"><?php echo $widget->author; ?></a></div>
+					<div class="grid_2"><?php echo $widget->version; ?></div>
+					<div class="grid_2 omega">
+					<?php if (isset($this->dbWidgets[strtolower($widget->module.':'.$widget->name)])) : ?>
+						<a class="t_a_link tWidgetAction" href="javascript: void(0)" rel="<?php echo $this->dbWidgets[strtolower($widget->module.':'.$widget->name)]; ?>"><?php echo $this->translator('widget_list_uninstall'); ?></a>
+					<?php else : ?>
+						<a class="t_a_link tWidgetAction" href="javascript: void(0)" rel="<?php echo strtolower($widget->module.':'.$widget->name); ?>"><?php echo $this->translator('widget_list_install'); ?></a>
+					<?php endif; ?>
+					</div>
+				</div>
+			<?php endforeach; ?>
+			</div>
+		</div>
+		<?php endforeach; ?>
+		<?php endif; ?>
+	</div>
+</div>
+
+<?php if ($this->allow('upload')) : ?>
+<div class="grid_12 t_a_bottom t_a_line"> 
+	<div></div> 
+	<h2><?php echo $this->translator('widget_list_upload_head'); ?></h2>
+</div>
+<?php if (extension_loaded('zip')) : ?>
+<form method="post" action="<?php echo $this->url(array(), 'core_widget_upload'); ?>" enctype="multipart/form-data">
+<div class="grid_12 t_a_bottom">
+	<?php echo $this->translator('widget_list_upload_desc'); ?><br />
+	<input type="file" name="file" style="width: 300px" /> <input class="t_a_button" type="submit" value="<?php echo $this->translator('widget_list_upload_button'); ?>" />
+</div>
+</form>
+<?php else : ?>
+<div class="grid_12 t_a_bottom">
+	<div class="t_a_message_warning"><?php echo $this->translator('widget_list_zip_extension_not_available'); ?></div>
+</div>
+<?php endif; ?>
+<?php endif; ?>
+
+<div id="tDialogContainer"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('a.tModuleToggle:first').parent().find('div:first').show();
+	$('a.tModuleToggle').click(function() {
+		$(this).parent().find('div:first').toggle('normal');
+	});
+
+	$('#tFilterButton').click(function() {
+		// Hide all
+		$('.tModuleContainer').hide();
+		
+		var module = $('#tModuleSelect').val();
+		var status = $('#tStatusSelect').val();
+		var selector = null;
+		if (status == '') {
+			if (module == '') {
+				$('.tModuleContainer').hide();
+				$('.tModuleContainer').eq(0).fadeIn('slow');
+			} else {
+				$('.tModuleContainer').hide();
+				$('#tModuleContainer_' + module).fadeIn('slow');
+			}
+		} else {
+			selector = (module != '') ? ('.tModule_' + module) : '';
+			if (status == 0) {
+				$('.tWidgetContainer.tWidgetInstalled' + selector).hide();
+				$('.tWidgetContainer.tWidgetNotInstalled' + selector).fadeIn('slow').parents('.tModuleContainer').show();
+			} else if (status == 1) {
+				$('.tWidgetContainer.tWidgetInstalled' + selector).fadeIn('slow').parents('.tModuleContainer').show();
+				$('.tWidgetContainer.tWidgetNotInstalled' + selector).hide();
+			}
+		}
+	});
+
+	$('a.tWidgetAction').click(function() {
+		var self = this;
+		var arr = $(self).attr('rel').split(':');
+		$(self).html('').addClass('t_a_loading');
+		switch (arr.length) {
+			case 2:
+				<?php if ($this->allow('install')) : ?>
+				$.ajaxq('widget_list', {
+					url: '<?php echo $this->url(array(), 'core_widget_install'); ?>',
+					type: 'POST',
+					data: { mod: arr[0], name: arr[1] },
+					success: function(response) {
+						$(self).html("<?php echo $this->translator('widget_list_uninstall'); ?>")
+							.attr('rel', response)
+							.removeClass('t_a_loading');
+						$(self).parents('.tWidgetContainer').addClass('tWidgetInstalled').removeClass('tWidgetNotInstalled');
+						$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('widget_list_install_success')); ?>', arr[1], arr[0]))
+							.dialog({
+								title: '<?php echo addslashes($this->translator('widget_list_action_message')); ?>',
+						    	show: { effect: 'fade' },
+								open: function(event, ui) {
+									setTimeout(function() {
+										$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+									}, 3000);
+								}
+							});
+					}
+				});	
+				<?php endif; ?>			
+				break;
+			case 3:
+				<?php if ($this->allow('uninstall')) : ?>
+				$.ajaxq('widget_list', {
+					url: '<?php echo $this->url(array(), 'core_widget_uninstall'); ?>',
+					type: 'POST',
+					data: { mod: arr[0], name: arr[1], id: arr[2] },
+					success: function(response) {
+						$(self).html("<?php echo $this->translator('widget_list_install'); ?>")
+							.attr('rel', response)
+							.removeClass('t_a_loading');
+						$(self).parents('.tWidgetContainer').addClass('tWidgetNotInstalled').removeClass('tWidgetInstalled');
+						$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('widget_list_uninstall_success')); ?>', arr[1], arr[0]))
+							.dialog({
+								title: '<?php echo addslashes($this->translator('widget_list_action_message')); ?>',
+						    	show: { effect: 'fade' },
+								open: function(event, ui) {
+									setTimeout(function() {
+										$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+									}, 3000);
+								}
+							});
+					}
+				});
+				<?php endif; ?>
+				break;
+		}
+	});
+});
+</script>

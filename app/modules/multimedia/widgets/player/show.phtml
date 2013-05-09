@@ -1,0 +1,108 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: show.phtml 1266 2010-02-23 04:32:10Z huuphuoc $
+ */
+?>
+<div class="t_g_box t_multimeida_player">
+    <div class="t_g_box_head">
+    	<h2><?php echo $this->translator()->widget('title'); ?></h2>
+    	<a class="t_g_box_head_collapse" href="javascript:void(0)">Collapse</a>				    					    				    	
+    </div>
+    <div class="t_g_box_content"> 
+    	<?php if ($this->files != null) : ?>
+		<div id="tMultimeidaPlayer">
+			<?php if (isset($this->files[0])) : ?>
+			<div id="tMultimeidaPlayerContainer">
+				<a href="javascript: void(0)"><img src="<?php echo $this->files[0]->image_crop; ?>" width="280px" height="210px" /></a>
+				<input type="hidden" value="<?php echo $this->files[0]->url; ?>" />
+				<input type="hidden" name="firstFileId" id="firstFileId" value="<?php echo $this->files[0]->file_id; ?>" />
+				<br />
+			</div>
+			<div id="tEmbedContainer"></div>
+			<div id="tMultimeidaPlayerDesc" class="t_g_top t_g_bottom"><?php echo $this->files[0]->description; ?></div>
+			<?php endif; ?>
+			<div style="height: 5px"><hr /></div>
+			<div id="tMultimeidaPlayerList" class="t_multimeida_player_list">
+				<table>
+				<?php for ($i = 1; $i < count($this->files); $i++) : ?>
+					<?php if ($i % 2 == 1) : ?><tr><?php endif; ?>
+					<td>
+						<a href="javascript: void(0)"><img src="<?php echo $this->files[$i]->image_square; ?>" width="60px" height="60px" /></a> <a href="<?php echo $this->url($this->files[$i]->getProperties(), 'multimedia_file_details'); ?>"><?php echo $this->files[$i]->title; ?></a>
+						<input type="hidden" value="<?php echo $this->files[$i]->url; ?>" />
+						<input type="hidden" name="fileId" id="fileId" value="<?php echo $this->files[$i]->file_id; ?>" />
+						<input type="hidden" value="<?php echo addslashes($this->files[$i]->description); ?>" />
+					</td>
+					<?php if ($i % 2 == 2) : ?></tr><?php endif; ?>
+				<?php endfor; ?>
+				</table>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<?php endif; ?>
+	</div>			    
+    <div class="t_g_box_corner t_g_box_corner_tl"></div>
+    <div class="t_g_box_corner t_g_box_corner_tr"></div>
+    <div class="t_g_box_corner t_g_box_corner_bl"></div>
+    <div class="t_g_box_corner t_g_box_corner_br"></div>
+</div>
+<script type="text/javascript">
+'Tomato.Modules.Multimedia.Widgets.Player'.namespace();
+Tomato.Modules.Multimedia.Widgets.Player.play = function(file, image, auto) {
+	var flashvars = { play: true, repeat: true, autostart: auto + '', file: file };
+	if (image != null) {
+		flashvars.image = image;
+	}
+	var params = { allowfullscreen: 'true', allowscriptaccess: 'always', menu: false };
+	swfobject.embedSWF('<?php echo $this->APP_STATIC_SERVER; ?>/js/jwplayer/player.swf', 'tMultimeidaPlayerContainer', '<?php echo $this->width ?>', '<?php echo $this->height ?>', '9.0.0', '<?php echo $this->APP_STATIC_SERVER; ?>/js/jwplayer/expressInstall.swf', flashvars, params, {});
+};
+$(document).ready(function() {	
+	var gHtmlCodes = {}, arr = null;	
+	<?php foreach ($this->files as $file) : ?>
+		gHtmlCodes['<?php echo $file->file_id; ?>']='<?php echo $file->html_code; ?>'
+	<?php endforeach; ?>
+
+	var image = $('#tMultimeidaPlayer').find('img:first').attr('src');
+	var file = $('#tMultimeidaPlayer').find('input:first[type="hidden"]').attr('value');
+	var fileId = $('#tMultimeidaPlayer').find('input:last[name="firstFileId"]').attr('value');
+	if (null != gHtmlCodes[fileId] && '' != gHtmlCodes[fileId]) {
+		$('#tMultimeidaPlayerContainer').css("display", "none");
+		$('#tEmbedContainer').html('<label>' + gHtmlCodes[fileId] + '</label>');
+	}
+	else {
+		$('#tEmbedContainer').html('');
+		$('#tMultimeidaPlayerContainer').css("display", "block");
+		Tomato.Modules.Multimedia.Widgets.Player.play(file, image, false);
+	}
+		
+	$("#tMultimeidaPlayerList a").click(function() {
+		var image = $(this).children('img').attr('src');
+		var file = $(this).parent().find('input:first[type="hidden"]').attr('value');
+		var fileId = $(this).parent().find('input:first[name="fileId"]').attr('value');
+		var desc = $(this).parent().find('input:last[type="hidden"]').attr('value');
+		$('#tMultimeidaPlayerDesc').html(desc);
+		if (null != gHtmlCodes[fileId] && '' != gHtmlCodes[fileId]) {
+			$('#tMultimeidaPlayerContainer').css("display", "none");
+			$('#tEmbedContainer').html('<label>' + gHtmlCodes[fileId] + '</label>');
+		}
+		else {
+			$('#tEmbedContainer').html('');
+			$('#tMultimeidaPlayerContainer').css("display", "block");
+			Tomato.Modules.Multimedia.Widgets.Player.play(file, image, true);
+		}
+	});
+});
+</script>

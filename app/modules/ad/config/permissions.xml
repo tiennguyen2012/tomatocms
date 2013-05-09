@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: permissions.xml 662 2010-01-12 04:09:32Z huuphuoc $
+ */
+-->
+<!DOCTYPE permissions SYSTEM "http://schemas.tomatocms.com/dtd/module_permission.dtd">
+<permissions>
+	<resource name="banner" description="Manage banners" langKey="permisson_banner">
+		<privilege name="list" description="View the list of banners" langKey="permisson_banner_list" />
+		<privilege name="add" description="Create new banner" langKey="permisson_banner_add" />
+		<privilege name="edit" description="Edit a banner" langKey="permisson_banner_edit" />
+		<privilege name="delete" description="Delete a banner" langKey="permisson_banner_delete" />
+	</resource>
+	<resource name="client" description="Manage clients" langKey="permisson_client">
+		<privilege name="list" description="View the list of clients" langKey="permisson_client_list" />
+		<privilege name="add" description="Add new client" langKey="permisson_client_add" />
+		<privilege name="edit" description="Edit client information" langKey="permisson_client_edit" />
+		<privilege name="delete" description="Delete client" langKey="permisson_client_delete" />
+	</resource>
+	<resource name="zone" description="Manage zones" langKey="permisson_zone">
+		<privilege name="list" description="View the list of zones" langKey="permisson_zone_list" />
+		<privilege name="add" description="Create new zone" langKey="permisson_zone_add" />
+		<privilege name="edit" description="Edit a zone" langKey="permisson_zone_edit" />
+		<privilege name="delete" description="Delete a zone" langKey="permisson_zone_delete" />
+	</resource>
+</permissions>

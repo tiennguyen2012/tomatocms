@@ -1,0 +1,96 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: add.phtml 2020 2010-04-02 07:26:40Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('category_add_page_title'));
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.validate/jquery.validate.min.js');
+?>
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span><span><a href="<?php echo $this->url(array(), 'category_category_list'); ?>"><?php echo $this->translator('category_list_breadcump'); ?></a></span><span><?php echo $this->translator('category_add_breadcump'); ?></span>	
+</div>
+
+<div class="grid_12">
+<?php echo $this->flashMessenger(); ?>
+</div>
+
+<form method="post" action="<?php echo $this->url(array(), 'category_category_add'); ?>" id="addCategoryForm" class="t_a_form">
+<div class="grid_12 t_a_bottom"><?php echo $this->translator('category_add_guide'); ?></div>
+<div class="grid_12 t_a_bottom">
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('category_name'); ?>:</label></div>
+		<div class="grid_10 omega"><input type="text" id="name" name="name" style="width: 400px" /></div>
+	</div>
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('category_slug'); ?>:</label></div>
+		<div class="grid_10 omega"><input type="text" id="slug" name="slug" style="width: 400px" /></div>
+	</div>
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('category_meta'); ?>:</label></div>
+		<div class="grid_10 omega"><textarea id="meta" name="meta" style="width: 400px; height: 100px;"></textarea></div>
+	</div>
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('category_parent'); ?>:</label></div>
+		<div class="grid_10 omega">
+			<select name="parentId" id="parentId">
+				<option value="">---</option>
+			<?php for ($i = 0; $i < count($this->categories); $i++) : ?>
+				<option value="<?php echo $this->categories[$i]->category_id; ?>"><?php echo str_repeat('---', $this->categories[$i]->depth).$this->categories[$i]->name; ?></option>
+			<?php endfor; ?>
+			</select>
+		</div>
+	</div>
+	<div class="grid_10 prefix_2 alpha"><input type="submit" class="t_a_button" value="<?php echo $this->translator('category_add_save_button'); ?>" /></div>
+</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function() {
+	$.validator.addMethod('slug', function(value) {
+		var regex = new RegExp(/^[a-z0-9\-]+$/);
+		if (value.match(regex)) {
+			return true;
+		} else {
+			return false;
+		}
+	}); 
+	$('#addCategoryForm').validate({
+		rules: {
+			name: {
+				required: true,
+		  		maxlength: 255
+			},
+			slug: {
+		  		required: true,
+		  		slug: true,
+		  		maxlength: 255
+			}
+	    },
+	    messages: {
+	    	name: {
+	        	required: "<?php echo $this->translator('category_name_required'); ?>",
+				maxlength: "<?php echo $this->translator('category_name_maxlength'); ?>"
+			},
+			slug: { 
+	        	required: "<?php echo $this->translator('category_slug_required'); ?>",
+	        	slug: "<?php echo $this->translator('category_slug_validate'); ?>",
+	        	maxlength: "<?php echo $this->translator('category_slug_maxlength'); ?>"
+	    	}
+		}
+	});
+});
+</script>

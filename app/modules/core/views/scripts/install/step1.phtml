@@ -1,0 +1,100 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: step1.phtml 1546 2010-03-10 08:05:36Z huuphuoc $
+ * @since		2.0.1
+ */
+?>
+<?php 
+$this->headTitle($this->translator('install_step1_page_title'));
+?>
+
+<div class="grid_12 t_a_bottom">
+	<div class="grid_3 alpha t_a_install_step">
+		<div class="t_a_line">
+			<div></div>
+			<h2><?php echo $this->translator('install_steps'); ?></h2>
+		</div>
+		<ul>
+			<li class="t_a_install_step_active">1. <?php echo $this->translator('install_steps_requirements'); ?></li>
+			<li>2. <?php echo $this->translator('install_steps_config'); ?></li>
+			<li>3. <?php echo $this->translator('install_steps_complete'); ?></li>
+		</ul>
+	</div>
+	<div class="grid_9 omega">
+		<form method="post" action="<?php echo $this->baseUrl(); ?>" class="t_a_form">
+		<div class="grid_9 alpha t_a_bottom">
+			<div class="t_a_line t_a_toggle">
+				<div></div>
+				<h2><?php echo $this->translator('install_step1_php_extensions'); ?></h2>
+			</div>
+			<div>
+				<div><?php echo $this->translator('install_step1_php_extensions_guide'); ?></div>
+				<div class="t_a_bottom">
+					<div class="grid_3 alpha t_a_line">
+						<div></div>
+						<h2><?php echo $this->translator('install_step1_extension'); ?></h2>
+					</div>
+					<div class="grid_6 omega t_a_line">
+						<div></div>
+						<h2><?php echo $this->translator('install_step1_installed_status'); ?></h2>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<?php foreach ($this->requiredExtensions as $ext => $loaded) : ?>
+				<div class="clearfix t_a_box">
+					<div class="grid_3 alpha"><span style="padding-left: 10px"><?php echo $ext; ?></span></div>
+					<div class="grid_6 omega"><?php if ($loaded): ?><?php echo $this->translator('install_step1_installed'); ?><?php else : ?><span style="width: 280px;" class="t_a_message_warning"><?php echo $this->translator('install_step1_not_installed'); ?></span><?php endif; ?></div>
+				</div>
+				<?php endforeach; ?>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<div class="grid_9 alpha t_a_bottom">
+			<div class="t_a_line t_a_toggle">
+				<div></div>
+				<h2><?php echo $this->translator('install_step1_file_permission'); ?></h2>
+			</div>
+			<div>
+				<div><?php echo $this->translator('install_step1_file_permission_guide'); ?></div>
+				<div class="t_a_bottom">
+					<div class="grid_3 alpha t_a_line">
+						<div></div>
+						<h2><?php echo $this->translator('install_step1_file'); ?></h2>
+					</div>
+					<div class="grid_6 omega t_a_line">
+						<div></div>
+						<h2><?php echo $this->translator('install_step1_writable_status'); ?></h2>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+				<?php foreach ($this->writableFiles as $file => $writable) : ?>
+				<div class="clearfix t_a_box">
+					<div class="grid_3 alpha"><span style="padding-left: 10px"><?php echo $file; ?></span></div>
+					<div class="grid_6 omega"><?php if ($writable) : ?><?php echo $this->translator('install_step1_writable'); ?><?php else : ?><span style="width: 280px;" class="t_a_message_warning"><?php echo $this->translator('install_step1_not_writable'); ?></span><?php endif; ?></div>
+				</div>
+				<?php endforeach; ?>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		<?php if ($this->pass) : ?>
+		<div class="t_a_bottom" style="text-align: right">
+			<input class="t_a_button" type="submit" name="submit" value="<?php echo $this->translator('install_steps_next_button'); ?>" />
+		</div>
+		<?php endif; ?>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,81 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: show.phtml 1488 2010-03-08 09:59:53Z huuphuoc $
+ */
+?>
+<div class="t_g_box t_news_stickycategory">
+    <div class="t_g_box_head">
+    	<h2><?php echo $this->translator()->widget('popular'); ?></h2>
+    	<a class="t_g_box_head_collapse" href="javascript:void(0)">Collapse</a>				    					    				    	
+    </div>
+    <div class="t_g_cycle_slider">
+		<span><a id="tNewsStickyCategorySliderPrev" class="t_g_cycle_slider_prev" href="javascript:void(0)"></a></span>
+		<div id="tNewsStickyCategorySliderNav" class="t_g_cycle_slider_nav"></div>
+		<span><a id="tNewsStickyCategorySliderNext" class="t_g_cycle_slider_next" href="javascript:void(0)"></a></span>
+	</div>
+    <div class="t_g_box_content">
+    	<?php if ($this->stickyArticles != null && $this->numArticlesPerRow) : ?>
+		<div id="tNewsStickyCategorySlideshow">
+			<?php foreach ($this->stickyArticles as $index => $article) : ?>
+			<?php if ($index % $this->numArticlesPerRow == 0) : ?><ul style="<?php if ($index < $this->numArticlesPerRow) : ?>dispaly: block<?php else : ?>display: none<?php endif; ?>"><?php endif; ?>
+			<li<?php if (($index + 1) % $this->numArticlesPerRow == 0) : ?> style="margin-right: 0"<?php endif; ?>>
+				<?php if ($article->image_crop != null) : ?><a href="<?php echo $this->url($article->getProperties(), 'news_article_details'); ?>"><img src="<?php echo $article->image_crop; ?>" /></a><?php endif; ?>
+				<br />
+				<h3><a href="<?php echo $this->url($article->getProperties(), 'news_article_details'); ?>"><?php echo $article->title; ?></a></h3>
+				<div><?php echo $this->subString($article->description, 400); ?></div>
+			</li>
+			<?php if (($index + 1) % $this->numArticlesPerRow == 0) : ?></ul><?php endif; ?>
+			<?php endforeach; ?>
+		</div>
+		<?php endif; ?>
+		<div class="clearfix"></div>
+	</div>			    
+    <div class="t_g_box_corner t_g_box_corner_tl"></div>
+    <div class="t_g_box_corner t_g_box_corner_tr"></div>
+    <div class="t_g_box_corner t_g_box_corner_bl"></div>
+    <div class="t_g_box_corner t_g_box_corner_br"></div>
+</div>
+<?php if (($numStickyArticles = count($this->stickyArticles)) > 0) : ?>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#tNewsStickyCategorySlideshow').cycle({
+	    fx: 'fade', 
+	    timeout: 5000,
+	    pager: '#tNewsStickyCategorySliderNav',
+	    prev: '#tNewsStickyCategorySliderPrev',
+	    next: '#tNewsStickyCategorySliderNext',		
+	    pagerAnchorBuilder: function(idx, slide) { 
+        	return '<span><a href="#"></a></span>'; 
+    	},
+		after: function(curr, next, opts) {
+		    var index = opts.currSlide;
+		    if (index == 0) {
+				$('#tNewsStickyCategorySliderPrev').css({backgroundPosition: "-10px -10px"});
+			} else {
+				$('#tNewsStickyCategorySliderPrev').css({backgroundPosition: "0px -10px"});
+			}
+			
+			if (index == <?php echo ($numStickyArticles - 1); ?>) {
+				$('#tNewsStickyCategorySliderNext').css({backgroundPosition: "-10px 0px"});
+			} else {
+				$('#tNewsStickyCategorySliderNext').css({backgroundPosition: "0px 0px"});
+			}
+		}
+	});		
+});
+</script>
+<?php endif; ?>

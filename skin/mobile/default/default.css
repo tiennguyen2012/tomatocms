@@ -1,0 +1,120 @@
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: default.css 1287 2010-02-24 04:00:49Z huuphuoc $
+ */
+ 
+/* ========== Common ======================================================== */
+ 
+/** 
+ * Reset 
+ */
+html * { font-family: Arial,Tahoma,Helvetica,Verdana,sans-serif; font-size: 11px; margin: 0; padding: 0; } 
+a, a:visited { text-decoration: none; color: #333; }
+ul li { list-style-type: none; }
+img { border: 0; }
+
+.t_g_left { float: left; }
+.t_g_right { float: right; }
+.t_g_clear { clear: both; }
+.t_g_space_top { margin-top: 5px; }
+
+#t_g_body_wrapper { background: #F1F1F1; color: #333; margin: 0; padding-left: 10px; padding-right: 10px; }
+#t_g_body_container { background: #DBDBDB; margin: 0 auto; padding: 5px; }
+#t_g_footer { background-color: #232323; color: #FFF; bottom: 0; height: 30px; padding: 5px; }
+#t_g_footer a { color: #FFF; } 
+#t_g_header { background-color: #B60002; height: 60px; }
+
+/** 
+ * Box 
+ */
+.t_g_box table thead { margin: 0; height: 28px; line-height: 28px; font-size: 16px; border-top: 5px solid #3C3C3C; border-bottom: 1px solid #666; padding-left: 10px; }
+
+.t_g_box { position: relative; margin: 0px; padding: 0px; margin-bottom: 10px; }
+.t_g_box .t_g_box_content { background: #FFF; padding: 5px; clear: both; }
+.t_g_box .t_g_box_corner { background-image: url(images/g_box_corner.jpg); background-repeat: no-repeat; position: absolute; width: 4px; height: 4px; }
+.t_g_box .t_g_box_corner_hide { background-image:url(images/g_box_corner_hide.jpg); background-repeat: no-repeat; position: absolute; width: 4px; height: 4px; }
+.t_g_box .t_g_box_corner_tl { top: 0px; left: 0px; background-position: 0px 0px; font-size: 2px; }
+.t_g_box .t_g_box_corner_tr { top: 0px; right: 0px; background-position: -4px 0px; font-size: 2px; }
+.t_g_box .t_g_box_corner_bl { bottom: 0px; left: 0px; background-position: 0px -4px; font-size: 2px; z-index: 10; }
+.t_g_box .t_g_box_corner_br { bottom: 0px; right: 0px; background-position: -4px -4px; font-size: 2px; z-index: 10; }
+.t_g_box .t_g_box_corner_bl2 { background-image: url(images/g_box_corner_hide.jpg); background-repeat: no-repeat; background-position: -4px -4px; top: 29px; right: 0; z-index: 100; }
+.t_g_box .t_g_box_corner_br2 { background-image: url(images/g_box_corner_hide.jpg); background-repeat: no-repeat; background-position: 0px -4px; top: 29px; left: 0; z-index: 100; }
+
+.t_g_box_head { background: #DBDBDB url(images/g_box_head.jpg) repeat-x; height: 33px; border: 0px solid red; }
+.t_g_box_head h2 { margin-left: 34px; line-height: 33px; font-size: 14px; font-weight: bold; color: #DB0002; }
+.t_g_box_head h2 a { font-weight: bold; color: #DB0002; }
+.t_g_box_head a { text-decoration: none; font-size: 12px; }
+.t_g_box_head a.t_g_box_head_close { position: absolute; right: 8px; top: 7px;  background: url(images/g_box_head_close.gif) no-repeat; width: 15px; height: 18px; text-indent: -900%; }
+.t_g_box_head a.t_g_box_head_close:hover { position: absolute; background: url(images/g_box_head_close.gif) no-repeat left bottom; }
+.t_g_box_head a.t_g_box_head_collapse { position: absolute; background: url(images/g_box_head_show.gif) no-repeat 0px 4px; left: 12px; top: 10px; text-indent: -900%; width: 12px; height: 12px; }
+.t_g_box_head a.t_g_box_head_show { position: absolute; background: url(images/g_box_head_show.gif) no-repeat 0px 4px;  }
+.t_g_box_head a.t_g_box_head_hide { position: absolute; background: url(images/g_box_head_hide.gif) no-repeat 3px 1px; }
+
+/* ========== Modules ======================================================= */
+ 
+/** 
+ * news 
+ */ 
+.t_news_details h2 { margin: 0; line-height: 20px; font-size: 16px; color: #DB0002; font-weight: bold; }
+.t_news_category_page li { background: url(images/g_dot_small.jpg) bottom repeat-x; margin-bottom: 10px; padding-bottom: 10px; clear: both; }
+.t_news_category_page li:last-child { background: none; }
+.t_news_category_page li img { float: left; border: 1px solid #CCC; margin-right: 10px; }
+.t_news_category_page li h4 { margin: 0; font-size: 12px; padding: 0; }
+.t_news_category_page .t_news_category_pager { border-top: 1px solid #333; font-weight: bold; margin-top: 10px; padding-top: 5px; text-align: right; }
+
+/* ========== Widgets ======================================================= */
+
+/** 
+ * news/breadcump 
+ */
+.t_news_breadcump { height: 26px; border-bottom: 1px solid #999; margin-bottom: 5px; }
+.t_news_breadcump li { display: inline; list-style-image: none; list-style-position: outside; list-style-type: none; }
+.t_news_breadcump li a { background: url(images/news_breadcump_seperator.gif) no-repeat left; color: #DB0002; display: block; float: left; font-size: 16px; font-weight: bold; height: 26px; line-height: 26px; padding: 0px 0px 0px 10px; text-decoration: none; z-index: 1; margin-right: 0px; margin-left: 6px; }
+.t_news_breadcump li a:hover { color: #333; text-decoration: underline; }
+.t_news_breadcump li a.first { background: none; margin-left: 0px; padding-left: 5px; }
+.t_news_breadcump li:first-child a { background: url(images/news_breadcump_home.png) no-repeat left; width: 12px; margin: 0px; padding: 0px; }
+.t_news_breadcump li:first-child a:hover {color: #333; text-decoration: none; }
+
+/** 
+ * news/hotest 
+ */ 
+.t_news_hotest div img { float: left; margin-right: 5px; }
+.t_news_hotest h4 a { margin: 0; font-weight: bold; font-size: 14px; }
+.t_news_hotest ul { clear: both; }
+.t_news_hotest ul li { list-style-type: none; clear: both; background: url(images/g_square.jpg) left no-repeat; padding-left: 10px; line-height: 18px; }
+
+/** 
+ * news/latestcategory 
+ */
+.t_news_latestcategory li { background: url(images/dot_1.jpg) bottom repeat-x; margin-bottom: 5px; padding-bottom: 5px; clear: both; }
+.t_news_latestcategory li img { float: left; border: 1px solid #CCC; margin-right: 10px; }
+.t_news_latestcategory li h4 { margin: 0; font-size: 12px; padding: 0; }
+
+/** 
+ * news/latesthome 
+ */
+.t_news_latesthome img { float: left; margin-right: 10px; border: 1px solid #CCC; width: 160px; height: 120px; overflow: hidden; }
+.t_news_latesthome ul { border: none; clear: both; } 
+.t_news_latesthome ul li { clear: both; background: url(images/g_square.jpg) left no-repeat; padding-left: 10px; width: 90%; }
+.t_news_latesthome ul li a:hover { text-decoration: underline; }
+
+/** 
+ * news/newer 
+ */
+.t_news_newer { margin-top: 5px; }
+.t_news_older h2 { margin: 0; height: 20px; line-height: 20px; font-size: 16px; border-bottom: 1px solid #666; margin-bottom: 5px; }
+.t_news_newer li { background: url(images/g_square.jpg) left no-repeat; padding-left: 10px; }
+.t_news_newer li span { color: #999; }

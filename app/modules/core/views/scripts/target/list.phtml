@@ -1,0 +1,178 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: list.phtml 2015 2010-04-02 07:24:33Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('target_list_page_title'));
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.resizable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+?>
+
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><a href="<?php echo $this->url(array(), 'core_hook_list'); ?>"><?php echo $this->translator('hook_list_breadcump'); ?></a></span><span><?php echo $this->translator('target_breadcump'); ?></span>	
+</div>
+<div class="grid_12 t_a_bottom"><?php echo $this->translator('target_list_top_desc'); ?></div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_4 alpha t_a_line">
+		<div></div>
+		<h2><?php echo $this->translator('target_list_name'); ?></h2>
+	</div>
+	<div class="grid_8 omega t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('target_list_hooks'); ?></h2>
+	</div>
+</div>
+<?php if ($this->targets) : ?>
+<?php foreach ($this->targets as $module => $targets) : ?>
+<div class="grid_12" style="margin-bottom: 5px">
+	<?php echo $this->translator('target_list_module'); ?> <a href="javascript: void(0)" rel="<?php echo $module; ?>" class="t_a_link tModuleToggle"><?php echo $module; ?></a>
+	<div style="display: block">
+		<?php foreach ($targets as $target) : ?>
+		<div class="clearfix t_a_box" id="tTarget_<?php echo $target['target_name']; ?>">
+			<div class="grid_4 alpha">
+				<div style="padding-left: 5px">
+					<b><?php echo $target['target_name']; ?></b>:<br />
+					<?php echo $target['description']; ?>
+				</div>
+			</div>
+			<div class="grid_8 omega tTargetContainer">
+				<div>
+				<?php if (isset($this->dbTargets[$target['target_name']])) : ?>
+					<?php foreach ($this->dbTargets[$target['target_name']] as $targetId => $moduleHookStr) : ?>
+					<div style="margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #CCC">
+						<input type="text" style="width: 300px" disabled="disabled" value="<?php echo substr($moduleHookStr, strpos($moduleHookStr, ':') + 1); ?>" /> <?php if ($this->allow('remove')) : ?><a href="javascript: void(0)" class="t_a_link tDeleteTarget" rel="<?php echo $targetId; ?>_<?php echo $moduleHookStr; ?>"><?php echo $this->translator('target_list_remove_action'); ?></a><?php endif; ?><br />
+						<?php if (isset($this->hooks[substr($moduleHookStr, 0, strpos($moduleHookStr, ':'))][substr($moduleHookStr, strpos($moduleHookStr, ':') + 1)])) : ?>	
+						<?php echo $this->hooks[substr($moduleHookStr, 0, strpos($moduleHookStr, ':'))][substr($moduleHookStr, strpos($moduleHookStr, ':') + 1)]->description; ?>
+						<?php endif; ?>
+					</div>
+					<?php endforeach; ?>
+				<?php endif; ?>
+				</div>
+				<div>
+					<?php if ($this->allow('add')) : ?>
+					<select style="width: 300px">
+						<option value=""><?php echo $this->translator('target_list_select_hook'); ?></option>
+						<?php foreach ($this->hookModules as $module) : ?>
+						<optgroup label="<?php echo ('_' == $module) ? $this->translator('target_list_select_from_global') : sprintf($this->translator('target_list_select_from_module'), $module); ?>">
+							<?php foreach ($this->hooks[$module] as $hook) : ?>
+							<option title="<?php echo $this->escape($hook->description); ?>" value="<?php echo $module.':'.$hook->name; ?>"<?php if (isset($this->dbTargets[$target['target_name']]) && in_array($hook->module.':'.$hook->name, array_values($this->dbTargets[$target['target_name']]))) : ?> disabled="disabled" style="background: #CCC"<?php endif; ?>><?php echo $hook->name; ?></option>
+							<?php endforeach; ?>	
+						</optgroup>
+						<?php endforeach; ?>
+					</select>
+					<a href="javascript: void(0)" class="t_a_link tAddTarget" rel="<?php echo $this->escape(Zend_Json::encode($target)); ?>"><?php echo $this->translator('target_list_add_action'); ?></a>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+		<?php endforeach; ?>
+	</div>
+</div>
+<?php endforeach; ?>
+<?php endif; ?>
+
+<div id="tDialogContainer"></div>
+
+<script type="text/javascript">
+<?php if ($this->allow('remove')) : ?>
+function removeTarget(link) {
+	if (confirm("<?php echo $this->escape($this->translator('target_list_remove_hook_confirm')); ?>")) {
+		$(link).html('').addClass('t_a_loading');
+		var arr = $(link).attr('rel').split('_');
+
+		var modHookStr = $(link).attr('rel').substring(arr[0].length + 1);
+		var module = modHookStr.split(':')[0];
+		var hook = modHookStr.split(':')[1];
+		
+		$.ajaxq('core_target', {
+			url: '<?php echo $this->url(array(), 'core_target_remove'); ?>',
+			type: 'POST',
+			data: { id: arr[0] },
+			success: function(response) {
+				$(link).parent().fadeOut('slow');
+				$(link).parents('.tTargetContainer').find('select:first').find('option[value="' + modHookStr + '"]').attr('disabled', '').css('background', '#FFF');
+				$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('target_list_hook_remove_success')); ?>', hook))
+					.dialog({
+						title: '<?php echo addslashes($this->translator('target_list_action_message')); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+			}
+		});
+	}
+}
+<?php endif; ?>
+
+$(document).ready(function() {
+	$('a.tModuleToggle:first').parent().find('div:first').show();
+	$('a.tModuleToggle').click(function() {
+		$(this).parent().find('div:first').toggle('normal');
+	});
+	<?php if ($this->allow('remove')) : ?>
+	$('a.tDeleteTarget').click(function() {
+		removeTarget(this);
+	});
+	<?php endif; ?>
+
+	<?php if ($this->allow('add')) : ?>
+	$('a.tAddTarget').click(function() {
+		var self = this;
+		var select = $(self).parent().find('select:first');
+		if ($(select).val() == '') {
+			return;
+		}
+		var arr = $(select).val().split(':');		
+		$.ajaxq('core_target', {
+			url: '<?php echo $this->url(array(), 'core_target_add'); ?>',
+			type: 'POST',
+			data: { mod: arr[0], hook: arr[1], target: $(self).attr('rel') },
+			success: function(response) {
+				$('<div style="margin-bottom: 5px; padding-bottom: 5px; border-bottom: 1px solid #CCC">'
+				+ '<input type="text" style="width: 300px" disabled="disabled" value="' + arr[1] + '" />' 
+				+ ' <a href="javascript: void(0)" class="t_a_link tDeleteTarget" onclick="javascript: removeTarget(this)" rel="' + response + '_' + $(select).val() + '">'
+				+ "<?php echo $this->escape($this->translator('target_list_remove_action')); ?>"
+				+ '</a><br />' + $(select).find('option[selected="true"]').attr('title')
+				+ '</div>').appendTo($(self).parent().parent().find('div:first'));
+
+				$(select).find('option[value="' + $(select).val() + '"]').attr('disabled', 'disabled').css('background', '#CCC');
+				$(select).find('option:first').attr('selected', 'selected');
+
+				$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('target_list_hook_add_success')); ?>', arr[1]))
+					.dialog({
+						title: '<?php echo addslashes($this->translator('target_list_action_message')); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+			}
+		});
+	});
+	<?php endif; ?>
+});
+</script>

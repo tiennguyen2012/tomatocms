@@ -1,0 +1,208 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: list.phtml 2015 2010-04-02 07:24:33Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('template_list_page_title'));
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.resizable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+?>
+<style type="text/css">
+.t_skin_container { list-style-type: none; }
+.t_skin_container li { float: left; margin-right: 10px; }
+.t_skin_container li div { width: 80px; height: 80px; }
+</style>
+<!--[if lte IE 7]>
+<style type="text/css">
+ul.t_skin_container li { float: right; }
+</style>
+<![endif]-->
+
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><?php echo $this->translator('template_list_breadcump'); ?></span>	
+</div>
+
+<div class="grid_12 t_a_bottom"><?php echo $this->translator('template_list_top_desc'); ?></div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_5 alpha t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('template_list_name'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('template_list_author'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('template_list_version'); ?></h2>
+	</div>
+	<div class="grid_3 omega t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('template_list_action'); ?></h2>
+	</div>
+</div>
+<?php foreach ($this->templates as $template) : ?>
+<div class="grid_12 tTemplateContainer" id="tTemplateContainer_<?php echo $template['name']; ?>">
+	<div class="clearfix t_a_box">
+		<div class="grid_5 alpha">
+			<div style="padding-left: 5px">
+				<b><?php echo $template['name']; ?>:</b><br />
+				<?php echo $template['description']; ?>
+				<?php if (count($template['skin']) > 0) : ?>
+				<br /><?php echo $this->translator('template_list_available_skins'); ?><br />
+				<ul class="t_skin_container">
+				<?php foreach ($template['skin'] as $index => $skin) : ?>
+					<li>
+						<div style="background: <?php echo $skin['color']; ?>; border: 1px solid #999">&nbsp;</div>
+						<?php echo $skin['description']; ?><br />
+						<span class="tSelectSkinContainer" id="skin_<?php echo $skin['name']; ?>">
+							<?php if ($skin['name'] == $this->currSkin) : ?>
+							<?php echo $this->translator('template_list_current_skin'); ?>
+							<?php else : ?>
+							<a href="javascript: void(0)" class="t_a_link tSelectSkin" rel="<?php echo $skin['name']; ?>"><?php echo $this->translator('template_list_select_skin_action'); ?></a>
+							<?php endif; ?>
+						</span>
+						<a class="t_a_link" href="<?php echo $this->url(array('template' => $template['name'], 'skin' => $skin['name']), 'core_template_editskin'); ?>"><?php echo $this->translator('template_list_edit_skin_action'); ?></a>
+					</li>
+				<?php endforeach; ?>
+				</ul>
+				<div class="clearfix"></div>
+				<?php endif; ?>
+			</div>
+		</div>
+		<div class="grid_2"><?php echo $template['author']; ?></div>
+		<div class="grid_2"><?php echo $template['version']; ?></div>
+		<div class="grid_3 omega">
+			<a href="<?php echo $this->url(array('template' => $template['name']), 'core_page_list'); ?>" class="t_a_link"><?php echo $this->translator('template_list_view_pages_action'); ?></a> |
+			<span class="tSelectTemplateContainer" id="template_<?php echo $template['name']; ?>">
+			<?php if ($template['name'] == $this->currTemplate) : ?>
+			<?php echo $this->translator('template_list_current_template'); ?>
+			<?php else : ?>
+			<a href="javascript: void(0)" class="t_a_link tSelectTemplate" rel="<?php echo $template['name']; ?>"><?php echo $this->translator('template_list_select_template_action'); ?></a>
+			<?php endif; ?>
+			</span>
+		</div>
+	</div>
+</div>
+<?php endforeach; ?>
+
+<div id="tDialogContainer"></div>
+
+<script type="text/javascript">
+<?php if ($this->allow('activate')) : ?>
+function activateTemplate(link) {
+	$(link).html('').addClass('t_a_loading');
+	var template = $(link).attr('rel');
+	$.ajaxq('template_list', {
+		url: '<?php echo $this->url(array(), 'core_template_activate'); ?>',
+		type: 'POST',
+		data: { template: template },
+		success: function(response) {
+			$('.tTemplateContainer').find('a.tSelectSkin').hide();
+			$('.tTemplateContainer[id="tTemplateContainer_' + template + '"]').find('a.tSelectSkin').show();
+			
+			$('span.tSelectTemplateContainer').each(function() {
+				if ($(this).find('a').length == 0) {
+					// 9 is length of prefix template_
+					var t = $(this).attr('id').substring(9);
+					var a = document.createElement('a');
+					$(a).attr('href', 'javascript: void(0)').attr('rel', t)
+						.addClass('t_a_link').addClass('tSelectTemplate')
+						.click(function() {
+							activateTemplate(this);
+						})
+						.html('<?php echo $this->escape($this->translator('template_list_select_template_action')); ?>');
+					$(this).html('').append(a);
+				}
+			});
+			$(link).parent().html('<?php echo $this->escape($this->translator('template_list_current_template')); ?>');
+			$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('template_list_select_template_success')); ?>', template))
+				.dialog({
+					title: '<?php echo addslashes($this->translator('template_list_action_message')); ?>',
+			    	show: { effect: 'fade' },
+					open: function(event, ui) {
+						setTimeout(function() {
+							$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+						}, 3000);
+					}
+				});
+		}
+	});	
+};
+<?php endif; ?>
+
+<?php if ($this->allow('skin')) : ?>
+function activateSkin(link) {
+	$(link).html('').addClass('t_a_loading');
+	var skin = $(link).attr('rel');
+	$.ajaxq('template_list', {
+		url: '<?php echo $this->url(array(), 'core_template_skin'); ?>',
+		type: 'POST',
+		data: { skin: skin },
+		success: function(response) {
+			$(link).parents('.t_skin_container').find('span.tSelectSkinContainer').each(function() {
+				if ($(this).find('a').length == 0) {
+					// 5 is length of skin_
+					var s = $(this).attr('id').substring(5);
+					var a = document.createElement('a');
+					$(a).attr('href', 'javascript: void(0)').attr('rel', s)
+						.addClass('t_a_link').addClass('tSelectSkin')
+						.click(function() {
+							activateSkin(this);
+						})
+						.html('<?php echo $this->escape($this->translator('template_list_select_skin_action')); ?>');
+					$(this).html('').append(a);
+				}
+			});
+			$(link).parent().html('<?php echo $this->escape($this->translator('template_list_current_skin')); ?>');
+			$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('template_list_select_skin_success')); ?>', skin))
+				.dialog({
+					title: '<?php echo addslashes($this->translator('template_list_action_message')); ?>',
+			    	show: { effect: 'fade' },
+					open: function(event, ui) {
+						setTimeout(function() {
+							$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+						}, 3000);
+					}
+				});
+		}
+	});		
+};
+<?php endif; ?>
+
+$(document).ready(function() {
+	$('.tTemplateContainer').find('a.tSelectSkin').hide();
+	$('.tTemplateContainer[id="tTemplateContainer_<?php echo $this->currTemplate; ?>"]').find('a.tSelectSkin').show();
+
+	<?php if ($this->allow('activate')) : ?>
+	$('a.tSelectTemplate').click(function() {
+		activateTemplate(this);
+	});
+	<?php endif; ?>
+
+	<?php if ($this->allow('skin')) : ?>
+	$('a.tSelectSkin').click(function() {
+		activateSkin(this);
+	});
+	<?php endif; ?>
+});
+</script>

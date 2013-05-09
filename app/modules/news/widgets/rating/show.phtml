@@ -1,0 +1,45 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id$
+ * @since		2.0.3
+ */
+?>
+<div class="t_news_rating" id="tNewsRating_<?php echo $this->unid; ?>">	
+	<ul class="t_news_rating_star">
+		<li class="current_rating" style="width: <?php if ($this->articleId) : ?><?php echo $this->currentRating; ?><?php else : ?>0<?php endif; ?>px;"><?php if ($this->articleId) : ?><?php echo $this->total; ?><?php else : ?>0<?php endif; ?></li>
+		<li><a href="javascript: void(0);" title="<?php echo $this->translator()->widget('one_star'); ?>" class="one_star" rel="1">1</a></li>
+		<li><a href="javascript: void(0);" title="<?php echo $this->translator()->widget('two_stars'); ?>" class="two_stars" rel="2">2</a></li>
+		<li><a href="javascript: void(0);" title="<?php echo $this->translator()->widget('three_stars'); ?>" class="three_stars" rel="3">3</a></li>
+		<li><a href="javascript: void(0);" title="<?php echo $this->translator()->widget('four_stars'); ?>" class="four_stars" rel="4">4</a></li>
+		<li><a href="javascript: void(0);" title="<?php echo $this->translator()->widget('five_stars'); ?>" class="five_stars" rel="5">5</a></li>
+	</ul>
+</div>
+<?php if ($this->articleId) : ?>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.t_news_rating_star').find('li').each(function() {
+		var self = this;
+		var a = $(self).children('a:first');
+		$(a).bind('click', function() {
+			var star = $(this).attr('rel');
+			var data = '{"article_id": "' + <?php echo $this->articleId; ?> + '", "rate": "' + star + '", "current_rate": "<?php echo $this->total; ?>", "width_star": "<?php echo $this->width; ?>", "num_star": "<?php echo $this->numStar; ?>"}';
+			var response = Tomato.Core.Widget.Loader.queueAction('news', 'rating', 'rating', data, 'tNewsRating_<?php echo $this->unid; ?>');
+		});
+	});
+});
+</script>
+<?php endif; ?>

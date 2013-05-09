@@ -1,0 +1,154 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: list.phtml 2015 2010-04-02 07:24:33Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('client_list_client_title'));
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.resizable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+?>
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span><span><?php echo $this->translator('client_list_breadcump'); ?></span>
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_10 alpha"><?php echo $this->translator('client_list_top_desc'); ?></div>
+	<div class="grid_2 omega t_a_textright"><a href="<?php echo $this->url(array(), 'ad_client_add'); ?>" class="t_a_link"><?php echo $this->translator('client_list_add'); ?></a></div>
+</div>
+<form method="post" action="<?php echo $this->url(array(), 'ad_client_list'); ?>">
+<div class="grid_12">
+	<div class="t_a_line t_a_bottom">
+		<div></div>
+		<h2><?php echo $this->translator('client_list_search'); ?></h2>
+	</div>
+	<div class="grid_4 alpha">
+		<div class="clearfix t_a_bottom">
+			<div class="grid_1 alpha"><?php echo $this->translator('client_list_search_name'); ?>:</div>
+			<div class="grid_3 omega"><input type="text" style="width: 200px" name="name" value="<?php if (isset($this->exp['name'])) : ?><?php echo $this->exp['name']; ?><?php endif; ?>" /></div>
+		</div>
+    </div>
+    <div class="grid_4">
+		<div class="grid_1 alpha"><?php echo $this->translator('client_list_search_email'); ?>:</div>
+		<div class="grid_3 omega"><div class="grid_3 omega"><input type="text" style="width: 200px" name="email" value="<?php if (isset($this->exp['email'])) : ?><?php echo $this->exp['email']; ?><?php endif; ?>" /></div></div>
+	</div>
+	<div class="grid_4 omega">
+		<div class="clearfix t_a_bottom">
+			<div class="grid_1 alpha"><?php echo $this->translator('client_list_search_address'); ?>:</div>
+			<div class="grid_3 omega"><div class="grid_3 omega"><input type="text" style="width: 200px" name="address" value="<?php if (isset($this->exp['address'])) : ?><?php echo $this->exp['address']; ?><?php endif; ?>" /></div></div>
+		</div>
+	</div>
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="prefix_1 alpha">
+		<input type="submit" class="t_a_button" value="<?php echo $this->translator('client_list_search_button'); ?>" />
+	</div>
+</div>
+</form>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_3 alpha t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('client_list_name'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('client_list_email'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('client_list_telephone'); ?></h2>
+	</div>
+	<div class="grid_3 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('client_list_address'); ?></h2>
+	</div>
+	<div class="grid_2 omega t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('client_list_action'); ?></h2>
+	</div>
+</div>
+<div class="clearfix"></div>
+<div id="tClientContainer">
+<?php if ($this->numClients == 0) : ?>
+	<div class="grid_12 t_a_bottom"><?php echo $this->translator('client_list_not_found'); ?></div>	
+<?php else : ?>
+	<?php foreach ($this->clients as $client) : ?>
+	<div class="grid_12 tClientRow" id="clientId_<?php echo $client->client_id; ?>">
+		<div class="clearfix t_a_box">
+			<div class="grid_3 alpha">
+				<div style="padding-left: 5px">
+					<b><?php echo $client->name; ?></b>
+					<br />
+					<?php echo $this->translator('client_list_at'); ?>
+					<?php echo date('Y-m-d H:i:s', strtotime($client->created_date)); ?>
+				</div>
+			</div>
+			<div class="grid_2"><?php if (null != $client->email) : ?><?php echo $client->email; ?><?php else: ?>&nbsp;<?php endif; ?></div>
+			<div class="grid_2"><?php if (null != $client->telephone) : ?><?php echo $client->telephone; ?><?php else: ?>&nbsp;<?php endif; ?></div>
+			<div class="grid_3"><?php if (null != $client->address) : ?><?php echo $client->address; ?><?php else: ?>&nbsp;<?php endif; ?></div>
+			<div class="grid_2 omega">
+				<?php if ($this->allow('edit')) : ?>
+				<a href="<?php echo $this->url(array('client_id' => $client->client_id), 'ad_client_edit'); ?>" class="t_a_link"><?php echo $this->translator('client_list_edit_action'); ?></a> |
+				<?php endif; ?>
+				<?php if ($this->allow('delete')) : ?> 
+				<a href="javascript: void(0)" rel="<?php echo $client->client_id; ?>" class="t_a_link tDeleteClient"><?php echo $this->translator('client_list_delete_action'); ?></a>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+	<?php endforeach; ?>
+	<div class="grid_12 t_a_bottom t_a_paginator">
+		<?php echo $this->paginator()->slide($this->paginator, $this->paginatorOptions); ?>
+	</div>
+	<?php endif; ?>
+</div>
+
+<div id="tDialogContainer"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	<?php if ($this->allow('delete')) : ?>
+	$('.tDeleteClient').click(function() {
+		var self = this;
+		if (confirm("<?php echo $this->escape($this->translator('client_list_delete_confirm')); ?>")) {
+			$(self).html('').addClass('t_a_loading');
+			$.ajaxq('client_list', {
+				url: '<?php echo $this->url(array(), 'ad_client_delete'); ?>',
+				type: 'POST',
+				data: { id: $(self).attr('rel') },
+				success: function(response) {
+					$(self).parents('.tClientRow');
+					$('#clientId_' + $(self).attr('rel')).fadeOut('slow');
+					$('#tDialogContainer').html('<?php echo addslashes($this->translator('client_list_delete_client_success')); ?>')
+					.dialog({
+						title: '<?php echo addslashes($this->translator('client_list_action_message')); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+				}
+			});
+		}
+	});
+	<?php endif; ?>
+});
+</script>

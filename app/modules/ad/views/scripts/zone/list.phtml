@@ -1,0 +1,112 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: list.phtml 2015 2010-04-02 07:24:33Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('zone_list_zone_title'));
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.resizable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+?>
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span><span><?php echo $this->translator('zone_list_breadcump'); ?></span>
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_10 alpha"><?php echo $this->translator('zone_list_top_desc'); ?></div>
+	<div class="grid_2 omega t_a_textright"><a href="<?php echo $this->url(array(), 'ad_zone_add'); ?>" class="t_a_link"><?php echo $this->translator('zone_list_add'); ?></a></div>
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_5 alpha t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('zone_list_name'); ?></h2>
+	</div>
+	<div class="grid_3 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('zone_list_width_height'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('zone_list_id'); ?></h2>
+	</div>
+	<div class="grid_2 omega t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('zone_list_action'); ?></h2>
+	</div>
+</div>
+<div class="clearfix"></div>
+<div id="tZoneContainer">
+	<?php foreach ($this->zones as $zone) : ?>
+	<div class="grid_12 tZoneRow" id="zoneId_<?php echo $zone->zone_id; ?>">
+		<div class="clearfix t_a_box">
+			<div class="grid_5 alpha">
+				<div style="padding-left: 5px">
+					<b><?php echo $zone->name; ?>:</b>
+					<?php echo $zone->description; ?>
+				</div>
+			</div>
+			<div class="grid_3"><?php echo '<b>'.$zone->width.'</b> x <b>'.$zone->height.'</b>'; ?></div>
+			<div class="grid_2"></div>
+			<div class="grid_2"><?php if (null != $zone->zone_id) : ?><?php echo $zone->zone_id;?><?php else: echo " "; endif; ?></div>
+			<div class="grid_2 omega">
+				<?php if ($this->allow('edit')) : ?>
+				<a href="<?php echo $this->url(array('zone_id' => $zone->zone_id), 'ad_zone_edit'); ?>" class="t_a_link"><?php echo $this->translator('zone_list_edit_action'); ?></a> |
+				<?php endif; ?>
+				<?php if ($this->allow('delete')) : ?> 
+				<a href="javascript: void(0)" rel="<?php echo $zone->zone_id; ?>" class="t_a_link tDeleteZone"><?php echo $this->translator('zone_list_delete_action'); ?></a>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+	<?php endforeach; ?>
+</div>
+
+<div id="tDialogContainer"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	<?php if ($this->allow('delete')) : ?>
+	$('.tDeleteZone').click(function() {
+		var self = this;
+		if (confirm("<?php echo $this->escape($this->translator('zone_list_delete_confirm')); ?>")) {
+			$(self).html('').addClass('t_a_loading');
+			$.ajaxq('zone_list', {
+				url: '<?php echo $this->url(array(), 'ad_zone_delete'); ?>',
+				type: 'POST',
+				data: { id: $(self).attr('rel') },
+				success: function(response) {
+					$(self).parents('.tZoneRow');
+					$('#zoneId_' + $(self).attr('rel')).fadeOut('slow');
+					$('#tDialogContainer').html('<?php echo addslashes($this->translator('zone_list_delete_zone_success')); ?>')
+					.dialog({
+						title: '<?php echo addslashes($this->translator('zone_list_action_message')); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+				}
+			});
+		}
+	});
+	<?php endif; ?>
+});
+</script>

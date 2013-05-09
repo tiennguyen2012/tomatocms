@@ -1,0 +1,39 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: show.phtml 1271 2010-02-23 04:46:59Z huuphuoc $
+ */
+?>
+<div class="t_news_latesthome">
+	<?php if (($articles = $this->helper()->getLatestArticles(null, $this->limit)) != null) : ?>
+	<?php foreach ($articles as $index => $article) : ?>
+	<div class="t_g_bottom">
+		<div class="t_g_left">
+			<h2><a href="<?php echo $this->url($article->getProperties(), 'news_article_details'); ?>"><?php echo $article->title; ?></a></h2>
+			<small><?php echo sprintf($this->translator()->widget('posted_by'), $article->created_user_name, date($this->globalConfig('datetime')->date_time_format, strtotime($article->activate_date))); ?> <?php echo sprintf($this->translator()->widget('posted_in'), '<a href="'.$this->url(array('category_id' => $article->category_id), 'news_article_category').'">'.$article->category_name.'</a>'); ?></small>
+		</div>
+		<div class="t_g_right t_news_latesthome_views"><?php echo $article->num_views; ?></div>
+		<div class="clearfix"></div>
+	</div>
+	<div class="t_g_top">
+		<div class="t_g_top"><?php echo $article->description; ?></div>
+		<div class="t_g_top"><?php echo $article->content; ?></div>
+		<div><p style="text-align: right; margin: 10px 0px"><a href="<?php echo $this->url($article->getProperties(), 'news_article_details'); ?>"><?php echo $this->translator()->widget('read_more'); ?></a></p></div>
+		<div class="t_g_clear"></div>
+	</div>
+	<?php endforeach; ?>
+	<?php endif; ?>	
+</div>

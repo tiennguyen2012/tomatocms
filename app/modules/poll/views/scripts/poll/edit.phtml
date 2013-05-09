@@ -1,0 +1,178 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: edit.phtml 2020 2010-04-02 07:26:40Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('poll_edit_page_title'));
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.datepicker.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.validate/jquery.validate.min.js');
+?>
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span><span><a href="<?php echo $this->url(array(), 'poll_list'); ?>"><?php echo $this->translator('poll_list_breadcump'); ?></a></span><span><?php echo $this->translator('poll_edit_breadcump'); ?></span>	
+</div>
+
+<div class="grid_12">
+<?php echo $this->flashMessenger(); ?>
+</div>
+
+<form method="post" action="<?php echo $this->url(array('poll_id' => $this->question->question_id), 'poll_edit'); ?>" id="addPollForm" class="t_a_form">
+<div class="grid_12 t_a_bottom"><?php echo $this->translator('poll_add_guide'); ?></div>
+<div class="grid_12 t_a_bottom">
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('poll_title'); ?>:</label></div>
+		<div class="grid_10 omega"><input maxlength="255" value="<?php if ($this->question != null) : ?><?php echo $this->question->title; ?><?php endif; ?>" type="text" id="title" name="title" style="width: 400px" /></div>
+	</div>
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('poll_content'); ?>:</label></div>
+		<div class="grid_10 omega"><textarea id="content" name="content" style="width: 400px; height: 100px;"><?php if ($this->question != null) : ?><?php echo $this->question->content; ?><?php endif; ?></textarea></div>
+	</div>
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('poll_start_date'); ?>:</label></div>
+		<div class="grid_10 omega"><input maxlength="10" readonly="readonly" value="<?php if ($this->question != null) : ?><?php echo date('Y-m-d', strtotime($this->question->start_date)); ?><?php endif; ?>" type="text" id="start_date" name="start_date" style="width: 100px" /></div>
+	</div>
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('poll_end_date'); ?>:</label></div>
+		<div class="grid_10 omega"><input maxlength="10" readonly="readonly" value="<?php if ($this->question != null) : ?><?php echo date('Y-m-d', strtotime($this->question->end_date)); ?><?php endif; ?>" type="text" id="end_date" name="end_date" style="width: 100px" /></div>
+	</div>
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('poll_multiple_options'); ?>:</label></div>
+		<div class="grid_10 omega">
+			<input type="checkbox"<?php if ($this->question != null && $this->question->multiple_options == 1) : ?> checked<?php endif; ?> name="multiOption" value="1" />
+		</div>
+	</div>
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('poll_status'); ?>:</label></div>
+		<div class="grid_10 omega">
+			<select name="status" id="status">
+				<option value="0"><?php echo $this->translator('poll_status_inactive'); ?></option>
+				<option value="1"<?php if ($this->question != null && $this->question->is_active == 1) : ?> selected<?php endif; ?>><?php echo $this->translator('poll_status_active'); ?></option>
+			</select>
+		</div>
+	</div>
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha">
+			<label><?php echo $this->translator('poll_answer'); ?>:</label>
+			<div><a href="javascript: void(0)" id="t_add_answer" class="t_a_link"><?php echo $this->translator('poll_add_answer_button'); ?></a></div>
+		</div>
+		<div class="grid_10 omega">
+			<div style="padding: 5px;"><input type="hidden" name="check_answer" id="check_answer" value="" /></div>
+			<div id="t_list_answer">
+			<?php for ($i=0; $i < count($this->answers); $i++) : ?>
+				<div style="clear: both; padding: 0 0 30px 0;">
+					<div style="float: left;">
+						<span class="t_answer_index"><?php echo $i + 1; ?>.</span> 
+						<input class="t_answer_title" maxlength="255" value="<?php echo $this->answers[$i]->title; ?>" type="text" name="answers[]" style="width: 320px;" />
+					</div> 
+					<div style="float: left; padding-left: 10px;"><a href="javascript: void(0)" class="t_remove_answer t_a_link" onclick="javascript: removeAnswer(this);"><?php echo $this->translator('poll_remove_answer_button'); ?></a></div>
+				</div>
+			<?php endfor; ?>
+			</div>
+		</div>
+	</div>
+	<div class="grid_10 prefix_2 alpha"><input type="submit" class="t_a_button" value="<?php echo $this->translator('poll_save_button'); ?>" /></div>
+</div>
+</form>
+<script type="text/javascript">
+$(document).ready(function() {
+	var dateOption = { appendText: '(yyyy-mm-dd)', dateFormat: 'yy-mm-dd' };
+	$('#start_date').datepicker(dateOption);
+	$('#end_date').datepicker(dateOption);
+	
+	$('#t_add_answer').bind('click', function() {
+		addAnswer();
+	});
+	
+	$.validator.addMethod('check_invalid_answer', function() {
+		var result = true;
+		$('#t_list_answer').find('input.t_answer_title').each(function() {
+			var that = this;
+			if ($(that).val() == undefined || $(that).val() == '') {
+				result = false;
+			}
+		});
+		return result;
+	}); 
+	$.validator.addMethod('check_no_answer', function() {
+		var result = true;
+		var numAnswer = $('#t_list_answer').find('input.t_answer_title').length;
+		if (numAnswer == 0) {
+			result = false;
+		}
+		return result;
+	});
+	$('#addPollForm').validate({
+		rules: {
+			title: {
+				required: true,
+		  		maxlength: 255
+			},
+			content: {
+		  		required: true
+			},
+			start_date: {
+				required: true
+			},
+			end_date: {
+				required: true
+			},
+			check_answer: {
+				check_no_answer: true,
+				check_invalid_answer: true
+			}
+	    },
+	    messages: {
+	    	title: {
+	        	required: "<?php echo $this->translator('poll_title_required'); ?>",
+				maxlength: "<?php echo $this->translator('poll_title_maxlength'); ?>"
+			},
+			content: { 
+	        	required: "<?php echo $this->translator('poll_content_required'); ?>"
+	    	},
+	    	start_date: {
+				required: "<?php echo $this->translator('poll_start_date_required'); ?>"
+			},
+			end_date: {
+				required: "<?php echo $this->translator('poll_end_date_required'); ?>"
+			},
+	    	check_answer: {
+	    		check_no_answer: "<?php echo $this->translator('poll_answer_required'); ?>",
+	    		check_invalid_answer: "<?php echo $this->translator('poll_answer_invalid'); ?>"
+			}
+		}
+	});
+});
+
+function addAnswer() {
+	var num = $('#t_list_answer').children('div').length;
+	num++;
+	var div = 	'<div style="clear: both; padding: 0 0 30px 0;">' 
+					+ '<div style="float: left;"><span class="t_answer_index">' + num + '.</span> <input class="t_answer_title" maxlength="255" type="text" name="answers[]" style="width: 320px;" /></div>' 
+					+ '<div style="float: left; padding-left: 10px;"><a href="javascript: void(0)" class="t_remove_answer t_a_link" onclick="javascript: removeAnswer(this);"><?php echo $this->translator('poll_remove_answer_button'); ?></a></div>' +
+				'</div>';
+	$('#t_list_answer').append(div);
+};
+
+function removeAnswer(object) {
+	$(object).parent().parent().remove();
+	$('#t_list_answer').children('div').each(function(k) {
+		var that = this;
+		$(that).find('.t_answer_index:first').html(k + 1 + '.');
+	});
+};
+</script>

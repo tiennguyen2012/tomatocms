@@ -1,0 +1,49 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: set.phtml 1249 2010-02-23 02:36:13Z huuphuoc $
+ * @since		2.0.2
+ */
+?>
+<?php 
+$this->headTitle(sprintf($this->translator('tag_list_by_tag'), $this->tag->tag_text));
+?>
+<div class="t_multimedia_set_details t_g_box t_g_bottom">
+	<div class="t_g_box_content">
+		<div class="t_g_bottom">
+			<h2><?php echo sprintf($this->translator('tag_list_by_tag'), $this->tag->tag_text); ?></h2>
+		</div>
+		<div class="t_g_bottom">
+		<?php if ($this->sets) : ?>
+		<?php foreach ($this->sets as $index => $set) : ?>
+			<?php if ($index % 3 == 0) : ?><ul class="clearfix"><?php endif; ?>
+			<li>
+				<a href="<?php echo $this->url($set->getProperties(), 'multimedia_set_details'); ?>"><img src="<?php echo $set->image_general; ?>" /></a><br />
+				<?php //echo $file->title; ?>
+			</li>
+			<?php if ($index % 3 == 2 || $index == count($this->sets) - 1) : ?></ul><?php endif; ?>
+		<?php endforeach; ?>
+		<?php endif; ?>
+		</div>
+		<div class="t_g_bottom t_g_paginator">
+			<?php echo $this->paginator()->slide($this->paginator, $this->paginatorOptions); ?>
+		</div>
+	</div>
+	<div class="t_g_box_corner t_g_box_corner_tl"></div>
+    <div class="t_g_box_corner t_g_box_corner_tr"></div>
+    <div class="t_g_box_corner t_g_box_corner_bl"></div>
+    <div class="t_g_box_corner t_g_box_corner_br"></div>
+</div>

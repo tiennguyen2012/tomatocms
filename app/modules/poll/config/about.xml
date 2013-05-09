@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: about.xml 1521 2010-03-09 10:00:26Z huuphuoc $
+ */
+-->
+<!DOCTYPE module SYSTEM "http://schemas.tomatocms.com/dtd/module_about.dtd">
+<module>
+	<name>poll</name>
+	<description langKey="about_poll_description"><![CDATA[Manage polls]]></description>
+	<thumbnail></thumbnail>
+	<author>TomatoCMS Core Team</author>
+	<email>core@tomatocms.com</email>
+	<version>2.0.1</version>
+	<license>free</license>
+	
+	<!-- Required modules and libraries -->
+	<requires>
+	</requires>
+	
+	<!-- Install and uninstall scripts -->
+	<install>
+		<query><![CDATA[DROP TABLE IF EXISTS `###poll_answer`;]]></query>
+		<query><![CDATA[CREATE TABLE `###poll_answer` (
+  `answer_id` int(10) unsigned NOT NULL auto_increment,
+  `question_id` int(11) NOT NULL,
+  `position` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content` text,
+  `is_correct` tinyint(4) default NULL,
+  `user_id` int(11) NOT NULL,
+  `num_views` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`answer_id`),
+  KEY `question_id` (`question_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###poll_question`;]]></query>
+		<query><![CDATA[CREATE TABLE `###poll_question` (
+  `question_id` int(10) unsigned NOT NULL auto_increment,
+  `title` varchar(255) NOT NULL,
+  `content` varchar(255) default NULL,
+  `created_date` datetime NOT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime default NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `multiple_options` tinyint(1) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `num_views` int(11) default NULL,
+  PRIMARY KEY  (`question_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>
+	</install>
+	
+	<uninstall>
+		<query><![CDATA[DROP TABLE IF EXISTS `###poll_question`;]]></query>
+		<query><![CDATA[DROP TABLE IF EXISTS `###poll_answer`;]]></query>
+	</uninstall>
+	
+	<admin>
+		<task langKey="dashboard_list_polls" link="/admin/poll/list/" />
+		<task langKey="dashboard_add_poll" link="/admin/poll/add/" />
+	</admin>
+</module>

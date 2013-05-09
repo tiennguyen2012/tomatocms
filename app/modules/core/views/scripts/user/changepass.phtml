@@ -1,0 +1,78 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: changepass.phtml 2020 2010-04-02 07:26:40Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('user_changepass_page_title'));
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.validate/jquery.validate.min.js');
+?>
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><?php echo $this->translator('user_changepass_breadcump'); ?></span>	
+</div>
+
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+
+<div class="grid_12 t_a_bottom">
+	<form method="post" action="<?php echo $this->url(array(), 'core_user_changepass'); ?>" id="changepassForm" class="t_a_form">
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('user_changepass_new_password'); ?>:</label></div>
+		<div class="grid_10 omega">
+			<input type="password" style="width: 400px" name="password" id="password" />
+			<div class="t_a_guide"><?php echo $this->translator('user_password_guide'); ?></div>
+		</div>
+	</div>
+	<div class="clearfix t_a_bottom">
+		<div class="grid_2 alpha"><label><?php echo $this->translator('user_changepass_confirm_password'); ?>:</label></div>
+		<div class="grid_10 omega">
+			<input type="password" style="width: 400px" name="passwordConfirm" id="passwordConfirm" />
+			<div class="t_a_guide"><?php echo $this->translator('user_confirm_password_guide'); ?></div>
+		</div>
+	</div>
+	<div class="clearfix t_a_bottom">
+		<div class="prefix_2 grid_6 alpha">
+			<input class="t_a_button" type="button" id="save" value="<?php echo $this->translator('user_changepass_save_button'); ?>" onclick="javascript: $('#changepassForm').submit();" />
+		</div>
+	</div>
+	</form>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#changepassForm').validate({
+		rules: {
+			password: {
+				required: true,
+		  		minlength: 5
+			},
+			passwordConfirm: {
+				equalTo: '#password'
+			}
+	    },
+	    messages: {
+	    	password: {
+	    		required: "<?php echo $this->translator('user_password_required'); ?>",
+				minlength: "<?php echo $this->translator('user_password_minlength'); ?>"
+			},
+			passwordConfirm: {
+				equalTo: "<?php echo $this->translator('user_confirm_password_error'); ?>"
+			}
+		}
+	});
+});
+</script>

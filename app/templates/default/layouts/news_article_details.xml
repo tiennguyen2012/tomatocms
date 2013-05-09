@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: news_article_details.xml 2034 2010-04-02 08:02:55Z huuphuoc $
+ */
+-->
+<!DOCTYPE layout SYSTEM "http://schemas.tomatocms.com/dtd/layout.dtd">
+<layout>
+	<container cols="12">
+		<widget module="menu" name="menu" load="php">
+			<title><![CDATA[Menu]]></title>
+			<resources>
+				<resource type="javascript" src="{APP_STATIC_SERVER}/js/jquery.hoverIntent/jquery.hoverIntent.minified.js" />
+				<resource type="javascript" src="{APP_STATIC_SERVER}/js/superfish/superfish.js" />
+				<resource type="javascript" src="{APP_STATIC_SERVER}/js/superfish/supersubs.js" />
+				<resource type="css" src="{APP_STATIC_SERVER}/js/superfish/superfish.css" />
+			</resources>
+			<params>
+				<param name="menu_id">
+					<value><![CDATA[1]]></value>
+				</param>
+			</params>
+		</widget>
+	</container>
+	<container cols="12">
+		<widget module="news" name="breadcump">
+			<title><![CDATA[Breadcump]]></title>
+			<resources></resources>
+			<params>
+				<param name="category_id" type="global" />
+			</params>
+		</widget>
+	</container>
+	<container cols="12">
+		<container cols="8" position="first">
+			<widget module="utility" name="socialshare">
+				<title><![CDATA[Share link]]></title>
+				<resources></resources>
+			</widget>
+			<widget module="utility" name="textresizer">
+				<title><![CDATA[Resize text]]></title>
+				<resources></resources>
+				<params>
+					<param name="sizes">
+						<value><![CDATA[11,12,13,14,15]]></value>
+					</param>
+					<param name="default_size">
+						<value><![CDATA[11]]></value>
+					</param>
+				</params>
+			</widget>
+			<defaultOutput />
+			<widget module="seo" name="googler">
+				<title><![CDATA[Welcome Googler]]></title>
+				<resources></resources>
+				<params>
+					<param name="message"><value><![CDATA[If this page is useful for you, why don't subscribe to <a href="/news/rss/index.xml">RSS feed</a> to get latest interesting thing from us.]]></value></param>
+				</params>
+			</widget>
+			<widget module="tag" name="tags">
+				<title><![CDATA[Tags]]></title>
+				<resources></resources>
+			</widget>
+			<widget module="comment" name="comment">
+				<title><![CDATA[Comment]]></title>
+				<resources>
+					<resource type="javascript" src="{APP_STATIC_SERVER}/js/jquery.validate/jquery.validate.min.js" />
+				</resources>
+				<params>
+					<param name="limit">
+						<value><![CDATA[10]]></value>
+					</param>
+					<param name="allow_comment">
+						<value><![CDATA[1]]></value>
+					</param>
+					<param name="show_avatar">
+						<value><![CDATA[1]]></value>
+					</param>
+					<param name="avatar_size">
+						<value><![CDATA[50]]></value>
+					</param>
+				</params>
+			</widget>
+			<widget module="news" name="newer">
+				<title><![CDATA[Newer articles]]></title>
+				<resources>
+					<resource type="javascript" src="{APP_STATIC_SERVER}/js/jquery.cycle/jquery.cycle.all.min.js" />
+				</resources>
+				<params>
+					<param name="article_id" type="global" />
+					<param name="category_id" type="global" />
+					<param name="limit">
+						<value><![CDATA[12]]></value>
+					</param>
+				</params>
+			</widget>
+			<widget module="news" name="older">
+				<title><![CDATA[Older articles]]></title>
+				<resources></resources>
+				<params>
+					<param name="article_id" type="global" />
+					<param name="category_id" type="global" />
+					<param name="limit">
+						<value><![CDATA[12]]></value>
+					</param>
+				</params>
+			</widget>
+		</container>
+		<container cols="4" position="last">
+			<widget module="news" name="stickycategory">
+				<title><![CDATA[Sticky articles in category]]></title>
+				<resources>
+					<resource type="javascript" src="{APP_STATIC_SERVER}/js/jquery.cycle/jquery.cycle.all.min.js" />
+				</resources>
+				<params>
+					<param name="categoryId" type="global" />
+					<param name="limit">
+						<value><![CDATA[6]]></value>
+					</param>
+					<param name="numArticlesPerRow">
+						<value><![CDATA[1]]></value>
+					</param>
+				</params>
+			</widget>
+			<widget module="news" name="siblingcategory">
+				<title><![CDATA[Articles in sibling categories]]></title>
+				<resources></resources>
+				<params>
+					<param name="category_id" type="global" />
+					<param name="limit">
+						<value><![CDATA[10]]></value>
+					</param>
+				</params>
+			</widget>
+			<widget module="tag" name="tagcloud" load="php">
+				<title><![CDATA[Tag Cloud]]></title>
+				<params>
+					<param name="limit">
+						<value><![CDATA[30]]></value>
+					</param>
+				</params>
+			</widget>
+			<widget module="multimedia" name="player" load="php">
+				<title><![CDATA[Latest clips]]></title>
+				<resources>
+					<resource type="javascript" src="{APP_STATIC_SERVER}/js/swfobject/swfobject.js" />
+				</resources>
+				<params>
+					<param name="limit">
+						<value><![CDATA[9]]></value>
+					</param>
+				</params>
+			</widget>
+		</container>
+	</container>
+</layout>

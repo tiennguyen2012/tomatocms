@@ -1,0 +1,286 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: build.phtml 2020 2010-04-02 07:26:40Z huuphuoc $
+ * @since 		2.0.2
+ */
+?>
+<?php
+$this->headTitle($this->translator('menu_build_title'));
+
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.sortable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.droppable.js');
+
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/interface/i.drag.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/interface/i.drop.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/interface/i.sortables.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/interface/interface.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/interface/i.nested.sortable.compressed.js');
+
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.treeview/jquery.treeview.js');
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.treeview/jquery.treeview.css');
+
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.validate/jquery.validate.min.js');
+
+/** Menu */
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/tomato/menu/menu.js');
+?>
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><a href="<?php echo $this->url(array(), 'menu_list'); ?>"><?php echo $this->translator('menu_list_breadcump'); ?></a></span>
+	<span><?php echo $this->translator('menu_build_breadcump'); ?></span>	
+</div>
+
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+
+<form action="<?php echo $this->url(array(), 'menu_build'); ?>" class="t_a_form" name="tMenuAdd" id="tMenuForm" method="post">
+<div class="grid_12 t_a_bottom">
+	<div class="grid_6 alpha t_a_bottom">
+		<div class="t_a_line t_a_bottom">
+			<div></div>
+			<h2><?php echo $this->translator('menu_information'); ?></h2>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="grid_2 alpha"><?php echo $this->translator('menu_name'); ?>:</div>
+			<div class="grid_4 omega"><input type="text" name="menu_name" id="menu_name" style="width: 300px" /></div>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="grid_2 alpha"><?php echo $this->translator('menu_description'); ?>:</div>
+			<div class="grid_4 omega"><textarea id="menu_description" name="menu_description" style="width: 300px; height: 200px"></textarea></div>
+		</div>
+		<div class="t_a_line t_a_bottom">
+			<div></div>
+			<h2><?php echo $this->translator('menu_item_head'); ?></h2>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="grid_2 alpha"><?php echo $this->translator('menu_item_label'); ?>:</div>
+			<div class="grid_4 omega"><input type="text" id="tElementLabel" name="tElementLabel" style="width: 220px" /></div>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="grid_2 alpha"><?php echo $this->translator('menu_item_url'); ?>:</div>
+			<div class="grid_4 omega">
+				<input type="text" id="tElementUrl" name="tElementUrl" style="width: 220px;" />
+				<input type="hidden" id="tElementId" name="tElementId" />
+				<a href="javascript: void(0)" class="t_a_link" id="tButtonElementAdd" style="padding-left: 10px"><?php echo $this->translator('menu_item_add'); ?></a>
+				<a href="javascript: void(0)" class="t_a_link" id="tButtonElementUpdate" style="padding-left: 10px; display: none"><?php echo $this->translator('menu_item_update'); ?></a>
+			</div>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="prefix_2 grid_4 alpha">
+				<input type="button" id="tSubmitButton" name="tSubmitButton" class="t_a_button" value="<?php echo $this->translator('menu_save_button'); ?>" />
+			</div>
+		</div>
+	</div>
+	
+	<div class="grid_6 omega t_a_bottom">
+		<div class="t_a_line t_a_bottom">
+			<div></div>
+			<h2><?php echo $this->translator('menu_build_preview'); ?></h2>
+		</div>
+		<div class="clearfix t_a_top">
+			<div class="t_g_menu_tree">
+				<div id="t_a_menu_container"><ul></ul></div>
+				<input type="hidden" name="menu_item" id="menu_item" />
+			</div>
+		</div>
+	</div>
+</div>
+<input type="hidden" name="tMenuBuilderData" id="tMenuBuilderData" />
+<input type="hidden" name="menu_html_data" id="menu_html_data" />
+</form>
+
+<div id="tMenuPreview" style="display: none;"></div>
+
+<script type="text/javascript">
+var acceptClass = 't_a_menu_item';
+var helperClass = 't_a_menu_helper';
+var tMenuBuilderData = null;
+var menuBuilder = new Tomato.Menu.Menu('t_a_menu');
+menuBuilder.setEnableHoverHandle(false);
+var ul = $('#t_a_menu_container').children('ul:first').attr('id', menuBuilder.getId());
+
+function menuNestedSortable() {
+	$('#' + menuBuilder.getId()).NestedSortable({
+		accept: acceptClass,
+		helperclass: helperClass,
+		opacity: 0.8,
+		leftToRight: true,
+		nestingPxSpace: 20,
+		onChange: function(serialized) {
+			addEvenOddClass();
+		}, 
+		onStop: function() {
+			$('#' + $(this).attr('id')).find('div').show();
+		}
+	}).disableSelection();
+};
+
+function addEvenOddClass() {
+	$(ul).find('li').each(function(i) {
+		var classItem = (i % 2 == 0) ? 'even' : 'odd';
+		$(this).removeClass('even').removeClass('odd')
+				.addClass(classItem);
+	});
+};
+
+function generateMenuHtml(data, id) {
+	var ul = document.createElement('ul');
+	for (var i = 0; i < data.length; i++) {
+		var item = menuBuilder.getItem(data[i].id);
+		var itemId = id + '_' + i;
+		item.setId(itemId);
+		if (item != null) {
+			var li = item.render();
+			if (data[i].children != undefined) {
+				var subUL = generateMenuHtml(data[i].children, itemId);
+				$(li).append(subUL);
+			}
+			$(ul).append(li);
+		}
+	}
+	return ul;
+};
+
+function addEditDeleteIcons() {
+	$('#t_a_menu_container').find('li').each(function() {
+		var self = this;
+		if ($(self).find('div.edit').length == 0) {
+			var divDelete = document.createElement('div');
+			var linkDelete = document.createElement('a');
+			
+			$(linkDelete).html('<?php echo $this->translator('menu_item_delete'); ?>')
+						.bind('click', function() {
+							if (confirm('<?php echo $this->translator('menu_item_delete_confirm'); ?>')) {
+								var that = this;
+								$(that).parent().parent().find('li').each(function() {
+									menuBuilder.removeItem($(this).attr('id'));
+									$(this).remove();
+								});
+								menuBuilder.removeItem($(that).parent().parent().attr('id'));
+								$(that).parent().parent().remove();
+								addEvenOddClass();
+							}
+						}).addClass('t_a_link');
+			$(divDelete).append(linkDelete)
+						.addClass('delete');
+			$(self).children('a:first').after($(divDelete));
+
+			var divEdit = document.createElement('div');
+			var linkEdit = document.createElement('a');
+			$(linkEdit).html('<?php echo $this->translator('menu_item_edit'); ?>')
+						.bind('click', function() {
+							$('#tButtonElementUpdate').show();
+							$('#tButtonElementAdd').hide();
+							var id = $(this).parent().parent().attr('id');
+							var item = menuBuilder.getItem(id);
+							var label = item.getLabel();
+							var link = item.getLink()
+							$('#tElementLabel').val(label);
+							$('#tElementUrl').val(link);
+							$('#tElementId').val(id);
+						}).addClass('t_a_link');
+			$(divEdit).append(linkEdit)
+						.addClass('edit');
+			$(self).children('a:first').after($(divEdit));
+		}
+	});
+};
+
+$(document).ready(function() {
+	/**
+	 * Add method menu item required 	
+	 */
+	jQuery.validator.addMethod('menu_item_required', function() { 
+		  if (ul == undefined || $(ul).find('li').length == 0) {
+			  return false;
+		  }
+		  return true;
+	});
+	/**
+	 * Validate form
+	 */
+	$('#tMenuForm').validate({
+		rules: {
+			menu_name: {
+				required: true
+			},
+			menu_item: {
+				menu_item_required: true
+			}
+		},
+		messages: {
+			menu_name: {
+				required: '<?php echo $this->translator('menu_name_required'); ?>'
+			},
+			menu_item: {
+				menu_item_required: '<?php echo $this->translator('menu_item_required'); ?>'
+			}
+		}
+	});
+
+	$('#tSubmitButton').click(function() {
+		if ($('#' + menuBuilder.getId()).html() != null) {
+			tMenuBuilderData = jQuery.iNestedSortable.serialize(menuBuilder.getId()).o;
+			var menuData = tMenuBuilderData[menuBuilder.getId()];
+			$('#tMenuPreview').html('').append(generateMenuHtml(menuData, menuBuilder.getId()));
+			$('#menu_html_data').val($.toJSON($('#tMenuPreview').html()));
+			$('#tMenuForm').submit();
+		}
+	});
+
+	$('#tButtonElementAdd').bind('click', function() {
+		var label = $('#tElementLabel').val();
+		var link = $('#tElementUrl').val();
+		if (label == '' || link == '') {
+			return false;
+		}
+		var item = new Tomato.Menu.Item(label, link);
+		var id = menuBuilder.addItem(item);
+		if (null == ul) {
+			ul = menuBuilder.render();
+			$('#t_a_menu_container').html('').append(ul);
+		} else {
+			$(ul).append(item.render());
+		}
+		addEvenOddClass();
+		menuNestedSortable();
+		addEditDeleteIcons();
+	});
+
+	menuNestedSortable();
+	
+	$('#tButtonElementUpdate').click(function() {
+		var id = $('#tElementId').val();
+		var label = $('#tElementLabel').val();
+		var link = $('#tElementUrl').val();
+		if (id != undefined) {
+			var item = menuBuilder.getItem(id);
+			item.setLabel(label);
+			item.setLink(link);
+			$('#' + id).children('a:first').attr('href', link).html(label);
+		}
+		$('#tButtonElementUpdate').hide();
+		$('#tButtonElementAdd').show();
+		$('#tElementLabel').val('');
+		$('#tElementUrl').val('');
+		$('#tElementId').val('');
+	});
+});
+</script>

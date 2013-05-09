@@ -1,0 +1,95 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: dashboard.phtml 1620 2010-03-14 15:37:50Z huuphuoc $
+ */
+?>
+<?php
+$this->headTitle($this->translator('index_dashboard_page_title'));
+?>
+
+<?php 
+/**
+ * Inform user if there is newer version
+ * @since 2.0.1
+ */
+if ($this->hasNewerVersion) :
+?>
+<div class="t_a_message">
+	<b>
+	<?php echo sprintf($this->translator('index_dashboard_tomato_version'), $this->tomatoVersion); ?><br />
+	<?php echo sprintf($this->translator('index_dashboard_new_version_available'), $this->latestVersion, 'a class="t_a_link" href="http://www.tomatocms.com"', '/a'); ?>
+	</b>
+</div>
+<?php endif; ?>
+
+<div class="grid_12 t_a_top">
+	<?php echo $this->translator('index_dashboard_guide'); ?>	
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_8 alpha">
+		<div class="t_a_line">
+			<div></div> 
+			<h2><?php echo $this->translator('index_dashboard_tasks'); ?></h2>
+		</div>
+		<?php echo $this->translator('index_dashboard_tasks_guide'); ?><br />
+		<?php for ($i = 0; $i < count($this->modules); $i++) : ?>
+		<div class="grid_4 t_a_top<?php if ($i % 2 == 0) : ?> alpha<?php else : ?> omega<?php endif; ?>">
+			<div class="clearfix t_a_box">
+				<div style="padding: 5px">
+					<div class="t_a_line t_a_toggle">
+						<div></div>
+						<h2><?php echo $this->modules[$i]['name']; ?></h2></div>
+					<div>
+						<?php echo $this->modules[$i]['description']; ?><br />
+						<?php if (count($this->modules[$i]['tasks']) > 0) : ?>
+						<ul class="t_a_list">
+							<?php foreach ($this->modules[$i]['tasks'] as $task) : ?>
+							<li><a href="<?php echo $this->baseUrl(); ?><?php echo $task['link']; ?>"><?php echo $task['label']; ?></a></li>
+							<?php endforeach; ?>
+						</ul>
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<?php if ($i % 2 == 1) : ?><div class="clearfix"></div><?php endif; ?>
+		<?php endfor; ?>
+	</div>
+	<div class="grid_4 omega">
+		<div class="t_a_line t_a_toggle">
+			<div></div>
+			<h2><?php echo $this->translator('index_dashboard_system_info'); ?></h2>
+		</div>
+		<div>
+			<?php echo sprintf($this->translator('index_dashboard_tomato_version'), $this->tomatoVersion); ?>
+			<ul class="t_a_list t_a_bottom">
+				<li><?php echo sprintf($this->translator('index_dashboard_php_version'), $this->phpVersion); ?></li>
+				<li><?php echo sprintf($this->translator('index_dashboard_mysql_version'), $this->mysqlVersion); ?></li>
+			</ul>
+			<div class="t_a_bottom"><?php echo $this->translator('index_dashboard_extension_required'); ?></div>
+			<ul class="t_a_list">
+			<?php foreach (array('gd', 'json', 'mbstring', 'mysql', 'pdo', 'pdo_mysql', 'simplexml', 'xml', 'xmlreader', 'zip') as $ext) : ?>
+				<?php if (extension_loaded($ext)): ?>
+				<li><?php echo $ext; ?> (<?php echo $this->translator('index_dashboard_extension_installed'); ?>)</li>
+				<?php else : ?>
+				<li class="t_a_bottom"><span class="t_a_message_warning" style="width: 280px"><?php echo $ext; ?> (<?php echo $this->translator('index_dashboard_extension_not_installed'); ?>)</span></li>
+				<?php endif; ?>
+			<?php endforeach; ?>	
+			</ul>
+		</div>
+	</div>
+</div>

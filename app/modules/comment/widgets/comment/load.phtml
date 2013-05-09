@@ -1,0 +1,71 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: load.phtml 666 2010-01-12 04:29:53Z huuphuoc $
+ */
+?>
+<?php if ($this->comments != null) : ?>
+<ul>
+	<?php foreach ($this->comments as $index => $comment) : ?>
+	<li class="t_comment_comment_level_<?php echo $comment->depth; ?>" style="padding-left: <?php echo $comment->depth * 20; ?>px;">
+		<a name="comment-<?php echo $comment->comment_id; ?>"></a>
+		<blockquote<?php if ($comment->depth> 0) : ?> class="reply"<?php endif; ?>>
+			<?php if ($this->showAvatar && $avatar = $this->helper()->gravatar($comment->email, $this->avatarSize)) : ?>
+			<a<?php if ($comment->web_site != null) : ?> target="_blank"<?php endif?> href="<?php if ($comment->web_site != null) : ?><?php echo $this->escape($comment->web_site); ?><?php else : ?>javascript: void(0);<?php endif; ?>" title="<?php echo $this->escape($comment->email); ?>"><img src="<?php echo $avatar; ?>" style="float: left; margin: 5px 5px 0 5px;" title="<?php echo $comment->full_name; ?>" alt="<?php echo $comment->full_name; ?>" /></a>
+			<?php endif; ?>
+			<p>
+				<a href="#comment-<?php echo $comment->comment_id; ?>" title="<?php echo $this->escape($comment->title); ?>" class="title"><?php echo $this->escape($comment->title); ?></a><br />
+				<?php echo Tomato_Core_Hook_Registry::getInstance()->executeFilter('Comment_Widget_Comment_FormatContent', $comment->content); ?>
+			</p>
+			<p style="clear: both;"></p>
+		</blockquote>
+		<cite<?php if ($comment->depth> 0) : ?> class="reply"<?php endif; ?>>
+			<strong><a<?php if ($comment->web_site != null) : ?> target="_blank"<?php endif?> href="<?php if ($comment->web_site != null) : ?><?php echo $this->escape($comment->web_site); ?><?php else : ?>javascript: void(0);<?php endif; ?>" title="<?php echo $this->escape($comment->full_name); ?>"><?php echo $comment->full_name; ?></a></strong> <?php echo sprintf($this->translator()->widget('commented_at'), date($this->globalConfig('datetime')->date_time_format, strtotime($comment->created_date))); ?>
+			<?php if ($this->allowComment) : ?><span><a class="tReplyAction" href="javascript: void(0);" rel="<?php echo $comment->comment_id; ?>" title="<?php echo $this->translator()->widget('reply'); ?>"><?php echo $this->translator()->widget('reply'); ?></a></span><?php endif; ?>
+		</cite>
+	</li>
+	<?php endforeach; ?>
+</ul>
+<div class="t_g_paginator">
+	<?php echo $this->paginator()->slide($this->paginator, $this->paginatorOptions); ?>
+</div>
+<?php endif; ?>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('.tReplyAction').click(function() {
+		var self = this;
+		var commentId = $(self).attr('rel');
+		$('#tCommentReply').val(commentId);
+		var container = $(self).parent().parent();
+		$(container).append($('#t_g_comment').css('padding', '10px 0 0'));
+		if ($('#tCommentCancelButton').attr('value') == undefined) {
+			var cancelButton = document.createElement('input');
+			$(cancelButton).attr('id', 'tCommentCancelButton')
+					.attr('type', 'button')
+					.attr('value', '<?php echo $this->translator()->widget('cancel_reply_button'); ?>')
+					.addClass('t_a_button')
+					.css('margin-left', '10px')
+					.bind('click', function() {
+						$('#tCommentReply').val(0);
+						$('#tCommentCancelButton').remove();
+						$('#tCommentList').after($('#t_g_comment'));
+					});
+			
+			$('#tCommentSendButton').after($(cancelButton));
+		}
+	});
+});
+</script>

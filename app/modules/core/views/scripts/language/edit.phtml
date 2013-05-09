@@ -1,0 +1,161 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: edit.phtml 2020 2010-04-02 07:26:40Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('language_edit_page_title'));
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.validate/jquery.validate.min.js');
+// Inplace Editor
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.editinplace/jquery.editinplace.packed.js');
+?>
+
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><a href="<?php echo $this->url(array(), 'core_language_list'); ?>"><?php echo $this->translator('language_list_breadcump'); ?></a></span>
+	<span><?php echo $this->translator('language_edit_breadcump'); ?></span>	
+</div>
+<div class="grid_12">
+	<?php echo sprintf($this->translator('language_edit_top_guide'), $this->language, $this->moduleName); ?>
+</div>
+<?php if ($this->data) : ?>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_4 alpha">
+		<div class="t_a_line">
+			<div></div> 
+			<h2><?php echo $this->translator('language_edit_key'); ?></h2> 
+		</div>
+	</div>
+	<div class="grid_8 omega">
+		<div class="t_a_line">
+			<div></div> 
+			<h2><?php echo $this->translator('language_edit_value'); ?></h2> 
+		</div>
+	</div>
+</div>
+<?php foreach ($this->data as $section => $langs) : ?>
+<div class="grid_12" style="margin-bottom: 5px">
+	<?php echo $this->translator('language_edit_section'); ?>: <a href="javascript: void(0)" rel="<?php echo $section; ?>" class="t_a_link tSectionToggle"><?php echo $section; ?></a>
+	<div style="display: none">
+		<?php foreach ($langs as $key => $value) : ?>
+		<div class="clearfix t_a_box" id="tKey_<?php echo $key; ?>">
+			<div class="grid_4 alpha"><div style="padding-left: 5px"><?php echo $key; ?></div></div>
+			<div class="grid_7">
+				<div class="editable edit_value" style="background: #E8E8E8; border: 1px solid #CCC" id="_valueFor_<?php echo $section.'___'.$key; ?>"><?php echo $this->escape($value); ?></div>
+			</div>
+			<div class="grid_1 omega"><?php if ($this->allow('delete')) : ?><a class="t_a_link tDeleteKey" href="javascript: void(0)" rel="<?php echo $this->escape($section.'___'.$key); ?>"><?php echo $this->translator('language_edit_delete_key'); ?></a><?php endif; ?></div>
+		</div>
+		<?php endforeach; ?>
+	</div>
+</div>
+<?php endforeach; ?>
+<?php endif; ?>
+
+<?php if ($this->allow('add')) : ?>
+<div class="clearfix"></div>
+
+<div class="grid_12 t_a_bottom">
+	<div class="t_a_line">
+		<div></div> 
+		<h2><?php echo $this->translator('language_edit_add_new_key'); ?></h2> 
+	</div>
+</div>
+
+<form style="margin-top: 10px" method="post" id="addLanguageForm" action="<?php echo $this->url(array(), 'core_language_add'); ?>">
+	<div class="grid_12" style="padding-bottom: 20px">
+		<div class="grid_2 alpha">
+			<?php echo $this->translator('language_edit_select_section'); ?><br />
+			<select name="section" style="width: 140px"><option value="">---</option><?php foreach ($this->sections as $index => $section) : ?><option value="<?php echo $section; ?>"><?php echo $section; ?></option><?php endforeach; ?></select>
+			<?php echo $this->translator('language_edit_or_create_new_section'); ?><br />
+			<input type="text" style="width: 140px" name="new_section" />
+		</div>
+		<div class="grid_3"><?php echo $this->translator('language_edit_key'); ?>:<br /><input type="text" style="width: 220px" name="key" id="key" /></div>
+		<div class="grid_6"><?php echo $this->translator('language_edit_value'); ?>:<br /><input type="text" style="width: 460px" name="value" id="value" /></div>
+		<div class="grid_1 omega"><br /><input class="t_a_button" type="submit" value="<?php echo $this->translator('language_edit_add_new_key_button'); ?>" /></div>
+	</div>
+	<input type="hidden" name="moduleName" value="<?php echo $this->moduleName; ?>" />
+	<input type="hidden" name="language" value="<?php echo $this->language; ?>" />
+	<input type="hidden" name="widget" value="<?php echo $this->widget; ?>" />
+</form>
+<br />
+<?php endif; ?>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('a.tSectionToggle:first').parent().find('div:first').show();
+	$('a.tSectionToggle').click(function() {
+		$(this).parent().find('div:first').toggle('normal');
+	});
+
+	<?php if ($this->allow('update')) : ?>
+	$('.edit_value').editInPlace({
+		url: "<?php echo $this->url(array(), 'core_language_update'); ?>",
+		bg_out: '#f3f3f3',
+		field_type: 'textarea',
+		textarea_cols: 50,
+		textarea_rows: 5,
+		saving_text: '<?php echo $this->translator('language_edit_saving'); ?>',	
+		callback: function(original_element, html, original) {
+			$.ajax({
+				url: "<?php echo $this->url(array(), 'core_language_update'); ?>",
+				type: 'POST',
+				data: { moduleName: "<?php echo $this->moduleName; ?>", widget: "<?php echo $this->widget; ?>", language: "<?php echo $this->language; ?>", keySection: original_element, value: html },
+				success: function(response) {
+				}
+			});
+			return(html);
+	    }	
+	});
+	<?php endif; ?>
+
+	<?php if ($this->allow('delete')) : ?>
+	$('a.tDeleteKey').click(function() {
+		var self = this;
+		var attr = $(self).attr('rel').split('___');
+		if (confirm("<?php echo $this->escape($this->translator('language_edit_delete_key_confirm')); ?>")) {
+			$(self).html('').addClass('t_a_loading');
+			$.ajax({
+				url: "<?php echo $this->url(array(), 'core_language_delete'); ?>",
+				type: 'POST',
+				data: { moduleName: "<?php echo $this->moduleName; ?>", widget: "<?php echo $this->widget; ?>", language: "<?php echo $this->language; ?>", section: attr[0], key: attr[1] },
+				success: function(response) {
+					if ('RESULT_OK' == response) {
+						$('#tKey_' + attr[1]).fadeOut('slow');
+					}
+				}
+			});
+		}
+	});
+	<?php endif; ?>
+
+	<?php if ($this->allow('add')) : ?>
+	$('#addLanguageForm').validate({
+		rules: {
+			key: {required: true},
+			value: {required: true}
+	    },
+	    messages: {
+	    	key: {
+	        	required: "<?php echo $this->translator('language_edit_key_required'); ?>"
+			},
+		    value: {
+	        	required: "<?php echo $this->translator('language_edit_value_required'); ?>"
+			}
+		}
+	});
+	<?php endif; ?>
+});
+</script>

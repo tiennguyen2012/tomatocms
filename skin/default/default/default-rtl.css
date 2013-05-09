@@ -1,0 +1,160 @@
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: default-rtl.css 1793 2010-03-26 04:17:13Z dinhchieu $
+ * @since		2.0.3
+ */
+
+@import "default.css";
+ 
+/** 
+ * Support RTL style
+ */
+html, body { direction: rtl; }
+#t_g_footer .omega { text-align: left; }
+
+.t_g_left { float: right; }
+.t_g_right { float: left; }
+.t_g_textleft { text-align: left; }
+.t_g_textright { text-align: right; }
+
+/** 
+ * Box 
+ */
+.t_g_box_head h2 { margin-left: 0; margin-right: 34px; }
+.t_g_box_head a.t_g_box_head_collapse { right: 12px; overflow: hidden; }
+
+/** 
+ * Cycle slider 
+ */
+.t_g_cycle_slider { left: 10px; right: auto; }
+
+/* ========== Modules ======================================================= */
+
+/**
+ * menu
+ */
+.t_g_menu_menu .sf-menu li { float: right; }
+.t_g_menu_menu .sf-menu li:hover ul,
+.t_g_menu_menu .sf-menu li.sfHover ul { right: 0; left: auto; }
+.t_g_menu_menu ul.sf-menu li li:hover ul, .t_g_menu_menu ul.sf-menu li li.sfHover ul { right: 180px; left: auto; }
+.t_g_menu_menu ul.sf-menu li li li:hover ul, .t_g_menu_menu ul.sf-menu li li li.sfHover ul { right: 180px; left: auto; }
+.t_g_menu_menu .sf-menu { float: right; }
+.t_g_menu_menu .sf-menu a { border-right: 1px solid #fff; border-left: none; }
+.t_g_menu_menu .sf-menu a.sf-with-ul { padding-left: 2.25em; padding-right: 1em; }
+.t_g_menu_menu .sf-sub-indicator { right:auto;left: .75em; background-image: url(images/menu_rtl.png); } 
+
+/** 
+ * multimedia
+ */
+.t_multimedia_set_details li { float: right; }
+
+/** 
+ * news
+ */
+.t_news_category_page li img { float: right; margin-left: 10px; }
+
+/* ========== Widgets ======================================================= */
+
+/**
+ * comment/latestcomment
+ */
+.t_comment_latestcomment blockquote img:first-child { float: right; }
+
+/**
+ * multimedia/filesets
+ */
+.t_multimedia_filesets li img { float: right; margin-left: 5px; margin-right: 0px; }
+
+/**
+ * multimedia/latestsets
+ */
+.t_multimedia_latestsets li img { float: right; margin-left: 5px; margin-right: 0px; }
+
+/**
+ * multimeida/player
+ */
+.t_multimeida_player .t_multimeida_player_list table { direction: rtl; }
+
+/**
+ * news/breadcump
+ */
+.t_news_breadcump li { float: right; }
+.t_news_breadcump li a { margin-right: 6px; }
+
+/**
+ * news/latesthome
+ */
+.t_news_latesthome ul li { background: url(images/g_square.jpg) right no-repeat; padding-right: 10px; }
+.t_news_latesthome img { float: right; margin-left: 10px; margin-right: 0; }
+
+/**
+ * news/mostviewed
+ */
+.t_news_mostviewed ul li div { margin-right: 0; margin-left: 5px; }
+body > div.t_news_mostviewed ul li { margin: 0px; padding: 0px; height: 1%; width: 100%; } 
+
+/** 
+ * news/newer
+ */
+.t_news_newer li { float: right; margin-left: 10px; }
+.t_news_newer li img { float: right; margin-left: 5px; }
+
+/**
+ * news/newest
+ */
+.t_news_newest ul li img { float: right; margin: 0px 0px 0px 6px; }
+
+/** 
+ * news/older
+ */
+.t_news_older li { background: url(images/g_square.jpg) right no-repeat; padding-right: 10px; }
+
+/**
+ * news/siblingcategory
+ */
+.t_news_siblingcategory .t_news_siblingcategory_grid li img { float: right; margin-right: 0px; margin-left: 5px; }
+.t_news_siblingcategory .t_news_siblingcategory_list li { background: url(images/g_square.jpg) right no-repeat; padding-right: 10px; }
+
+/**
+ * tag/tagcloud
+ */
+.t_tag_tagcloud .Zend_Tag_Cloud li { float: right; }
+
+/**
+ * tag/tags
+ */
+.t_tag_tags .t_g_box_content span { float: right; }
+
+/** 
+ * utility/countdown
+ */
+.t_utility_countdown .countdown_section { float: right; }
+
+/** 
+ * utility/twitter
+ */
+.t_utility_twitter a, .t_utility_twitter a:visited { text-decoration: none; }
+.t_utility_twitter li a:hover { text-decoration: underline; }
+
+/** 
+ * utility/socialshare
+ */
+.t_utility_socialshare { float: left; }
+
+/** 
+ * utility/textresizer
+ */
+.t_utility_textresizer { float: left; }

@@ -1,0 +1,194 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: list.phtml 2015 2010-04-02 07:24:33Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('file_list_page_title'));
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.editinplace/jquery.editinplace.packed.js');
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+?>
+
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><?php echo $this->translator('file_list_breadcump'); ?></span>	
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_6 alpha"><?php echo $this->translator('file_list_guide'); ?></div>
+	<div class="grid_6 omega t_a_textright">
+		<a href="<?php echo $this->url(array(), 'multimedia_photo_upload'); ?>" class="t_a_link"><?php echo $this->translator('photo_upload_breadcump'); ?></a> <?php echo $this->translator('file_list_or'); ?>&nbsp; <a href="<?php echo $this->url(array(), 'multimedia_file_add'); ?>" class="t_a_link"><?php echo $this->translator('file_add_breadcump'); ?></a>
+	</div>	
+</div>
+
+<form method="post" action="<?php echo $this->url(array(), 'multimedia_file_list'); ?>">
+<div class="grid_12 t_a_bottom">
+	<div class="t_a_line t_a_bottom">
+		<div></div>
+		<h2><?php echo $this->translator('file_list_search'); ?></h2>
+	</div>
+	<div class="grid_12 omega">
+		<div class="clearfix t_a_bottom">
+			<div class="grid_1 alpha"><?php echo $this->translator('file_list_search_keyword'); ?>:</div>
+			<div class="grid_11 omega"><input type="text" style="width: 775px" name="keyword" value="<?php if (isset($this->exp['keyword'])) : ?><?php echo $this->exp['keyword']; ?><?php endif; ?>" /></div>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="grid_1 alpha"><?php echo $this->translator('file_list_search_id'); ?>:</div>
+			<div class="grid_11 omega"><input type="text" style="width: 130px" name="fileId" value="<?php if (isset($this->exp['file_id'])) : ?><?php echo $this->exp['file_id']; ?><?php endif; ?>" /></div>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="grid_11 prefix_1 alpha">
+				<input type="checkbox" name="findPhotos"<?php if (isset($this->exp['photo'])) : ?> checked="checked"<?php endif; ?> value="1"/> <?php echo $this->translator('file_list_search_photos'); ?>
+				&nbsp;<input type="checkbox" name="findClips"<?php if (isset($this->exp['clip'])) : ?> checked="checked"<?php endif; ?> value="1"/> <?php echo $this->translator('file_list_search_clips'); ?>
+			</div>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="grid_3 prefix_1 alpha"><input type="checkbox" name="findMyFiles"<?php if (isset($this->exp['created_user'])) : ?> checked="checked"<?php endif; ?> value="1"/> <?php echo $this->translator('file_list_search_my_files'); ?></div>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="grid_11 prefix_1 alpha"><input type="submit" class="t_a_button" value="<?php echo $this->translator('file_list_search_button'); ?>" /></div>
+		</div>
+    </div>
+</div>
+</form>
+<div class="grid_12 t_a_line">
+	<div></div>
+	<h2><?php echo $this->translator('file_list_files'); ?></h2>
+</div>	
+<?php if ($this->numFiles == 0) : ?>
+	<div class="grid_12 t_a_bottom"><?php echo $this->translator('file_list_not_found'); ?></div>	
+<?php else : ?>	
+	<?php $i = 0; ?>
+	<?php foreach ($this->files as $file) : ?>
+		<?php if ($i % 5 == 0) : ?><ul class="grid_12 t_a_bottom"><?php endif; ?>
+			<li id="tFileRow_<?php echo $file->file_id; ?>" style="padding: 10px; padding-top: 10px; float: left">
+				<div class="clearfix t_a_bottom "><img src="<?php echo $file->image_general; ?>"/></div>
+				<div class="clearfix t_a_bottom editable edit_value" style="background: #E8E8E8; border: 1px solid #CCC; width: 160px; max-height: 200px; overflow: auto;" id="<?php echo 'title_'.$file->file_id ?>"><?php echo $file->title; ?></div>
+				<div class="clearfix t_a_bottom editable edit_value" style="background: #E8E8E8; border: 1px solid #CCC; width: 160px; max-height: 200px; overflow: auto;" id="<?php echo 'description_'.$file->file_id ?>"><?php echo $file->description; ?></div>
+				<?php if ($this->allow('edit')) : ?>
+					<a class="t_a_link tEditAction" href="<?php echo $this->url(array('file_id' => $file->file_id), 'multimedia_file_edit'); ?>"><?php echo $this->translator('file_list_action_edit'); ?></a>
+				<?php endif; ?>
+				<?php if ($this->allow('delete')) : ?> 
+				 | <a class="t_a_link tDeleteAction" rel="<?php echo $file->file_id; ?>" href="javascript: void(0)"><?php echo $this->translator('file_list_action_delete'); ?></a>
+				<?php endif; ?>
+				<?php if ($this->allow('activate')) : ?>
+				 | <a class="t_a_link tActivateFile" rel="<?php echo $file->file_id ?>_<?php echo (int)$file->is_active; ?>_<?php echo $file->slug; ?>" href="javascript: void(0)"><?php if ($file->is_active) : ?><?php echo $this->translator('file_list_action_deactivate'); ?><?php else : ?><?php echo $this->translator('file_list_action_activate'); ?><?php endif; ?></a>
+				<?php endif; ?>
+			</li>
+		<?php if ($i % 5 == 4 || $i == (count($this->files) - 1)) : ?></ul><?php endif; ?>
+		<?php $i++; ?>
+	<?php endforeach; ?>	
+	<div class="grid_12 t_a_bottom t_a_paginator">
+		<?php echo $this->paginator()->slide($this->paginator, $this->paginatorOptions); ?>
+	</div>
+<?php endif; ?>
+
+<div id="tDialogContainer"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	<?php if ($this->allow('edit')) : ?>
+	$('.edit_value').editInPlace({
+		url: "<?php echo $this->url(array('file_id' => 0), 'multimedia_file_edit'); ?>",
+		bg_out: '#f3f3f3',
+		field_type: 'textarea',
+		textarea_cols: 17,
+		textarea_rows: 2,
+		saving_text: '<?php echo $this->translator('file_list_saving'); ?>',	
+		callback: function(original_element, html, original) {
+			$.ajax({
+				url: "<?php echo $this->url(array('file_id' => 0), 'multimedia_file_edit'); ?>",
+				type: 'POST',
+				data: { keySection: original_element, value: html },
+				success: function(response) {
+					$('#tDialogContainer').html('<?php echo $this->translator('file_list_update_success'); ?>')
+					.dialog({
+						title: '<?php echo $this->translator('set_list_action_message'); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+				}
+			});
+			return(html);
+	    }	
+	});
+	<?php endif; ?>
+	
+	<?php if ($this->allow('delete')) : ?>
+	$('a.tDeleteAction').click(function() {
+		if (confirm('<?php echo $this->escape($this->translator('file_list_action_delete_confirm')); ?>')) {
+			$(this).html('').addClass('t_a_loading');
+			var id = $(this).attr('rel');
+			$.ajaxq('multimedia_file', {
+				type: 'POST',
+				url: "<?php echo $this->url(array(), 'multimedia_file_delete'); ?>",
+				data: { id: id },
+				success: function(response) {
+					if ('RESULT_OK' == response) {
+						$('#tFileRow_' + id).fadeOut('slow');
+					}
+				}
+			});
+		}
+	});
+	<?php endif; ?>
+
+	<?php if ($this->allow('activate')) : ?>
+	$('a.tActivateFile').click(function() {
+		activateFile(this);
+	});
+	<?php endif; ?>
+
+	<?php if ($this->allow('activate')) : ?>
+	function activateFile(linkObj) {
+		var self = linkObj;
+		var arr = $(self).attr('rel').split('_');
+		$(self).html('').addClass('t_a_loading');
+		$.ajaxq('multimedia_set', {
+			url: "<?php echo $this->url(array(), 'multimedia_file_activate'); ?>",
+			type: 'POST',
+			data: { id: arr[0], status: arr[1] },
+			success: function(response) {
+				$(self).attr('rel', arr[0] + '_' + response + '_' + arr[2]);
+				if (response == 1) {
+					$(self).html("<?php echo $this->translator('file_list_action_deactivate'); ?>");
+				} else {
+					$(self).html("<?php echo $this->translator('file_list_action_activate'); ?>");
+				}
+				$(self).removeClass('t_a_loading').fadeIn('normal');
+
+				$('#tDialogContainer').html((response == 1) ? sprintf('<?php echo addslashes($this->translator('file_list_activate_success')); ?>', arr[2]) : sprintf('<?php echo addslashes($this->translator('file_list_deactivate_success')); ?>', arr[2]))
+					.dialog({
+						title: '<?php echo addslashes($this->translator('file_list_action_message')); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+			}
+		});
+	};
+	<?php endif; ?>
+});
+</script>

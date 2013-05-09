@@ -1,0 +1,62 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: show.phtml 1478 2010-03-08 03:58:13Z leha $
+ */
+?>
+<div class="t_g_box t_multimedia_slideshow">
+    <div class="t_g_box_head">
+    	<h2><?php echo $this->translator()->widget('title'); ?></h2>
+    	<a class="t_g_box_head_collapse" href="javascript:void(0)">Collapse</a>				    					    				    	
+    </div>
+    <div class="t_g_box_content">
+    	<?php if ($this->photos) : ?>
+		<ul id="tMultimediaSlideshowContainer" class="t_multimedia_slideshow_container">
+			<?php foreach ($this->photos as $index => $photo) : ?>
+			<li style="<?php if ($index == 0) : ?>dispaly: block<?php else : ?>display: none<?php endif; ?>">
+				<a href="<?php echo $this->url($photo->getProperties(), 'multimedia_file_details'); ?>"><img src="<?php echo $photo->image_large; ?>" /></a>
+				<div><h3><a href="<?php echo $this->url($photo->getProperties(), 'multimedia_file_details'); ?>"><?php echo $photo->title; ?></a></h3></div>
+			</li>
+			<?php endforeach; ?>
+		</ul>
+		<div class="clearfix"></div>
+		<div class="t_multimedia_slideshow_nav">
+			<div id="tMultimediaSlideshowNav"></div>
+		</div>
+		<div class="clearfix"></div>
+		<?php endif; ?>
+	</div>			    
+    <div class="t_g_box_corner t_g_box_corner_tl"></div>
+    <div class="t_g_box_corner t_g_box_corner_tr"></div>
+    <div class="t_g_box_corner t_g_box_corner_bl"></div>
+    <div class="t_g_box_corner t_g_box_corner_br"></div>
+</div>
+
+<?php if ($this->photos) : ?>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#tMultimediaSlideshowContainer').cycle({
+		fx: 'fade',
+		timeout: 5000,
+		pager: '#tMultimediaSlideshowNav',
+		pagerAnchorBuilder: function(idx, slide) {
+			$('#tMultimediaSlideshowNav').find('span').eq(<?php echo count($this->photos); ?> - 1).remove();
+        	return '<span><a href="#">' + (idx + 1) + '</a></span>';
+    	}
+	});
+});
+</script>
+<?php endif; ?>

@@ -1,0 +1,45 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: category.phtml 1248 2010-02-23 02:30:35Z huuphuoc $
+ */
+?>
+<?php
+$this->headTitle($this->category->name); 
+?>
+<div class="t_news_category_page">
+	<?php foreach ($this->articles as $index => $article) : ?>
+	<div class="t_g_bottom">
+		<div class="t_g_left">
+			<h2><a href="<?php echo $this->url($article->getProperties(), 'news_article_details'); ?>"><?php echo $article->title; ?></a></h2>
+			<small><?php echo sprintf($this->translator('article_category_posted_by'), $article->created_user_name, date($this->globalConfig('datetime')->date_time_format, strtotime($article->activate_date))); ?> <?php echo sprintf($this->translator('article_category_posted_in'), '<a href="'.$this->url($article->getProperties(), 'news_article_details').'">'.$article->category_name.'</a>'); ?></small>
+		</div>
+		<div class="t_g_right t_news_category_page_views"><?php echo $article->num_views; ?></div>
+		<div class="clearfix"></div>
+	</div>
+	<div class="t_g_top">	
+		<div class="t_g_top">
+			<?php if ($article->image_general) : ?><img src="<?php echo $article->image_general; ?>" /><?php endif; ?>
+			<?php echo $article->description; ?>
+		</div>
+		<div class="t_g_clear"><p style="text-align: right; margin: 10px 0px"><a href="<?php echo $this->url($article->getProperties(), 'news_article_details'); ?>"><?php echo $this->translator('article_category_read_more'); ?> &raquo;</a></p></div>
+	</div>
+	<?php endforeach; ?>
+	<!-- Pager -->
+	<div class="t_news_category_pager">
+		<div><?php if ($this->pageIndex >= 2) : ?><a href="<?php echo $this->url(array('category_id' => $this->category->category_id, 'page_index' => $this->pageIndex - 1), 'news_article_category_pager'); ?>"><?php echo $this->translator('article_category_previous_page'); ?></a> | <?php endif; ?><a href="<?php echo $this->url(array('category_id' => $this->category->category_id, 'page_index' => $this->pageIndex + 1), 'news_article_category_pager'); ?>"><?php echo $this->translator('article_category_next_page'); ?></a></div>
+	</div>
+</div>	

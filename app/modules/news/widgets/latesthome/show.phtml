@@ -1,0 +1,47 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: show.phtml 1582 2010-03-11 06:50:17Z huuphuoc $
+ */
+?>
+<?php if ($this->categories != null) : ?>
+<div class="t_g_box t_news_latesthome">
+    <div class="t_g_box_head">
+    	<h2><?php foreach ($this->categories as $index => $category) : ?><?php if ($index > 0) : ?> | <?php endif; ?><a href="<?php echo $this->url($category->getProperties(), 'news_article_category'); ?>"><?php echo $category->name; ?></a><?php endforeach; ?></h2>
+    	<a class="t_g_box_head_collapse" href="javascript:void(0)">Collapse</a>
+    </div>
+    <div class="t_g_box_content">
+		<?php if (($articles = $this->helper()->getLatestArticles($this->categories[0]->category_id, $this->limit)) != null && count($articles) > 0) : ?>
+		<div>
+			<a href="<?php echo $this->url($articles[0]->getProperties(), 'news_article_details'); ?>"><?php if ($articles[0]->image_general) : ?><img src="<?php echo $articles[0]->image_general; ?>" /><?php endif; ?><b><?php echo $articles[0]->title; ?></b></a><?php echo $this->articleIcons($articles[0]->icons); ?>
+			<br />
+			<?php echo $articles[0]->description; ?>
+		</div>
+		<div>
+			<ul>
+			<?php for ($i = 1; $i < count($articles); $i++) : ?>
+				<li><a href="<?php echo $this->url($articles[$i]->getProperties(), 'news_article_details'); ?>"><?php echo $articles[$i]->title; ?></a><?php echo $this->articleIcons($articles[$i]->icons); ?></li>
+			<?php endfor; ?>
+			</ul>
+		</div>
+		<?php endif; ?>
+	</div>			    
+    <div class="t_g_box_corner t_g_box_corner_tl"></div>
+    <div class="t_g_box_corner t_g_box_corner_tr"></div>
+    <div class="t_g_box_corner t_g_box_corner_bl"></div>
+    <div class="t_g_box_corner t_g_box_corner_br"></div>
+</div>
+<?php endif; ?>

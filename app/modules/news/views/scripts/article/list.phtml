@@ -1,0 +1,222 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: list.phtml 2015 2010-04-02 07:24:33Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('article_list_page_title'));
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.resizable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+?>
+
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><?php echo $this->translator('article_list_breadcump'); ?></span>
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_10 alpha"><?php echo $this->translator('article_list_guide'); ?></div>
+	<div class="grid_2 omega t_a_textright"><a href="<?php echo $this->url(array(), 'news_article_add'); ?>" class="t_a_link"><?php echo $this->translator('article_add_breadcump'); ?></a></div>
+</div>
+
+<form class="t_a_form" method="post" action="<?php echo $this->url(array(), 'news_article_list'); ?>">
+<div class="grid_12">
+	<div class="t_a_line t_a_bottom">
+		<div></div>
+		<h2><?php echo $this->translator('article_list_search'); ?></h2>
+	</div>
+	<div class="grid_4 alpha">
+		<div class="clearfix t_a_bottom">
+			<div class="grid_1 alpha"><label><?php echo $this->translator('article_list_search_keyword'); ?>:</label></div>
+			<div class="grid_3 omega"><input type="text" style="width: 220px" name="keyword" value="<?php if (isset($this->exp['keyword'])) : ?><?php echo $this->exp['keyword']; ?><?php endif; ?>" /></div>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="grid_1 alpha"><label><?php echo $this->translator('article_list_search_id'); ?>:</label></div>
+			<div class="grid_3 omega"><input type="text" style="width: 220px" name="articleId" value="<?php if (isset($this->exp['article_id'])) : ?><?php echo $this->exp['article_id']; ?><?php endif; ?>" /></div>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="grid_3 prefix_1 alpha"><input type="checkbox" name="findMyArticles"<?php if (isset($this->exp['created_user_id'])) : ?> checked="checked"<?php endif; ?> value="1"/> <label><?php echo $this->translator('article_list_search_my_articles'); ?></label></div>
+		</div>
+    </div>
+    <div class="grid_4">
+		<div class="grid_1 alpha"><label><?php echo $this->translator('article_list_search_category'); ?>:</label></div>
+		<div class="grid_3 omega">
+			<select name="category" style="width: 100%">
+				<option value="">---</option>
+				<?php for ($i = 0; $i < count($this->categories); $i++) : ?>
+				<option value="<?php echo $this->categories[$i]->category_id; ?>"<?php if (isset($this->exp['category_id']) && $this->exp['category_id'] == $this->categories[$i]->category_id) : ?> selected="selected"<?php endif; ?>><?php echo str_repeat('---', $this->categories[$i]->depth).$this->categories[$i]->name; ?></option>
+				<?php endfor; ?>
+		</select>
+		</div>
+	</div>
+	<div class="grid_4 omega">
+		<div class="clearfix t_a_bottom">
+			<div class="grid_1 alpha"><label><?php echo $this->translator('article_list_search_status'); ?>:</label></div>
+			<div class="grid_3 omega">
+				<select name="status" style="width: 220px">
+					<option value=""<?php if (!isset($this->exp['status'])) : ?> selected="selected"<?php endif; ?>>---</option>
+					<option value="active"<?php if (isset($this->exp['status']) && $this->exp['status'] == 'active') : ?> selected="selected"<?php endif; ?>><?php echo $this->translator('article_list_status_activated'); ?></option>
+					<option value="inactive"<?php if (isset($this->exp['status']) && $this->exp['status'] == 'inactive') : ?> selected="selected"<?php endif; ?>><?php echo $this->translator('article_list_status_not_activated'); ?></option>
+					<option value="draft"<?php if (isset($this->exp['status']) && $this->exp['status'] == 'draft') : ?> selected="selected"<?php endif; ?>><?php echo $this->translator('article_list_status_draft'); ?></option>
+				</select>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="prefix_1 alpha">
+		<input type="submit" class="t_a_button" value="<?php echo $this->translator('article_list_search_button'); ?>" />
+	</div>
+</div>
+</form>
+
+<?php if ($this->numArticles == 0) : ?>
+<div class="grid_12 t_a_bottom"><?php echo $this->translator('article_list_not_found'); ?></div>	
+<?php else : ?>
+	<div class="grid_12 t_a_bottom">
+		<div class="grid_5 alpha t_a_line">
+			<div></div>
+			<h2><?php echo $this->translator('article_main_title'); ?></h2>
+		</div>
+		<div class="grid_2 t_a_line">
+			<div></div>
+			<h2><?php echo $this->translator('article_status'); ?></h2>
+		</div>
+		<div class="grid_2 t_a_line">
+			<div></div>
+			<h2><?php echo $this->translator('article_num_views'); ?></h2>
+		</div>
+		<div class="grid_1 t_a_line">
+			<div></div>
+			<h2><?php echo $this->translator('article_id'); ?></h2>
+		</div>
+		<div class="grid_2 omega t_a_line">
+			<div></div>
+			<h2><?php echo $this->translator('article_list_action'); ?></h2>
+		</div>
+	</div>
+
+	<?php foreach ($this->articles as $article) : ?>
+	<div id="tArticleRow_<?php echo $article->article_id; ?>" class="grid_12">
+		<div class="clearfix t_a_box">
+			<div class="grid_5 alpha">
+				<div style="padding-left: 5px">
+					<?php if ($article->image_square) : ?>
+					<a href="<?php echo $this->url(array('article_id' => $article->article_id), 'news_article_edit'); ?>"><img src="<?php echo $article->image_square; ?>" class="t_a_left" width="60px" height="60px" style="padding: 0 5px" /></a>
+					<?php endif; ?>
+					<div>
+						<b><a href="<?php echo $this->url(array('article_id' => $article->article_id), 'news_article_edit'); ?>"><?php echo $article->title; ?></a></b><br />
+						<?php echo sprintf($this->translator('article_list_posted_by'), $article->created_user_name, date('Y-m-d H:i:s', strtotime($article->created_date))); ?>
+						<?php if ($article->status == 'active') : ?>
+						<br />
+						<?php echo sprintf($this->translator('article_list_activated_by'), $article->activate_user_name, date('Y-m-d H:i:s', strtotime($article->activate_date))); ?>
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+			<div class="grid_2" id="tAricleStatus_<?php echo $article->article_id; ?>">
+			<?php if ($article->status == 'active') : ?>
+				<?php echo $this->translator('article_list_status_activated'); ?>
+			<?php elseif ($article->status == 'inactive' || null == $article->status) : ?>
+				<?php echo $this->translator('article_list_status_not_activated'); ?>
+			<?php elseif ($article->status == 'draft') : ?>
+				<?php echo $this->translator('article_list_status_draft'); ?>
+			<?php elseif ($article->status == 'deleted') : ?>
+				<?php echo $this->translator('article_list_status_deleted'); ?>
+			<?php endif; ?>
+			</div>
+			<div class="grid_2"><?php echo $article->num_views; ?></div>
+			<div class="grid_1"><?php echo $article->article_id; ?></div>
+			<div class="grid_2 omega">
+				<?php if ($this->allow('edit')) : ?>
+				<a class="t_a_link" href="<?php echo $this->url(array('article_id' => $article->article_id), 'news_article_edit'); ?>"><?php echo $this->translator('article_list_action_edit'); ?></a> |
+				<?php endif; ?>
+				<?php if ($this->allow('delete')) : ?> 
+				<a class="t_a_link tDeleteAction" rel="<?php echo $article->article_id; ?>" href="javascript: void(0)"><?php echo $this->translator('article_list_action_delete'); ?></a> |
+				<?php endif; ?>
+				<?php if ($this->allow('activate')) : ?>
+				<a class="t_a_link tActivateAction" rel="<?php echo $article->article_id; ?>_<?php echo $article->status; ?>" href="javascript: void(0)"><?php if ($article->status == 'active') : ?><?php echo $this->translator('article_list_action_deactivate'); ?><?php else : ?><?php echo $this->translator('article_list_action_activate'); ?><?php endif; ?></a>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+	<?php endforeach; ?>
+	<div class="grid_12 t_a_bottom t_a_paginator">
+		<?php echo $this->paginator()->slide($this->paginator, $this->paginatorOptions); ?>
+	</div>
+<?php endif; ?>
+
+<div id="tDialogContainer"></div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	<?php if ($this->allow('delete')) : ?>
+	$('a.tDeleteAction').click(function() {
+		if (confirm('<?php echo $this->escape($this->translator('article_list_action_delete_confirm')); ?>')) {
+			$(this).html('').addClass('t_a_loading');
+			var id = $(this).attr('rel');
+			$.ajaxq('news_article', {
+				type: 'POST',
+				url: "<?php echo $this->url(array(), 'news_article_delete'); ?>",
+				data: { id: id },
+				success: function(response) {
+					if ('RESULT_OK' == response) {
+						$('#tArticleRow_' + id).fadeOut('slow');
+					}
+				}
+			});
+		}
+	});
+	<?php endif; ?>
+	<?php if ($this->allow('activate')) : ?>
+	$('a.tActivateAction').click(function() {
+		var self = this;
+		var arr = $(this).attr('rel').split('_');
+		$(self).html('').addClass('t_a_loading');
+		$.ajaxq('news_article', {
+			url: "<?php echo $this->url(array(), 'news_article_activate'); ?>",
+			type: 'POST',
+			data: { id: arr[0], status: arr[1] },
+			success: function(response) {
+				$(self).attr('rel', arr[0] + '_' + response);
+				if (response == 'active') {
+					$('#tAricleStatus_' + arr[0]).html("<?php echo $this->translator('article_list_status_activated'); ?>");
+					$(self).html("<?php echo $this->translator('article_list_action_deactivate'); ?>");
+				} else {
+					$('#tAricleStatus_' + arr[0]).html("<?php echo $this->translator('article_list_status_not_activated'); ?>");
+					$(self).html("<?php echo $this->translator('article_list_action_activate'); ?>");
+				}
+				$(self).removeClass('t_a_loading');
+
+				$('#tDialogContainer').html((response == 'active') ? '<?php echo addslashes($this->translator('article_list_activated_success')); ?>' : '<?php echo addslashes($this->translator('article_list_deactivated_success')); ?>')
+					.dialog({
+						title: '<?php echo addslashes($this->translator('article_list_action_message')); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+			}
+		});
+	});
+	<?php endif; ?>
+});
+</script>

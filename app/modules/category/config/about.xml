@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: about.xml 1512 2010-03-09 09:14:08Z huuphuoc $
+ */
+-->
+<!DOCTYPE module SYSTEM "http://schemas.tomatocms.com/dtd/module_about.dtd">
+<module>
+	<name>category</name>
+	<description langKey="about_category_description"><![CDATA[Manage categories]]></description>
+	<thumbnail></thumbnail>
+	<author>TomatoCMS Core Team</author>
+	<email>core@tomatocms.com</email>
+	<version>2.0.1</version>
+	<license>free</license>
+	
+	<!-- Required modules and libraries -->
+	<requires>
+	</requires>
+	
+	<!-- Install and uninstall scripts -->
+	<install>
+		<query><![CDATA[DROP TABLE IF EXISTS `###category`;]]></query>
+		<query><![CDATA[CREATE TABLE `###category` (
+  `category_id` smallint(6) unsigned NOT NULL auto_increment,
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(100) NOT NULL,
+  `meta` text,
+  `left_id` int(11) NOT NULL,
+  `right_id` int(11) NOT NULL,
+  `num_views` int(11) default NULL,
+  `is_active` tinyint(4) default '1',
+  `created_date` datetime default NULL,
+  `modified_date` datetime default NULL,
+  `user_id` int(11) default NULL,
+  PRIMARY KEY  (`category_id`),
+  KEY `idx_left_right` (`left_id`,`right_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;]]></query>	
+	</install>
+	
+	<uninstall>
+		<query><![CDATA[DROP TABLE IF EXISTS `###category`;]]></query>
+	</uninstall>
+	
+	<admin>
+		<task langKey="dashboard_list_categories" link="/admin/category/list/" />
+		<task langKey="dashboard_add_category" link="/admin/category/add/" />
+	</admin>
+</module>

@@ -1,0 +1,52 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: message.phtml 1979 2010-04-02 06:59:50Z huuphuoc $
+ * @since		2.0.3
+ */
+?>
+<?php 
+/**
+ * Use this layout to show messages as error, offline messages
+ */
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"<?php if ($this->APP_LANG_RTL) : ?> dir="rtl"<?php endif; ?>>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->APP_STATIC_SERVER; ?>/skin/<?php echo $this->APP_TEMPLATE; ?>/<?php echo $this->APP_SKIN; ?>/images/favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->APP_STATIC_SERVER; ?>/css/960/<?php if ($this->APP_LANG_RTL) : ?>all-rtl.min.css<?php else : ?>all.min.css<?php endif; ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->APP_STATIC_SERVER; ?>/skin/<?php echo $this->APP_TEMPLATE; ?>/<?php echo $this->APP_SKIN; ?>/<?php if ($this->APP_LANG_RTL) : ?>default-rtl.css<?php else : ?>default.css<?php endif; ?>" />
+    <script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/jquery/jquery.min.js"></script>
+	<?php echo $this->headMeta(); ?>
+	<?php echo $this->headTitle(); ?>
+    <?php echo $this->headScript(); ?>
+	<?php echo $this->headLink(); ?>
+	<style type="text/css">
+	.t_g_message_container { margin: 0 auto; width: 60%; margin-top: 150px; border: 1px solid #999; padding: 10px; -moz-border-radius: 4px; -webkit-border-radius: 4px; }
+	.t_g_message_container h2 { line-height: 33px; font-size: 14px; font-weight: bold; }
+	</style>
+</head>
+<body>
+	<div class="container_12">
+		<div class="t_g_message_container">
+			<?php echo $this->layout()->content; ?>			
+		</div>
+		<div class="clearfix t_g_bottom"></div>
+	</div>
+</body>
+</html>

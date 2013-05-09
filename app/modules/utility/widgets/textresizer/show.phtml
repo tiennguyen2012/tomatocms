@@ -1,0 +1,55 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: show.phtml 1343 2010-02-28 16:26:12Z huuphuoc $
+ * @since 		2.0.3
+ */
+?>
+<?php if ($this->sizes) : ?>
+<div class="t_utility_textresizer">
+	<ul>
+		<li><a class="t_utility_textresizer_smaller" id="textResizerSmaller" href="javascript: void(0)"></a></li>
+		<li><a class="t_utility_textresizer_default" id="textResizerDefault" href="javascript: void(0)"></a></li>
+		<li><a class="t_utility_textresizer_larger" id="textResizerLarger" href="javascript: void(0)"></a></li>
+	</ul>
+</div>
+<script type="text/javascript">
+var sizes = [ <?php echo $this->sizes; ?> ];
+var defaultSize = parseInt('<?php echo $this->defaultSize; ?>');
+var currentSize = defaultSize;
+$(document).ready(function() {
+	$('#textResizerSmaller').click(function() {
+		currentSize = (currentSize > sizes[0]) ? currentSize - 1 : currentSize;
+		Tomato.Modules.Utility.Widgets.TextResizer.setSize(currentSize);
+	});
+	$('#textResizerDefault').click(function() {
+		currentSize = defaultSize;
+		Tomato.Modules.Utility.Widgets.TextResizer.setSize(currentSize);
+	});	
+	$('#textResizerLarger').click(function() {
+		currentSize = (currentSize < sizes[sizes.length - 1]) ? currentSize + 1 : currentSize;
+		Tomato.Modules.Utility.Widgets.TextResizer.setSize(currentSize);
+	});			
+});
+'Tomato.Modules.Utility.Widgets.TextResizer'.namespace();
+Tomato.Modules.Utility.Widgets.TextResizer.setSize = function(size) {
+	if (currentSize != undefined) { 
+		$('head').find('style[type="text/css"]:last').remove();
+	}
+	$('<style type="text/css">body { font-size: ' + size + 'px; }</style>').appendTo('head');
+};
+</script>
+<?php endif; ?>

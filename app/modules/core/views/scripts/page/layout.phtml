@@ -1,0 +1,254 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: layout.phtml 2031 2010-04-02 07:32:48Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('page_layout_title')); 
+
+/** TinyMCE */
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/tinymce/tiny_mce.js');
+
+/** Layout */
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/tomato/core/colorconverter.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/tomato/core/layout.js');
+
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.tabs.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.sortable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.droppable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.resizable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/skin/'.$this->APP_TEMPLATE.'/'.$this->APP_SKIN.'/default.css');
+?>
+
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><a href="<?php echo $this->url(array(), 'core_template_list'); ?>"><?php echo $this->translator('template_list_breadcump'); ?></a></span>
+	<span><a href="<?php echo $this->url(array('template' => 'default'), 'core_page_list'); ?>"><?php echo $this->translator('page_list_breadcump'); ?></a></span>	
+</div>
+
+<style type="text/css">
+#t_layout_dest { }
+.t_container { list-style-type: none; padding: 0; }
+.t_container li { float: left; width: 140px; height: 90px; line-height: 90px; text-align: center; margin-bottom: 20px; background: #999; color: #FFF; font-weight: bold; }
+
+#tTabs.ui-tabs { border: none; border-width: 0; padding: 0; }
+#tTabs.ui-corner-all { -moz-border-radius: 0px; -webkit-border-radius: 0px }
+#tTabs.ui-tabs .ui-tabs-nav { background: none; border-top: none; border-left: none; border-right: none; }
+#tTabs.ui-tabs .ui-tabs-panel { padding-left: 0; padding-right: 0; border-width: 0; }
+#tTabs.ui-widget-content { border: none; background: none; }
+
+.t_widget_container {} 
+.t_widget_container ul { list-style-type: none; width: 760px; }
+.t_widget_container ul li { float: left; width: 140px; height: 90px; text-align: center; margin-right: 15px; margin-bottom: 15px; background: #999; position: relative; color: #FFF; }
+
+.t_g_output_draggable { width: 140px; height: 90px; text-align: center; margin-right: 15px; margin-bottom: 15px; background: #999; }
+
+.t_tab_container .ui-tabs-nav { background: #CCC; } 
+#tDialogContainer .ui-widget-content { background-image: none; background-color: yellow; }
+</style>
+
+<div class="grid_12">
+	<div id="tTabs">
+		<ul>
+			<li><a href="#tColumnTab"><span><?php echo $this->translator('page_layout_columns_tab'); ?></span></a></li>
+			<!-- 
+			<li><a href="#tTabContainerTab"><span>Tab</span></a></li>
+			-->
+			<li><a href="#tWidgetTab"><span><?php echo $this->translator('page_layout_widgets_tab'); ?></span></a></li>
+			<li><a href="#tOutputTab"><span><?php echo $this->translator('page_layout_output_tab'); ?></span></a></li>
+		</ul>
+		<div class="t_a_top" id="tColumnTab">
+			<div id="tLayoutColumnsSelector">
+				<div class="t_a_line t_a_toggle">
+					<div></div> 
+					<h2><?php echo $this->translator('page_layout_columns'); ?></h2>
+				</div>
+				<div>
+					<ul class="t_container">
+						<?php for ($i = 1; $i <= 12; $i++) : ?>
+						<li id="tColumns_<?php echo $i; ?>" class="t_column_draggable grid_2<?php if ($i %6 == 1) : ?> alpha<?php elseif ($i % 6 == 0) : ?> omega<?php endif; ?>"><?php echo sprintf($this->translator('page_layout_num_columns'), $i); ?><?php if ($i == 12) : ?> (<a href="javascript: void(0)" id="addContainerQuickly">+</a>)<?php endif; ?></li>
+						<?php endfor; ?>	
+					</ul>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+		<!-- 
+		<div class="t_a_top" id="tTabContainerTab">
+			<ul class="t_container">
+				<li class="t_tab_draggable grid_2">Tab</li>
+			</ul>
+		</div>
+		 -->
+		<div class="t_a_top" id="tWidgetTab">
+			<div class="grid_2 alpha">
+				<div class="t_a_line t_a_toggle">
+					<div></div>
+					<h2><?php echo $this->translator('page_layout_module_filter'); ?></h2>
+				</div>
+				<div>
+					<ul class="t_widget_modules">
+					<?php foreach ($this->widgetModules as $widget) : ?>
+						<li><a href="javascript: void(0)"><?php echo $widget->module; ?></a></li>
+					<?php endforeach; ?>
+					</ul>
+				</div>
+			</div>
+			<div class="grid_10 omega">
+				<div class="t_a_line t_a_toggle">
+					<div></div> 
+					<h2><?php echo $this->translator('page_layout_widget_list'); ?></h2>
+				</div>
+				<div>
+					<div class="t_g_clear"></div>
+					<div id="tWidgetContainer"></div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		
+		<div class="t_a_top" id="tOutputTab">
+			<?php echo $this->translator('page_layout_output_tab_guide'); ?><br />
+			<div id="tDefaultOutputContainer" class="t_g_output_draggable"><?php echo $this->escape($this->translator('page_layout_default_output')); ?></div>
+		</div>
+	</div>
+</div>
+
+<div class="grid_12 t_a_bottom t_a_line">
+	<div></div> 
+	<h2><?php echo $this->translator('page_layout_layout'); ?></h2>
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_9 alpha"><?php echo sprintf($this->translator('page_layout_editing_guide'), $this->page->name); ?></div>
+	<div class="grid_3 omega t_a_textright">
+		<input type="button" class="t_a_button" id="tPreviewButton" value="<?php echo $this->translator('page_layout_preview_button'); ?>" /> <input type="button" class="t_a_button" id="tSaveButton" value="<?php echo $this->translator('page_layout_save_button'); ?>" />
+	</div>
+</div>
+<div id="tLayoutDest" class="t_g_clear t_layout_container" style="width: 940px; margin: 0 auto; min-height: 150px; height: 150px"></div>
+
+<div id="tDialogContainer"></div>
+
+<script type="text/javascript">
+function loadWidgets(page, module) {
+	$('#tWidgetContainer').html('').addClass('t_a_loading');
+	$.ajaxq('page_layout', {
+		url: '<?php echo $this->url(array(), 'core_page_widgets'); ?>',
+		type: 'POST',
+		data: { mod: module, page: page },
+		success: function(response) {
+			$('#tWidgetContainer').html(response).removeClass('t_a_loading');
+		}
+	});	
+};
+
+var rootContainer = new Tomato.Core.Layout.Container('tLayoutDest');
+rootContainer.setBaseUrl('<?php echo $this->baseUrl(); ?>');
+loadWidgets(1, $('#tWidgetTab').find('li:first a').html());
+
+$(document).ready(function() {
+	/** Create tab */
+	$("#tTabs").tabs();
+	$('ul.t_widget_modules').find('li a').click(function() {
+		loadWidgets(1, $(this).html());
+	});
+
+	$('#addContainerQuickly').unbind('click').bind('click', function() {
+		rootContainer.append(12);
+	});
+
+	/** Load lang */
+	Tomato.Core.Layout.Lang.setLang({
+		CONTAINER_COLS: 			'<?php echo $this->escape($this->translator('page_layout_container_columns')); ?>',
+		CONTAINER_REMOVE_CONFIRM: 	'<?php echo $this->escape($this->translator('page_layout_remove_container_confirm')); ?>',
+		WIDGET_PREVIEW: 			'<?php echo $this->escape($this->translator('page_layout_widget_preview')); ?>',
+		WIDGET_BACK: 				'<?php echo $this->escape($this->translator('page_layout_widget_back')); ?>',
+		WIDGET_REMOVE_CONFIRM: 		'<?php echo $this->escape($this->translator('page_layout_remove_widget_confirm')); ?>',
+		WIDGET_CACHE: 				'<?php echo $this->escape($this->translator('page_layout_widget_cache')); ?>',
+		WIDGET_LOAD_AJAX: 			'<?php echo $this->escape($this->translator('page_layout_widget_load_ajax')); ?>',
+		DEFAULT_OUTPUT: 			'<?php echo $this->escape($this->translator('page_layout_default_output')); ?>'
+	});
+	
+	/** Containers are draggable */
+	$('li.t_column_draggable').css('cursor', 'move').draggable({
+		zIndex: 1000,
+		cursor: 'move',
+		helper: 'clone'
+	}).disableSelection();
+//	$('ul.t_container a').click(function() {
+//		var arr = $(this).parent().attr('id').split('_');
+//		rootContainer.append(parseInt(arr[arr.length - 1]));
+//	});
+
+	/** Tab containers are draggable */
+	$('li.t_tab_draggable').css('cursor', 'move').draggable({
+		zIndex: 1000
+//		helper: 'clone'
+	}).disableSelection();
+
+	/** Default output */
+	$('#tDefaultOutputContainer').css('cursor', 'move').draggable({
+		zIndex: 1000,
+		cursor: 'pointer',
+		helper: 'clone'
+	}).disableSelection();
+	
+	/** Load layout */
+	<?php if ($this->jsonData) : ?>
+	rootContainer.load(<?php echo $this->jsonData; ?>);
+	<?php endif; ?>
+
+	/** Preview handle */
+	$('#tPreviewButton').toggle(function() {
+		$('#tLayoutDest').find('.t_a_widget_head, .t_a_widget_bottom').hide();
+		$(this).val("<?php echo $this->escape($this->translator('page_layout_config_button')); ?>");
+		rootContainer.toggleMode('PREVIEW');
+	}, function() {
+		$('#tLayoutDest').find('.t_a_widget_head, .t_a_widget_bottom').show();
+		$(this).val("<?php echo $this->escape($this->translator('page_layout_preview_button')); ?>");
+		rootContainer.toggleMode('CONFIG');
+	});
+
+	<?php if ($this->allow('savelayout')) : ?>
+	/** Save handle */
+	$('#tSaveButton').click(function() {
+		var layout = $.toJSON(rootContainer.save());
+		$.ajaxq('page_layout', {
+			url: '<?php echo $this->url(array(), 'core_page_savelayout'); ?>',
+			type: 'POST',
+			data: { template: '<?php echo $this->template; ?>', page: '<?php echo $this->page->name; ?>', layout: layout },
+			success: function(response) {
+				$('#tDialogContainer').html('<?php echo addslashes($this->translator('page_layout_save_success')); ?>')
+					.dialog({
+						title: '<?php echo addslashes($this->translator('page_layout_action_message')); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+			}
+		});
+	});
+	<?php endif; ?>
+});
+</script>

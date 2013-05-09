@@ -1,0 +1,45 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: show.phtml 697 2010-01-12 17:51:04Z huuphuoc $
+ */
+?>
+<div class="t_g_box t_comment_latestcomment">
+    <div class="t_g_box_head">
+    	<h2><?php echo $this->translator()->widget('latest_comments'); ?></h2>
+    	<a class="t_g_box_head_collapse" href="javascript:void(0)">Collapse</a>				    					    				    	
+    </div>
+    <div class="t_g_box_content">
+    	<?php if (count($this->comments) > 0) : ?>
+    	<ul>
+			<?php foreach ($this->comments as $index => $comment) : ?>
+			<li>
+				<blockquote>
+					<img src="<?php echo $this->helper()->gravatar($comment->email, 60); ?>" title="<?php echo $comment->full_name; ?>" alt="<?php echo $comment->full_name; ?>" />
+					<p><?php echo $this->subString($comment->content, 400); ?></p>
+					<div class="clearfix"></div>
+				</blockquote>
+				<cite><?php echo sprintf($this->translator()->widget('posted_by'), '<b>'.$comment->full_name.'</b>', date($this->globalConfig('datetime')->date_time_format, strtotime($comment->created_date))); ?></cite>
+			</li>
+			<?php endforeach; ?>
+		</ul>
+		<?php endif; ?>
+	</div>			    
+    <div class="t_g_box_corner t_g_box_corner_tl"></div>
+    <div class="t_g_box_corner t_g_box_corner_tr"></div>
+    <div class="t_g_box_corner t_g_box_corner_bl"></div>
+    <div class="t_g_box_corner t_g_box_corner_br"></div>
+</div>

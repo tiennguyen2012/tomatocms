@@ -1,0 +1,264 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: step2.phtml 1821 2010-03-30 06:44:37Z huuphuoc $
+ * @since		2.0.1
+ */
+?>
+<?php 
+$this->headTitle($this->translator('install_step2_page_title'));
+?>
+<div class="grid_12"><?php echo $this->flashMessenger(); ?></div>
+
+<div class="grid_12 t_a_bottom">
+	<?php if ('install' == $this->mode) : ?>
+	<div class="grid_3 alpha t_a_install_step">
+		<div class="t_a_line">
+			<div></div>
+			<h2><?php echo $this->translator('install_steps'); ?></h2>
+		</div>
+		<ul>
+			<li>1. <?php echo $this->translator('install_steps_requirements'); ?></li>
+			<li class="t_a_install_step_active">2. <?php echo $this->translator('install_steps_config'); ?></li>
+			<li>3. <?php echo $this->translator('install_steps_complete'); ?></li>
+		</ul>
+	</div>
+	<?php else:?>
+	<div class="grid_12 t_a_breadcump">
+		<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span><span><?php echo $this->translator('install_steps_config'); ?></span>	
+	</div>
+	<?php endif; ?>
+	<div class="grid_9 omega">
+		<form method="post" action="<?php if ('install' == $this->mode) : ?><?php echo $this->url(array(), 'core_install_step2'); ?><?php else : ?><?php echo $this->APP_URL; ?>/admin/core/config/app/<?php endif; ?>" class="t_a_form">
+		
+		<!-- Database settings -->
+		<div class="t_a_bottom">
+			<div class="t_a_line t_a_toggle">
+				<div></div>
+				<h2><?php echo $this->translator('install_step2_database_conn'); ?></h2>
+			</div>
+			<div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_database_host'); ?></label></div>
+					<div class="grid_7 omega">
+						<input type="text" name="host" value="<?php echo $this->master['host']; ?>" style="width: 300px" />
+						<div class="t_a_guide"><?php echo $this->translator('install_step2_database_host_guide'); ?></div>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_database_port'); ?></label></div>
+					<div class="grid_7 omega">
+						<input type="text" name="port" value="<?php echo $this->master['port']; ?>" style="width: 100px" />
+						<div class="t_a_guide"><?php echo $this->translator('install_step2_database_port_guide'); ?></div>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_database_username'); ?></label></div>
+					<div class="grid_7 omega">
+						<input type="text" name="username" value="<?php echo $this->master['username']; ?>" style="width: 300px" />
+						<div class="t_a_guide"><?php echo $this->translator('install_step2_database_username_guide'); ?></div>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_database_password'); ?></label></div>
+					<div class="grid_7 omega">
+						<input type="password" name="password" value="<?php echo $this->master['password']; ?>" style="width: 300px" />
+						<div class="t_a_guide"><?php echo $this->translator('install_step2_database_password_guide'); ?></div>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_database_name'); ?></label></div>
+					<div class="grid_7 omega">
+						<input type="text" name="dbname" value="<?php echo $this->master['dbname']; ?>" style="width: 300px" />
+						<div class="t_a_guide"><?php echo $this->translator('install_step2_database_name_guide'); ?></div>
+					</div>
+				</div>
+				
+				<?php 
+				/**
+				 * Allows user to set the database prefix
+				 * @since 2.0.3
+				 */
+				?>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_database_prefix'); ?></label></div>
+					<div class="grid_7 omega">
+						<input type="text" name="prefix" value="<?php echo $this->dbPrefix; ?>" style="width: 50px" />
+					</div>
+				</div>
+				
+				<?php 
+				/**
+				 * Allows user to import sample data
+				 * @since 2.0.4
+				 */
+				?>
+				<div class="clearfix t_a_bottom">
+					<div class="prefix_2 grid_7 alpha">
+						<input type="checkbox" name="importSampleData" /> <?php echo $this->translator('install_step2_import_sample_data'); ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Web settings -->
+		<div class="t_a_bottom">
+			<div class="t_a_line t_a_toggle">
+				<div></div>
+				<h2><?php echo $this->translator('install_step2_web_settings'); ?></h2>
+			</div>
+			<div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_web_url'); ?></label></div>
+					<div class="grid_7 omega">
+						<input type="text" name="url" value="<?php echo $this->url; ?>" style="width: 300px" />
+						<div class="t_a_guide"><?php echo $this->translator('install_step2_web_url_guide'); ?></div>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_web_name'); ?></label></div>
+					<div class="grid_7 omega">
+						<input type="text" name="siteName" value="<?php echo $this->siteName; ?>" style="width: 300px" />
+						<div class="t_a_guide"><?php echo $this->translator('install_step2_web_name_guide'); ?></div>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_web_language'); ?></label></div>
+					<div class="grid_7 omega">
+						<select name="lang" style="width: 150px">
+							<option value="en_US"<?php if ($this->lang == 'en_US') : ?> selected="selected"<?php endif; ?>>English</option>
+							<option value="vi_VN"<?php if ($this->lang == 'vi_VN') : ?> selected="selected"<?php endif; ?>>Tiếng Việt</option>
+						</select>
+					</div>
+				</div>
+				
+				<?php 
+				/**
+				 * Allows user to set the language direction
+				 * @since 2.0.3
+				 */
+				?>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_web_language_direction'); ?></label></div>
+					<div class="grid_7 omega">
+						<select name="langDirection" style="width: 150px" >
+							<option value="ltr"<?php if ($this->langDirection == 'ltr') : ?> selected="selected"<?php endif; ?>><?php echo $this->translator('install_step2_web_language_ltr'); ?></option>
+							<option value="rtl"<?php if ($this->langDirection == 'rtl') : ?> selected="selected"<?php endif; ?>><?php echo $this->translator('install_step2_web_language_rtl'); ?></option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_web_template'); ?></label></div>
+					<div class="grid_7 omega">
+						<select id="tTemplateSelect" name="template" style="width: 280px">
+							<?php foreach ($this->templates as $template => $value) : ?>
+							<option value="<?php echo $template; ?>"<?php if ($this->currentTemplate == $template) : ?> selected="selected"<?php endif; ?>><?php echo $template; ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_web_skin'); ?></label></div>
+					<div class="grid_7 omega">
+						<select id="tSkinSelect" name="skin" style="width: 280px">
+							<option value="default" selected="selected">default</option>
+						</select>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_web_title'); ?></label></div>
+					<div class="grid_7 omega">
+						<input type="text" name="title" value="<?php echo $this->defaultTitle; ?>" style="width: 300px" />
+						<div class="t_a_guide"><?php echo $this->translator('install_step2_web_title_guide'); ?></div>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_web_keyword'); ?></label></div>
+					<div class="grid_7 omega">
+						<textarea name="metaKeyword" style="width: 500px; height: 100px"><?php echo $this->metaKeyword; ?></textarea>
+						<div class="t_a_guide"><?php echo $this->translator('install_step2_web_keyword_guide'); ?></div>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_web_description'); ?></label></div>
+					<div class="grid_7 omega">
+						<textarea name="metaDescription" style="width: 500px; height: 100px"><?php echo $this->metaDescription; ?></textarea>
+						<div class="t_a_guide"><?php echo $this->translator('install_step2_web_description_guide'); ?></div>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_web_offline_message'); ?>:</label></div>
+					<div class="grid_7 omega">
+						<textarea style="width: 500px; height: 100px" name="offlineMessage"><?php if (null != $this->offlineMessage) : ?><?php echo $this->offlineMessage; ?><?php endif; ?></textarea>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha">&nbsp;</div>
+					<div class="grid_7 omega">
+						<input type="checkbox" name="offline" value="1" <?php if (null != $this->offline && 'true' == $this->offline) : ?>checked="checked"<?php endif; ?> /> <?php echo $this->translator('install_step2_web_offline'); ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Misc settings -->
+		<div class="t_a_bottom">
+			<div class="t_a_line t_a_toggle">
+				<div></div>
+				<h2><?php echo $this->translator('install_step2_misc_settings'); ?></h2>
+			</div>
+			<div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_timezone'); ?></label></div>
+					<div class="grid_7 omega">
+						<select name="timezone">
+						<?php foreach ($this->timeZones as $timeZone => $name) : ?>
+							<option value="<?php echo $timeZone; ?>"<?php if ($timeZone == $this->currentTimeZone): ?> selected="selected"<?php endif; ?>><?php echo $name; ?></option>
+						<?php endforeach; ?>
+						</select>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_date_format'); ?></label></div>
+					<div class="grid_7 omega">
+						<select name="dateFormat">
+						<?php foreach ($this->availableDateFormats as $format) : ?>
+							<option value="<?php echo $format; ?>"<?php if ($format == $this->dateFormat) : ?> selected="selected"<?php endif; ?>><?php echo date($format); ?></option>
+						<?php endforeach; ?>
+						</select>
+					</div>
+				</div>
+				<div class="clearfix t_a_bottom">
+					<div class="grid_2 alpha"><label><?php echo $this->translator('install_step2_date_time_format'); ?></label></div>
+					<div class="grid_7 omega">
+						<select name="datetimeFormat">
+						<?php foreach ($this->availableDateTimeFormats as $format) : ?>
+							<option value="<?php echo $format; ?>"<?php if ($format == $this->dateTimeFormat) : ?> selected="selected"<?php endif; ?>><?php echo date($format); ?></option>
+						<?php endforeach; ?>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="t_a_bottom" style="text-align: right">
+			<input type="hidden" name="mode" value="<?php echo $this->mode; ?>" />
+			<input class="t_a_button" type="submit" name="submit" value="<?php if ('install' == $this->mode) : ?><?php echo $this->translator('install_steps_next_button'); ?><?php else : ?><?php echo $this->translator('install_step2_save_button'); ?><?php endif; ?>" />
+		</div>
+		</form>
+	</div>
+</div>

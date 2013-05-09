@@ -1,0 +1,340 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: thread.phtml 2035 2010-04-02 08:05:20Z hoangninh $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('comment_list_page_title'));
+$this->headLink()->appendStylesheet($this->APP_STATIC_SERVER.'/js/jquery.ui/themes/base/ui.all.css');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.core.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.draggable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.resizable.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.ui/ui.dialog.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/jquery.validate/jquery.validate.min.js');
+$this->headScript()->appendFile($this->APP_STATIC_SERVER.'/js/tinymce/tiny_mce.js');
+?>
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span>
+	<span><a href="<?php echo $this->url(array(), 'comment_list'); ?>"><?php echo $this->translator('comment_list_breadcump'); ?></a></span>
+	<span><?php echo $this->translator('comment_thread_breadcump'); ?></span>
+</div>
+
+<div class="grid_12 t_a_bottom">
+	<?php echo $this->translator('comment_thread_guide') ?> <a href="<?php echo $this->escape($this->baseUrl().$this->pageUrl); ?>" target="_blank" class="t_a_link"><?php echo $this->escape($this->pageUrl); ?></a>
+</div>
+
+<div class="grid_12">
+<?php echo $this->flashMessenger(); ?>
+</div>
+
+<div class="grid_12 t_a_comment">
+    <div id="tCommentList">
+		<?php if (count($this->comments) > 0) : ?>
+		<ul>
+			<?php foreach ($this->comments as $index => $comment) : ?>
+			<li id="tCommentRow_<?php echo $comment->comment_id; ?>" class="t_comment_comment_level_<?php echo $comment->depth; ?>" style="padding-left: <?php echo $comment->depth * 20; ?>px;">
+				<a name="comment-<?php echo $comment->comment_id; ?>"></a>
+				<blockquote<?php if ($comment->depth > 0) : ?> class="t_a_comment_reply"<?php endif; ?>>
+					<?php if ($avatar = $this->gravatar($comment->email, 50)) : ?>
+					<?php if (null != $comment->web_site && false !== strstr($comment->web_site, 'http://')) : ?> 
+						<a target="_blank" href="<?php echo $this->escape($comment->web_site); ?>" ><img src="<?php echo $avatar; ?>" style="float: left; margin: 5px 5px 0 5px;" title="<?php echo $this->escape($comment->full_name); ?>" alt="<?php echo $this->escape($comment->full_name); ?>" /></a>
+					<?php else: ?>
+						<img src="<?php echo $avatar; ?>" style="float: left; margin: 5px 5px 0 5px;" title="<?php echo $this->escape($comment->full_name); ?>" alt="<?php echo $this->escape($comment->full_name); ?>" />
+					<?php endif; ?>
+					<?php endif; ?>
+					<p>
+						<a href="#comment-<?php echo $comment->comment_id; ?>" title="<?php echo $this->escape($comment->title); ?>" class="title"><?php echo $this->escape($comment->title); ?></a><br />
+						<?php echo (Tomato_Core_Hook_Registry::getInstance()->executeFilter('Comment_Widget_Comment_FormatContent', nl2br($comment->content))); ?>
+					</p>
+					<p class="t_a_clear"></p>
+				</blockquote>
+				<cite<?php if ($comment->depth > 0) : ?> class="reply"<?php endif; ?>>
+					<strong>
+					<?php if (null != $comment->web_site && false !== strstr($comment->web_site, 'http://')) : ?> 
+						<a class="t_a_link" target="_blank" href="<?php echo $this->escape($comment->web_site); ?>" ><?php echo $this->escape($comment->full_name); ?></a>
+					<?php else: ?>
+						<?php echo $this->escape($comment->full_name); ?>
+					<?php endif; ?>					
+					</strong>
+					<?php echo sprintf($this->translator('comment_at'), date($this->globalConfig('datetime')->date_time_format, strtotime($comment->created_date))); ?>
+					<span>
+						<?php if ($this->allow('add')) : ?><a class="t_a_link tReplyAction" href="javascript: void(0);" rel="<?php echo $comment->comment_id; ?>" title="<?php echo $this->translator('comment_thread_action_reply'); ?>"><?php echo $this->translator('comment_thread_action_reply'); ?></a> | <?php endif; ?>
+						<?php if ($this->allow('edit')) : ?><a class="t_a_link" href="<?php echo $this->url(array('comment_id' => $comment->comment_id), 'comment_edit'); ?>" rel="<?php echo $comment->comment_id; ?>" title="<?php echo $this->translator('comment_thread_action_edit'); ?>"><?php echo $this->translator('comment_thread_action_edit'); ?></a> | <?php endif; ?>
+						<?php if ($this->allow('delete')) : ?><a class="t_a_link tDeleteAction" href="javascript: void(0);" rel="<?php echo $comment->comment_id; ?>" title="<?php echo $this->translator('comment_thread_action_delete'); ?>"><?php echo $this->translator('comment_thread_action_delete'); ?></a> | <?php endif; ?>
+						<?php if ($this->allow('activate')) : ?>
+							<a class="t_a_link tActivateAction" rel="<?php echo $comment->comment_id; ?>_<?php echo $comment->is_active; ?>" href="javascript: void(0)"><?php if ($comment->is_active == 1) : ?><?php echo $this->translator('comment_thread_action_deactivate'); ?><?php else : ?><?php echo $this->translator('comment_thread_action_activate'); ?><?php endif; ?></a>
+						<?php endif; ?>
+					</span>
+				</cite>
+			</li>
+			<?php endforeach; ?>
+		</ul>
+		<?php endif; ?>
+		<div class="t_a_bottom t_a_paginator">
+			<?php echo $this->paginator()->slide($this->paginator, $this->paginatorOptions); ?>
+		</div>
+	</div>
+	
+	<?php if ($this->allow('add')) : ?>
+	<div id="t_g_comment">
+		<div class="t_a_bottom"><b><?php echo $this->translator('comment_write_your_comment'); ?></b></div>
+		<div class="t_a_bottom">
+			<form action="<?php echo $this->url(array('paramsString' => $this->paramsString), 'comment_add'); ?>" method="post" id="tSendCommentForm" class="t_a_form">
+				<input type="hidden" name="tCommentReply" id="tCommentReply" />
+				<table width="100%" border="0" cellspacing="0" cellpadding="10">
+					<tr>
+						<td width="40%"><input type="text" name="tCommentFullName" id="tCommentFullName" value="<?php if ($this->user != null) : ?><?php echo $this->escape($this->user->full_name); ?><?php endif; ?>" style="width: 100%; padding: 3px 0" /></td>
+						<td width="40%"><input type="text" name="tCommentEmail" id="tCommentEmail" value="<?php if ($this->user != null) : ?><?php echo $this->escape($this->user->email); ?><?php endif; ?>" style="width: 100%; padding: 3px 0" /></td>
+					</tr>
+					<tr>
+						<td><input type="text" name="tCommentTitle" id="tCommentTitle" value="" style="width: 100%; padding: 3px 0" /></td>
+						<td><input type="text" name="tCommentWebsite" id="tCommentWebsite" value="<?php echo $this->escape($this->baseUrl()); ?>" style="width: 100%; padding: 3px 0" /></td>
+					</tr>
+					<tr>
+						<td colspan="2" width="100%">
+							<textarea style="width: 100%; height: 150px" name="tCommentContent" id="tCommentContent"></textarea>
+							<label for="tCommentContent" generated="true" class="error" style="display: none;"></label>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" width="100%">
+							<input type="button" id="tCommentSendButton" class="t_a_button" value="<?php echo $this->escape($this->translator('comment_send_comment_button')); ?>" />
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+	<?php endif; ?>
+</div>			    
+
+<div id="tDialogContainer"></div>
+
+<script type="text/javascript">
+<?php if ($this->allow('add')) : ?>
+/**
+ * Init TinyMCE instances
+ */
+tinyMCE.init({
+	theme: "advanced",
+	theme_advanced_buttons1 : "bold,italic,underline,separator,strikethrough,justifyleft,justifycenter,justifyright, justifyfull,bullist,numlist,undo,redo,link,unlink",
+	theme_advanced_buttons2 : "",
+	theme_advanced_buttons3 : "",
+	theme_advanced_toolbar_location : "top",
+	theme_advanced_toolbar_align : "left",
+	width: "100%",
+	height: "180",
+	mode: "specific_textareas",
+	elements: 'tCommentContent',
+	// update validation status on change
+	onchange_callback: function(editor) {
+		tinyMCE.triggerSave();
+		$("#" + editor.id).valid();
+	}
+});
+<?php endif; ?>
+$(document).ready(function() {
+	<?php if ($this->allow('delete')) : ?>
+	$('a.tDeleteAction').click(function() {
+		if (confirm('<?php echo $this->escape($this->translator('comment_list_action_delete_confirm')); ?>')) {
+			$(this).html('').addClass('t_a_loading');
+			var id = $(this).attr('rel');
+			$.ajaxq('news_article', {
+				type: 'POST',
+				url: '<?php echo $this->url(array(), 'comment_delete'); ?>',
+				data: { id: id },
+				success: function(response) {
+					response = $.evalJSON(response);
+					$('#tCommentRow_' + id).fadeOut('slow');
+					$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('comment_list_delete_comment_success')); ?>', response.title))
+					.dialog({
+						title: '<?php echo addslashes($this->translator('comment_list_action_message')); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+				}
+			});
+		}
+	});
+	<?php endif; ?>
+	<?php if ($this->allow('activate')) : ?>
+	$('a.tActivateAction').click(function() {
+		var self = this;
+		var arr = $(this).attr('rel').split('_');
+		$(self).html('').addClass('t_a_loading');
+		$.ajaxq('comment_activate', {
+			url: '<?php echo $this->url(array(), 'comment_activate'); ?>',
+			type: 'POST',
+			data: { id: arr[0], status: arr[1] },
+			success: function(response) {
+				response = $.evalJSON(response);
+				//$(self).attr('rel', arr[0] + '_' + response);
+				if (response.is_active == 1) {
+					$('#tCommentStatus_' + arr[0]).html("<?php echo $this->translator('comment_list_status_activated'); ?>");
+					$(self).html("<?php echo $this->translator('comment_list_action_deactivate'); ?>");
+					$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('comment_list_active_comment_success')); ?>', response.title))
+					.dialog({
+						title: '<?php echo addslashes($this->translator('comment_list_action_message')); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+				} else {
+					$('#tCommentStatus_' + arr[0]).html("<?php echo $this->translator('comment_list_status_not_activated'); ?>");
+					$(self).html("<?php echo $this->translator('comment_list_action_activate'); ?>");
+					$('#tDialogContainer').html(sprintf('<?php echo addslashes($this->translator('comment_list_inactive_comment_success')); ?>', response.title))
+					.dialog({
+						title: '<?php echo addslashes($this->translator('comment_list_action_message')); ?>',
+				    	show: { effect: 'fade' },
+						open: function(event, ui) {
+							setTimeout(function() {
+								$('#' + event.target.id).dialog('option', 'hide', 'fade').dialog('destroy');
+							}, 3000);
+						}
+					});
+				}
+				$(self).removeClass('t_a_loading');
+			}
+		});
+	});
+	<?php endif; ?>
+	<?php if ($this->allow('add')) : ?>
+	var validator = $('#tSendCommentForm').submit(function() {
+						tinyMCE.triggerSave();	
+					}).validate({
+							rules: {
+								tCommentFullName: {
+									required: true,
+									maxlength: 255
+								},
+								tCommentEmail: {
+									required: true,
+									email: true
+								},
+								tCommentTitle: {
+									required: true,
+									maxlength: 255
+								},
+								tCommentContent: {
+									required: true,
+									maxlength: 800
+								}
+							},
+							messages: {
+								tCommentFullName: {
+									required: '<?php echo $this->translator('comment_full_name_required'); ?>'
+								},
+								tCommentEmail: {
+									required: '<?php echo $this->translator('comment_email_required'); ?>',
+									email: '<?php echo $this->translator('comment_email_invalid'); ?>'
+								},
+								tCommentTitle: {
+									required: '<?php echo $this->translator('comment_title_required'); ?>',
+									maxlength: '<?php echo $this->translator('comment_title_maxlength'); ?>'
+								},
+								tCommentContent: {
+									required: '<?php echo $this->translator('comment_content_required'); ?>',
+									maxlength: '<?php echo $this->translator('comment_content_maxlength'); ?>'
+								}
+							}
+					});
+	validator = function() {
+		// Put focus on tinymce on submit validation
+		if( this.settings.focusInvalid ) {
+			try {
+				var toFocus = $(this.findLastActive() || this.errorList.length && this.errorList[0].element || []);
+				if (toFocus.is("textarea")) {
+					tinyMCE.get(toFocus.attr("id")).focus();
+				} else {
+					toFocus.filter(":visible").focus();
+				}
+			} catch(e) {
+				// Ignore IE throwing errors when focusing hidden elements
+			}
+		}
+	};
+
+	$('.tReplyAction').click(function() {
+		var editor = 'tCommentContent';
+		toggleEditor(editor);
+		var self = this;
+		var commentId = $(self).attr('rel');
+		$('#tCommentReply').val(commentId);
+		var container = $(self).parent().parent().parent();
+		$(container).append($('#t_g_comment').css('padding', '10px 0 0'));
+		toggleEditor(editor);
+		if ($('#tCommentCancelButton').attr('value') == undefined) {
+			var cancelButton = document.createElement('input');
+			$(cancelButton).attr('id', 'tCommentCancelButton')
+					.attr('type', 'button')
+					.attr('value', '<?php echo $this->translator('comment_cancel_reply_button'); ?>')
+					.addClass('t_a_button')
+					.css('margin-left', '10px')
+					.bind('click', function() {
+						toggleEditor(editor);
+						$('#tCommentReply').val(0);
+						$('#tCommentCancelButton').remove();
+						$('#tCommentList').after($('#t_g_comment'));
+						toggleEditor(editor);
+					});
+			
+			$('#tCommentSendButton').after($(cancelButton));
+		}
+	});
+
+	function toggleEditor(id) {
+		if (!tinyMCE.get(id)) {
+			tinyMCE.execCommand('mceAddControl', false, id);
+		} else { 
+			tinyMCE.execCommand('mceRemoveControl', false, id);
+		}
+	};
+	
+	$('#tCommentSendButton').click(function() {
+		$('#tSendCommentForm').submit();
+	});
+	
+	var arr = [
+	   		{
+	   			msg: '<?php echo $this->translator('comment_title_default'); ?>',
+	   			input: 'tCommentTitle'
+	   		}
+   	];
+   	$(arr).each(function() {
+   		var input = this.input;
+   		var msg = this.msg;
+   		$('#' + input).val(msg).css('color', '#9196A2')
+   		.focus(function() {
+   			if ($(this).val() == msg) {
+   				$(this).val('').css('color', '#000');
+   			}
+   		}).blur(function() {
+   			if ($(this).val() == '') {
+   				$(this).val(msg).css('color', '#9196A2');
+   			}
+   		});
+   	});
+	<?php endif; ?>
+});
+</script>

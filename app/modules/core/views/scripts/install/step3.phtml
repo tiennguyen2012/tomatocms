@@ -1,0 +1,60 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: step3.phtml 1546 2010-03-10 08:05:36Z huuphuoc $
+ * @since		2.0.1
+ */
+?>
+<?php 
+$this->headTitle($this->translator('install_step3_page_title'));
+?>
+
+<form method="post" action="<?php echo $this->url(array(), 'core_install_step3'); ?>" class="t_a_form">
+<div class="grid_12 t_a_bottom">
+	<div class="grid_3 alpha t_a_install_step">
+		<div class="t_a_line">
+			<div></div>
+			<h2><?php echo $this->translator('install_steps'); ?></h2>
+		</div>
+		<ul>
+			<li>1. <?php echo $this->translator('install_steps_requirements'); ?></li>
+			<li>2. <?php echo $this->translator('install_steps_config'); ?></li>
+			<li class="t_a_install_step_active">3. <?php echo $this->translator('install_steps_complete'); ?></li>
+		</ul>
+	</div>
+	<div class="grid_9 omega">
+		<div class="t_a_line">
+			<div></div>
+			<h2><?php echo $this->translator('install_step3_complete'); ?></h2>
+		</div>
+		<div>
+			<?php echo $this->translator('install_step3_installed_success'); ?><br /><br />
+			<?php echo $this->translator('install_step3_guide'); ?><br />
+			- <?php echo $this->translator('install_step3_admin_username'); ?>: admin<br />
+			- <?php echo $this->translator('install_step3_admin_password'); ?>: <span class="t_a_install_warning"><?php echo $this->password; ?></span><br />
+			<br />
+			<?php echo sprintf($this->translator('install_step3_change_password'), $this->url.'/admin/'); ?>
+		</div>
+		<div class="t_a_top">
+			<span class="t_a_install_warning"><?php echo $this->translator('install_step3_press_button_message'); ?></span>
+		</div>
+		<div class="t_a_top">
+			<input style="height: 30px" type="submit" name="gotoFrontend" value="<?php echo $this->translator('install_step3_go_to_frontend'); ?>" />
+			<input style="height: 30px" type="submit" name="gotoBackend" value="<?php echo $this->translator('install_step3_go_to_backtend'); ?>" />
+		</div>
+	</div>
+</div>
+</form>

@@ -1,0 +1,156 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version		$Id: admin.phtml 2025 2010-04-02 07:29:38Z huuphuoc $
+ */
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <?php echo $this->headTitle(); ?>
+    <?php echo $this->headLink(); ?>
+    <?php echo $this->headMeta(); ?>
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo $this->APP_STATIC_SERVER; ?>/skin/<?php echo $this->APP_TEMPLATE; ?>/<?php echo $this->APP_SKIN; ?>/images/favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->APP_STATIC_SERVER; ?>/css/960/<?php if ($this->APP_LANG_RTL) : ?>all-rtl.min.css<?php else : ?>all.min.css<?php endif; ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->APP_STATIC_SERVER; ?>/skin/admin/default/<?php if ($this->APP_LANG_RTL) : ?>admin-rtl.css<?php else : ?>admin.css<?php endif; ?>" />
+    <script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/jquery.ajaxq/jquery.ajaxq.min.js"></script>
+    <script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/jquery.json/jquery.json.min.js"></script>
+   	<script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/phpjs/php.full.min.js"></script>
+    <script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/tomato/namespace.js"></script>
+    <script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/tomato/core/widget.loader.js"></script>
+    <script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/jquery.hoverIntent/jquery.hoverIntent.minified.js"></script>
+    <script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/superfish/superfish.js"></script>
+    <script type="text/javascript" src="<?php echo $this->APP_STATIC_SERVER; ?>/js/superfish/supersubs.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo $this->APP_STATIC_SERVER; ?>/js/superfish/superfish.css" />
+    <?php echo $this->headScript(); ?>
+	<!--[if lte IE 7]>
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->APP_STATIC_SERVER; ?>/skin/admin/default/admin-ie.css" />
+	<?php if ($this->APP_LANG_RTL) : ?>
+	<link rel="stylesheet" type="text/css" href="<?php echo $this->APP_STATIC_SERVER; ?>/skin/admin/default/admin-rtl-ie.css" />
+	<?php endif; ?>
+	<![endif]-->
+	<script type="text/javascript">
+	Tomato.Core.Widget.Loader.baseUrl = '<?php echo $this->baseUrl(); ?>';
+	</script>
+</head>
+<body>
+	<div id="t_a_body_wrapper">
+		<div id="t_a_header">
+			<div class="container_12">
+				<div class="grid_12">
+					<div id="t_a_header_welcome">
+					<?php if (Zend_Auth::getInstance()->hasIdentity()) : ?>
+						<?php echo sprintf($this->translator('menu_welcome', 'core'), Zend_Auth::getInstance()->getIdentity()->user_name); ?> | <a class="t_a_link" href="<?php echo $this->baseUrl(); ?>"><?php echo $this->translator('menu_homepage', 'core'); ?></a> | <a class="t_a_link" href="<?php echo $this->url(array(), 'core_auth_logout'); ?>"><?php echo $this->translator('menu_logout', 'core'); ?></a>
+					<?php endif; ?>
+					</div>
+					<?php if ($config = Tomato_Core_Config::getConfig()) : ?>
+					<h1><?php echo $config->web->site_name; ?></h1>
+					<?php endif; ?>
+					<div id="t_a_header_menu">
+						<ul id="tAdminMenu" class="t_a_menu_menu sf-menu">
+							<li><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></li>
+							<li><a href="#"><?php echo $this->translator('menu_user', 'core'); ?></a>
+								<ul class="t_a_menu_hor">
+									<li><a href="<?php echo $this->url(array(), 'core_role_list'); ?>"><?php echo $this->translator('menu_role', 'core'); ?></a></li>
+									<li><a href="<?php echo $this->url(array(), 'core_user_list'); ?>"><?php echo $this->translator('menu_user', 'core'); ?></a></li>
+									<li><a href="<?php echo $this->url(array(), 'core_privilege_list'); ?>"><?php echo $this->translator('menu_privilege', 'core'); ?></a></li>
+								</ul>
+							</li>
+							<li><a href="#"><?php echo $this->translator('menu_custome', 'core'); ?></a>
+								<ul class="t_a_menu_hor">
+									<li><a href="<?php echo $this->url(array(), 'core_language_list'); ?>"><?php echo $this->translator('menu_language', 'core'); ?></a></li>
+									<li>
+										<a href="<?php echo $this->url(array(), 'core_config_list'); ?>"><?php echo $this->translator('menu_config', 'core'); ?></a>
+										<ul class="t_a_menu_hor">
+											<li><a href="<?php echo $this->url(array(), 'core_config_app'); ?>"><?php echo $this->translator('menu_config_app', 'core'); ?></a></li>
+										</ul>
+									</li>
+									<li><a href="<?php echo $this->url(array(), 'core_cache_list'); ?>"><?php echo $this->translator('menu_cache', 'core'); ?></a></li>
+								</ul>
+							</li>
+							<li><a href="#"><?php echo $this->translator('menu_extend', 'core'); ?></a>
+								<ul class="t_a_menu_hor">
+									<li><a href="<?php echo $this->url(array(), 'core_template_list'); ?>"><?php echo $this->translator('menu_template', 'core'); ?></a></li>
+									<li><a href="<?php echo $this->url(array(), 'core_module_list'); ?>"><?php echo $this->translator('menu_module', 'core'); ?></a></li>
+									<li><a href="<?php echo $this->url(array(), 'core_plugin_list'); ?>"><?php echo $this->translator('menu_plugin', 'core'); ?></a></li>
+									<li><a href="<?php echo $this->url(array(), 'core_widget_list'); ?>"><?php echo $this->translator('menu_widget', 'core'); ?></a></li>
+									<li><a href="<?php echo $this->url(array(), 'core_hook_list'); ?>"><?php echo $this->translator('menu_hook', 'core'); ?></a></li>
+									<li><a href="<?php echo $this->url(array(), 'core_target_list'); ?>"><?php echo $this->translator('menu_target', 'core'); ?></a></li>
+								</ul>
+							</li>
+							<li><a href="#"><?php echo $this->translator('menu_account', 'core'); ?></a>
+								<ul class="t_a_menu_hor">
+									<li><a href="<?php echo $this->url(array(), 'core_user_changepass'); ?>"><?php echo $this->translator('menu_changepass', 'core'); ?></a></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div id="t_a_body_container" class="container_12">
+			<?php echo $this->layout()->content; ?>
+			<div class="clearfix t_a_bottom"></div>			
+		</div>
+		
+		<div id="t_a_footer">
+			<div class="container_12" style="padding-top: 30px">
+				<div class="grid_8 alpha">
+					&copy; <?php echo date('Y'); ?> <?php echo $this->SITE_NAME; ?>
+				</div>
+				<div class="grid_4 omega t_a_textright">
+					<a href="http://www.tomatocms.com" title="Powered by TomatoCMS" target="_blank"><img src="<?php echo $this->APP_STATIC_SERVER; ?>/images/PoweredBy_TomatoCMS_White.png" border="0" width="108px" height="28px" /></a>
+				</div>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript"> 
+$(document).ready(function() {
+	/** Build menu */
+	$("ul.t_a_menu_menu").supersubs({ 
+		minWidth:    15,   // minimum width of sub-menus in em units 
+		maxWidth:    30,   // maximum width of sub-menus in em units 
+		extraWidth:  1     // extra width can ensure lines don't sometimes turn over
+    }).superfish({
+    	speed:       'fast',
+     	delay:       500,
+     	dropShadows: false
+    });
+	
+    /** Toggle div */
+    $('.t_a_toggle h2').each(function() {
+        $(this).html('<span>' + $(this).html() + '</span>');
+    	var div = $(this).parent().parent().children('div').eq(1);
+		if ($(this).hasClass('t_a_toggle_show')) {
+			$(div).hide();
+		}
+        $(this).click(function() {
+        	$(div).toggle();
+        	if ($(div).css('display') == 'block') {
+        		$(this).addClass('t_a_toggle_hide').removeClass('t_a_toggle_show');
+        	} else {
+        		$(this).addClass('t_a_toggle_show').removeClass('t_a_toggle_hide');
+        	}
+		});
+    });
+}); 
+</script>	
+</body>
+</html>

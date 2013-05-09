@@ -1,0 +1,79 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: show.phtml 1582 2010-03-11 06:50:17Z huuphuoc $
+ */
+?>
+<?php if ($this->articles->count() > 0) : ?>
+<div class="t_g_box t_news_newer">
+    <div class="t_g_box_head">
+    	<h2><?php echo $this->translator()->widget('newer_articles'); ?></h2>
+    	<a class="t_g_box_head_collapse" href="javascript:void(0)">Collapse</a>				    					    				    	
+    </div>
+    <div class="t_g_cycle_slider">
+		<span><a id="tNewsNewerSliderPrev" class="t_g_cycle_slider_prev" href="javascript:void(0)"></a></span>
+		<div id="tNewsNewerSliderNav" class="t_g_cycle_slider_nav"></div>
+		<span><a id="tNewsNewerSliderNext" class="t_g_cycle_slider_next" href="javascript:void(0)"></a></span>
+	</div>
+    <div class="t_g_box_content">
+    	<div id="tNewsNewerSlideshow">
+			<?php foreach ($this->articles as $index => $article) : ?>
+			<?php if ($index % 8 == 0) : ?><ul style="<?php if ($index == 0) : ?>dispaly: block<?php else : ?>display: none<?php endif; ?>"><?php endif;?>
+			<?php if ($index > 0 && $index % 2 == 0) : ?><li style="clear: both; width: 450px; height: 1px; line-height: 0"></li><?php endif; ?>
+			<li>
+				<?php if ($article->image_square != null) : ?><a href="<?php echo $this->url($article->getProperties(), 'news_article_details'); ?>"><img src="<?php echo $article->image_square; ?>" width="60px" height="60px" /></a><?php endif; ?>
+				<a href="<?php echo $this->url($article->getProperties(), 'news_article_details'); ?>"><?php echo $article->title; ?></a><?php echo $this->articleIcons($article->icons); ?>
+			</li>
+			<?php if ($index % 8 == 7) : ?></ul><?php endif; ?>
+			<?php endforeach; ?>
+		</div>
+		<div class="clearfix"></div>
+	</div>			    
+    <div class="t_g_box_corner t_g_box_corner_tl"></div>
+    <div class="t_g_box_corner t_g_box_corner_tr"></div>
+    <div class="t_g_box_corner t_g_box_corner_bl"></div>
+    <div class="t_g_box_corner t_g_box_corner_br"></div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('#tNewsNewerSlideshow').cycle({ 
+	    fx: 'fade', 
+	    timeout: 5000, 
+	    pager: '#tNewsNewerSliderNav',
+	    prev: '#tNewsNewerSliderPrev',
+	    next: '#tNewsNewerSliderNext',		
+	    pagerAnchorBuilder: function(idx, slide) { 
+        	return '<span><a href="#"></a></span>'; 
+    	},
+		after: function(curr, next, opts) {
+		    var index = opts.currSlide;
+		    if (index == 0) {
+				$('#tNewsNewerSliderPrev').css({backgroundPosition: "-10px -10px"});
+			} else {
+				$('#tNewsNewerSliderPrev').css({backgroundPosition: "0px -10px"});
+			}
+			<?php if ($this->articles != null) : ?>
+			if (index == <?php echo floor(count($this->articles) / 8) - 1; ?>) {
+				$('#tNewsNewerSliderNext').css({backgroundPosition: "-10px 0px"});
+			} else {
+				$('#tNewsNewerSliderNext').css({backgroundPosition: "0px 0px"});
+			}
+			<?php endif; ?>
+		}
+	});		
+});
+</script>
+<?php endif; ?>

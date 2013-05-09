@@ -1,0 +1,196 @@
+<?php 
+/**
+ * TomatoCMS
+ * 
+ * LICENSE
+ *
+ * This source file is subject to the GNU GENERAL PUBLIC LICENSE Version 2 
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://www.gnu.org/licenses/gpl-2.0.txt
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@tomatocms.com so we can send you a copy immediately.
+ * 
+ * @copyright	Copyright (c) 2009-2010 TIG Corporation (http://www.tig.vn)
+ * @license		http://www.gnu.org/licenses/gpl-2.0.txt GNU GENERAL PUBLIC LICENSE Version 2
+ * @version 	$Id: list.phtml 1506 2010-03-09 08:39:58Z huuphuoc $
+ */
+?>
+<?php 
+$this->headTitle($this->translator('banner_list_page_title'));
+?>
+<div class="grid_12 t_a_breadcump">
+	<span><a href="<?php echo $this->url(array(), 'core_index_dashboard'); ?>"><?php echo $this->translator('menu_admin', 'core'); ?></a></span><span><?php echo $this->translator('banner_list_breadcump'); ?></span>
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="grid_10 alpha"><?php echo $this->translator('banner_list_guide'); ?></div>
+	<div class="grid_2 omega t_a_textright"><a href="<?php echo $this->url(array(), 'ad_banner_add'); ?>" class="t_a_link"><?php echo $this->translator('banner_add_breadcump'); ?></a></div>
+</div>
+
+<form method="post" action="<?php echo $this->url(array(), 'ad_banner_list'); ?>">
+<div class="grid_12">
+	<div class="t_a_line t_a_bottom">
+		<div></div>
+		<h2><?php echo $this->translator('banner_list_search'); ?></h2>
+	</div>
+	<div class="grid_4 alpha">
+		<div class="clearfix t_a_bottom">
+			<div class="grid_1 alpha"><?php echo $this->translator('banner_list_search_keyword'); ?>:</div>
+			<div class="grid_3 omega"><input type="text" style="width: 220px" name="keyword" value="<?php if (isset($this->exp['keyword'])) : ?><?php echo $this->exp['keyword']; ?><?php endif; ?>" /></div>
+		</div>
+		<div class="clearfix t_a_bottom">
+			<div class="grid_1 alpha"><?php echo $this->translator('banner_list_search_id'); ?>:</div>
+			<div class="grid_3 omega"><input type="text" style="width: 220px" name="bannerId" value="<?php if (isset($this->exp['banner_id'])) : ?><?php echo $this->exp['banner_id']; ?><?php endif; ?>" /></div>
+		</div>
+    </div>
+    <div class="grid_4">
+		<div class="grid_1 alpha"><?php echo $this->translator('banner_list_search_page'); ?>:</div>
+		<div class="grid_3 omega">
+			<select name="page" style="width: 100%">
+				<option value="">---</option>
+				<?php for ($i = 0; $i < count($this->pages); $i++) : ?>
+				<option value="<?php echo $this->pages[$i]->name; ?>"<?php if (isset($this->exp['page_name']) && $this->exp['page_name'] == $this->pages[$i]->name) : ?> selected="selected"<?php endif; ?>><?php echo $this->pages[$i]->title; ?></option>
+				<?php endfor; ?>
+			</select>
+		</div>
+	</div>
+	<div class="grid_4 omega">
+		<div class="clearfix t_a_bottom">
+			<div class="grid_1 alpha"><?php echo $this->translator('banner_list_search_status'); ?>:</div>
+			<div class="grid_3 omega">
+				<select name="status" style="width: 220px">
+					<option value=""<?php if (!isset($this->exp['status'])) : ?> selected="selected"<?php endif; ?>>---</option>
+					<option value="active"<?php if (isset($this->exp['status']) && $this->exp['status'] == 'active') : ?> selected="selected"<?php endif; ?>><?php echo $this->translator('banner_list_status_activated'); ?></option>
+					<option value="inactive"<?php if (isset($this->exp['status']) && $this->exp['status'] == 'inactive') : ?> selected="selected"<?php endif; ?>><?php echo $this->translator('banner_list_status_not_activated'); ?></option>
+				</select>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="grid_12 t_a_bottom">
+	<div class="prefix_1 alpha">
+		<input type="submit" class="t_a_button" value="<?php echo $this->translator('banner_list_search_button'); ?>" />
+	</div>
+</div>
+</form>
+
+<div class="grid_12 t_a_bottom">
+	<div class="grid_5 alpha t_a_line">
+		<div></div>
+		<h2><?php echo $this->translator('banner_name'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div>
+		<h2><?php echo $this->translator('banner_status'); ?></h2>
+	</div>
+	<div class="grid_2 t_a_line">
+		<div></div>
+		<h2><?php echo $this->translator('banner_image_url'); ?></h2>
+	</div>
+	<div class="grid_1 t_a_line">
+		<div></div>
+		<h2><?php echo $this->translator('banner_id'); ?></h2>
+	</div>
+	<div class="grid_2 omega t_a_line">
+		<div></div>
+		<h2><?php echo $this->translator('banner_list_action'); ?></h2>
+	</div>
+</div>	
+<?php if ($this->numBanners == 0) : ?>
+	<div class="grid_12 t_a_bottom"><?php echo $this->translator('banner_list_not_found'); ?></div>	
+<?php else : ?>
+	<?php foreach ($this->banners as $banner) : ?>
+	<div id="tBannerRow_<?php echo $banner->banner_id; ?>" class="grid_12">
+		<div class="clearfix t_a_box">
+			<div class="grid_5 alpha">
+				<div style="padding-left: 5px">
+					<?php echo $banner->name.'<br /> at: '.date('Y-m-d H:i:s',strtotime($banner->created_date)); ?>
+				</div>
+			</div>
+			<div class="grid_2" id="tAricleStatus_<?php echo $banner->banner_id; ?>">
+			<?php if ($banner->status == 'active') : ?>
+				<?php echo $this->translator('banner_list_status_activated'); ?>
+			<?php elseif ($banner->status == 'inactive') : ?>
+				<?php echo $this->translator('banner_list_status_not_activated'); ?>
+			<?php endif; ?>
+			</div>
+			<div class="grid_2">
+				<?php if (null != $banner->image_url) : ?> 
+					<?php if ('.swf' == substr($banner->image_url, strlen($banner->image_url) - 4, 4)) : ?> 
+					<object width="100" height="50">
+						<param name="movie" value="<?php echo $banner->image_url; ?>">
+						<embed src="<?php echo $banner->image_url; ?>" width="100" height="50"></embed>
+					</object>	
+					<?php else: ?>
+					<img src="<?php echo $banner->image_url; ?>" width="100" height="50" />
+					<?php endif; ?>
+				<?php else : ?>
+					&nbsp;
+				<?php endif; ?>
+			</div>
+			<div class="grid_1"><?php echo $banner->banner_id; ?></div>
+			<div class="grid_2 omega">
+				<?php if ($this->allow('edit')) : ?>
+				<a class="t_a_link" href="<?php echo $this->url(array('banner_id' => $banner->banner_id), 'ad_banner_edit'); ?>/"><?php echo $this->translator('banner_list_action_edit'); ?></a> |
+				<?php endif; ?>
+				<?php if ($this->allow('delete')) : ?> 
+				<a class="t_a_link tDeleteAction" rel="<?php echo $banner->banner_id; ?>" href="javascript: void(0)"><?php echo $this->translator('banner_list_action_delete'); ?></a> |
+				<?php endif; ?>
+				<?php if ($this->allow('activate')) : ?>
+				<a class="t_a_link tActivateAction" rel="<?php echo $banner->banner_id; ?>_<?php echo $banner->status; ?>" href="javascript: void(0)"><?php if ($banner->status == 'active') : ?><?php echo $this->translator('banner_list_action_deactivate'); ?><?php else : ?><?php echo $this->translator('banner_list_action_activate'); ?><?php endif; ?></a>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+	<?php endforeach; ?>
+	<div class="grid_12 t_a_bottom t_a_paginator">
+		<?php echo $this->paginator()->slide($this->paginator, $this->paginatorOptions); ?>
+	</div>
+<?php endif; ?>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	<?php if ($this->allow('delete')) : ?>
+	$('a.tDeleteAction').click(function() {
+		if (confirm('<?php echo $this->escape($this->translator('banner_list_action_delete_confirm')); ?>')) {
+			$(this).html('').addClass('t_a_loading');
+			var id = $(this).attr('rel');
+			$.ajaxq('ad_banner', {
+				type: 'POST',
+				url: '<?php echo $this->url(array(), 'ad_banner_delete'); ?>',
+				data: { id: id },
+				success: function(response) {
+					if ('RESULT_OK' == response) {
+						$('#tBannerRow_' + id).fadeOut('slow');
+					}
+				}
+			});
+		}
+	});
+	<?php endif; ?>
+	<?php if ($this->allow('activate')) : ?>
+	$('a.tActivateAction').click(function() {
+		var self = this;
+		var arr = $(this).attr('rel').split('_');
+		$(self).html('').addClass('t_a_loading');
+		$.ajaxq('ad_banner', {
+			url: '<?php echo $this->url(array(), 'ad_banner_activate'); ?>',
+			type: 'POST',
+			data: { id: arr[0], status: arr[1] },
+			success: function(response) {
+				$(self).attr('rel', arr[0] + '_' + response);
+				if (response == 'active') {
+					$('#tAricleStatus_' + arr[0]).html("<?php echo $this->translator('banner_list_status_activated'); ?>");
+					$(self).html("<?php echo $this->translator('banner_list_action_deactivate'); ?>");
+				} else {
+					$('#tAricleStatus_' + arr[0]).html("<?php echo $this->translator('banner_list_status_not_activated'); ?>");
+					$(self).html("<?php echo $this->translator('banner_list_action_activate'); ?>");
+				}
+				$(self).removeClass('t_a_loading');
+			}
+		});
+	});
+	<?php endif; ?>
+});
+</script>
